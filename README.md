@@ -95,3 +95,15 @@ Index once.
 Query fast.
 Append incrementally.
 
+
+## ROS2 Compatibility
+
+Current validation uses structured JSONL trace events.
+
+Planned adapters:
+
+- rosbag2 (.db3)
+- rosbag2 (.mcap)
+
+Velune Trace is designed to index normalized runtime events extracted from ROS2 logging pipelines.
+
