@@ -7,13 +7,25 @@ Velune Trace is an evidence-window extraction engine for large robotics logs.
 
 It helps engineers move from large ROS2 / MCAP runtime logs to a small set of reproducible evidence windows.
 
-Velune Trace is the first operational component of the broader VeluneOS evidence architecture.
+Velune Trace is part of the broader VeluneOS evidence architecture.
 
 Velune does not perform root-cause analysis.  
 Velune does not assign fault.  
 Velune does not assign liability.
 
 Velune helps engineers find where to look first.
+
+---
+
+## Validated On
+
+- 10.7 GB benchmark corpus
+- 9,237,885 indexed events
+- External nuScenes MCAP dataset
+- Controlled dropout recovery fixture
+- Incremental indexing validation
+
+Velune has been validated on both internal robotics datasets and external autonomous-driving MCAP datasets.
 
 ---
 
@@ -30,6 +42,55 @@ Velune Trace is built to reduce that search space.
 Instead of starting from an entire log corpus, engineers start from ranked evidence windows.
 
 ---
+
+## Investigation Workflow
+
+Without Velune
+
+~~~text
+400GB MCAP
+↓
+Manual replay
+↓
+Topic hopping
+↓
+Timestamp hunting
+↓
+Investigation
+~~~
+
+With Velune
+
+~~~text
+400GB MCAP
+↓
+windowed-verify
+↓
+Top evidence windows
+↓
+evidence-window
+↓
+Investigation
+~~~
+
+## Try It On Your Own MCAP
+
+~~~bash
+./bin/velune inspect my_log.mcap
+
+./bin/velune windowed-verify \
+  my_log.mcap \
+  --topic /lidar_top \
+  --window-sec 1 \
+  --top 5
+~~~
+
+Expected output:
+
+- ranked evidence windows
+- timing gaps
+- count ratios
+- reproducible evidence JSON
 
 ## 30-Second MCAP Example
 
@@ -208,7 +269,7 @@ Roadmap:
 - [ ] larger-scale benchmark datasets
 - [ ] additional external robotics datasets
 - [ ] fleet-scale validation
-- [ ] evidence classification layer
+
 
 ---
 
