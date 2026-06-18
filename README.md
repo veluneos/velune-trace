@@ -1,8 +1,25 @@
 # Velune Trace
 
-Find the events that matter inside large ROS2 logs.
+Find the events.
 
-Velune Trace is a trace indexing and event-chain reconstruction prototype designed for large ROS2 runtime logs.
+Engineers find the cause.
+
+Velune Trace helps engineers reduce investigation scope from large robotics logs to a small set of reproducible evidence windows.
+
+## Validation Highlights
+
+- 10.7 GB benchmark validated
+- 9,237,885 events indexed
+- 0.002 sec indexed event-chain retrieval
+- Incremental indexing validated
+- External nuScenes MCAP validation completed ([summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md))
+- Controlled dropout recovery validation completed
+
+Velune focuses on evidence retrieval and investigation scope reduction.
+
+Velune does not perform root-cause analysis.
+
+Velune does not assign fault.
 
 ## Quick Start
 
