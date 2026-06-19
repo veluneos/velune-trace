@@ -1,8 +1,10 @@
-*.sqlite
-*.db
-*.jsonl
-*.zip
-*.ots
+.venv/
 __pycache__/
 *.pyc
-.DS_Store
+*.pyo
+*.sqlite
+*.db
+*.mcap
+*.jsonl
+windowed_report.json
+evidence_window.json

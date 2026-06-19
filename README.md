@@ -15,7 +15,14 @@ Velune does not assign liability.
 
 Velune helps engineers find where to look first.
 
+## Start Here
+
+- [Getting Started](docs/GETTING_STARTED.md)
+- [External nuScenes Validation Summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)
+
 ---
+
+
 
 ## Validated On
 
@@ -71,6 +78,30 @@ Top evidence windows
 evidence-window
 ↓
 Investigation
+~~~
+
+## Try the Included Sample
+
+Generate a small sample MCAP:
+
+~~~bash
+python3 tools/create_sample_mcap.py
+~~~
+
+Inspect it:
+
+~~~bash
+./bin/velune inspect examples/sample.mcap
+~~~
+
+Rank timing windows:
+
+~~~bash
+./bin/velune windowed-verify \
+  examples/sample.mcap \
+  --topic /lidar_top \
+  --window-sec 1 \
+  --top 5
 ~~~
 
 ## Try It On Your Own MCAP

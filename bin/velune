@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -e
+
+if [ "$#" -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ] || [ "$1" = "help" ]; then
+  cat <<'HELP'
+Velune Trace CLI
+
+Usage:
+  ./bin/velune <command> [args]
+
+Commands:
+  inspect          Inspect MCAP metadata
+  chunks           List MCAP chunk index information
+  read             Read selected MCAP chunk/time window
+  profile          Profile topic frequency and timing stability
+  compare          Compare one topic between two windows
+  compare-all      Compare all common topics between two windows
+  windowed-verify  Rank timing-irregular windows for one topic
+  evidence-window  Extract a reproducible evidence window
+
+Examples:
+  ./bin/velune inspect your_log.mcap
+
+  ./bin/velune windowed-verify \
+    your_log.mcap \
+    --topic /lidar_top \
+    --window-sec 1 \
+    --top 5
+
+  ./bin/velune evidence-window \
+    your_log.mcap \
+    --topic /lidar_top \
+    --start-sec START_SEC \
+    --end-sec END_SEC \
+    --expected-count 20
+
+Velune Trace does not infer root cause or assign fault.
+HELP
+  exit 0
+fi
+
+PYTHONPATH="$(pwd):${PYTHONPATH}" python3 -m velune_trace.cli.main "$@"
