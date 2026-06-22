@@ -17,6 +17,7 @@ Commands:
   compare-all      Compare all common topics between two windows
   windowed-verify  Rank timing-irregular windows for one topic
   evidence-window  Extract a reproducible evidence window
+  validation-report  Generate anonymous validation report
 
 Examples:
   ./bin/velune inspect your_log.mcap

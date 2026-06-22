@@ -157,3 +157,35 @@ class VeluneMcapReader:
             chunks=chunks,
             has_summary=True,
         )
+
+def read_messages(path):
+    """
+    Streaming MCAP message reader used by validation-report.
+
+    Yields:
+      {
+        "topic": str,
+        "log_time": int,
+        "publish_time": int,
+        "channel_id": int,
+        "schema_id": int | None,
+      }
+
+    Payload bytes are intentionally not returned.
+    """
+    from pathlib import Path
+    from mcap.reader import make_reader
+
+    p = Path(path)
+
+    with p.open("rb") as f:
+        reader = make_reader(f)
+
+        for schema, channel, message in reader.iter_messages():
+            yield {
+                "topic": channel.topic,
+                "log_time": int(message.log_time),
+                "publish_time": int(message.publish_time),
+                "channel_id": int(message.channel_id),
+                "schema_id": int(channel.schema_id) if channel.schema_id is not None else None,
+            }

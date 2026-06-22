@@ -36,6 +36,31 @@ Velune has been validated on both internal robotics datasets and external autono
 
 ---
 
+## Validation Partner Program
+
+Velune Trace can generate a shareable validation report without requiring raw MCAP upload.
+
+Submit only:
+
+velune_report/shareable_anonymous_report.json
+
+Send to:
+
+skagusdn1998@gmail.com
+
+Participants may receive:
+
+- anonymous benchmark comparison
+- timing anomaly summary
+- investigation starting points
+- validation feedback
+
+Do not send raw MCAP files, sensor payloads, maps, credentials, or private operational data.
+
+This is an early Validation Partner Program. Submission is optional.
+
+---
+
 ## The Problem
 
 Large robotics investigations often begin with one question:
