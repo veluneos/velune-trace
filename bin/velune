@@ -20,6 +20,12 @@ Commands:
   validation-report  Generate anonymous validation report
 
 Examples:
+  ./bin/velune validation-report your_log.mcap \
+    --export-dir velune_report \
+    --window-sec 1 \
+    --top 5 \
+    --allowed-lateness-sec 2
+
   ./bin/velune inspect your_log.mcap
 
   ./bin/velune windowed-verify \
