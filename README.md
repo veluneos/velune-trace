@@ -1,5 +1,68 @@
 # Velune Trace
 
+## 3-Minute Validation Partner Quick Start
+
+Run Velune locally on your MCAP.
+
+Find the evidence windows worth reviewing first.
+
+Keep raw logs inside your own environment.
+
+Generate one anonymous report.
+
+Send only that report to the Validation Partner Program.
+
+Receive evidence-based feedback when a relevant reference cohort is available.
+
+### Step 1. Run the sample
+
+    python3 tools/create_sample_mcap.py
+
+    ./bin/velune validation-report examples/sample.mcap \
+      --export-dir velune_report \
+      --window-sec 1 \
+      --top 5 \
+      --allowed-lateness-sec 2
+
+### Step 2. Run your own MCAP
+
+    ./bin/velune validation-report your_log.mcap \
+      --export-dir velune_report \
+      --window-sec 1 \
+      --top 5 \
+      --allowed-lateness-sec 2
+
+### Step 3. Send one anonymous report
+
+Send only:
+
+    velune_report/shareable_anonymous_report.json
+
+Do not send raw MCAP files, sensor payloads, maps, credentials, or private operational data.
+
+Temporary submission address:
+
+    skagusdn1998@gmail.com
+
+Program details:
+
+    docs/PARTNER_PROGRAM.md
+
+Example feedback report:
+
+    docs/EXAMPLE_FEEDBACK_REPORT.md
+
+Boundary:
+
+Velune reports observable timing evidence and evidence windows worth reviewing first.
+
+Velune does not infer root cause, assign fault, or make safety, liability, or risk determinations.
+
+Engineers determine cause.
+
+---
+
+
 Find the events.  
 Engineers find the cause.
 
@@ -18,6 +81,8 @@ Velune helps engineers find where to look first.
 ## Start Here
 
 - [Getting Started](docs/GETTING_STARTED.md)
+- [Validation Partner Program](docs/PARTNER_PROGRAM.md)
+- [Example Feedback Report](docs/EXAMPLE_FEEDBACK_REPORT.md)
 - [External nuScenes Validation Summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)
 
 ---
@@ -33,31 +98,6 @@ Velune helps engineers find where to look first.
 - Incremental indexing validation
 
 Velune has been validated on both internal robotics datasets and external autonomous-driving MCAP datasets.
-
----
-
-## Validation Partner Program
-
-Velune Trace can generate a shareable validation report without requiring raw MCAP upload.
-
-Submit only:
-
-velune_report/shareable_anonymous_report.json
-
-Send to:
-
-skagusdn1998@gmail.com
-
-Participants may receive:
-
-- anonymous benchmark comparison
-- timing anomaly summary
-- investigation starting points
-- validation feedback
-
-Do not send raw MCAP files, sensor payloads, maps, credentials, or private operational data.
-
-This is an early Validation Partner Program. Submission is optional.
 
 ---
 
