@@ -14,11 +14,13 @@ Run Velune Trace inside your own environment.
 
 Command:
 
-    ./bin/velune validation-report your_log.mcap \
+    ./bin/velune validation-report /path/to/your_log.mcap \
       --export-dir velune_report \
       --window-sec 1 \
       --top 5 \
       --allowed-lateness-sec 2
+
+Replace `/path/to/your_log.mcap` with the path to your own MCAP file.
 
 This creates:
 

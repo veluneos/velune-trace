@@ -52,11 +52,13 @@ The point is to reduce the investigation scope to the evidence windows worth rev
 
 ### Step 3. Run Velune on your own MCAP
 
-    ./bin/velune validation-report your_log.mcap \
+    ./bin/velune validation-report /path/to/your_log.mcap \
       --export-dir velune_report \
       --window-sec 1 \
       --top 5 \
       --allowed-lateness-sec 2
+
+Replace `/path/to/your_log.mcap` with the path to your own MCAP file.
 
 ### Step 4. Review the local report
 
@@ -191,7 +193,7 @@ With Velune
 
 The primary evaluation path is:
 
-    ./bin/velune validation-report your_log.mcap \
+    ./bin/velune validation-report /path/to/your_log.mcap \
       --export-dir velune_report \
       --window-sec 1 \
       --top 5 \

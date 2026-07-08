@@ -20,22 +20,22 @@ Commands:
   validation-report  Generate anonymous validation report
 
 Examples:
-  ./bin/velune validation-report your_log.mcap \
+  ./bin/velune validation-report /path/to/your_log.mcap \
     --export-dir velune_report \
     --window-sec 1 \
     --top 5 \
     --allowed-lateness-sec 2
 
-  ./bin/velune inspect your_log.mcap
+  ./bin/velune inspect /path/to/your_log.mcap
 
   ./bin/velune windowed-verify \
-    your_log.mcap \
+    /path/to/your_log.mcap \
     --topic /lidar_top \
     --window-sec 1 \
     --top 5
 
   ./bin/velune evidence-window \
-    your_log.mcap \
+    /path/to/your_log.mcap \
     --topic /lidar_top \
     --start-sec START_SEC \
     --end-sec END_SEC \

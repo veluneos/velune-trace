@@ -15,7 +15,7 @@ It focuses on one primary workflow:
 
 The primary evaluation path is:
 
-    ./bin/velune validation-report your_log.mcap \
+    ./bin/velune validation-report /path/to/your_log.mcap \
       --export-dir velune_report \
       --window-sec 1 \
       --top 5 \
@@ -88,6 +88,10 @@ Current public comparison capability:
     Public reference comparison: limited
     Matched anonymous cohort comparison: not yet available
     Global percentile dashboard: not yet available
+
+## Quick Start Placeholder Clarification
+
+Quick Start examples now use `/path/to/your_log.mcap` instead of `your_log.mcap` to make it clear that users should replace the placeholder with their own MCAP file path.
 
 ## Advanced CLI Commands
 

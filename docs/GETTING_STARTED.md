@@ -24,11 +24,11 @@ python3 -m pip install -r requirements.txt
 
 Inspect metadata:
 
-./bin/velune inspect your_log.mcap
+./bin/velune inspect /path/to/your_log.mcap
 
 Profile timing behavior:
 
-./bin/velune profile your_log.mcap \
+./bin/velune profile /path/to/your_log.mcap \
   --start-sec START_SEC \
   --end-sec END_SEC \
   --sort max_gap
@@ -36,7 +36,7 @@ Profile timing behavior:
 Rank suspicious timing windows:
 
 ./bin/velune windowed-verify \
-  your_log.mcap \
+  /path/to/your_log.mcap \
   --topic /lidar_top \
   --window-sec 1 \
   --top 5 \
@@ -45,7 +45,7 @@ Rank suspicious timing windows:
 Extract an evidence window:
 
 ./bin/velune evidence-window \
-  your_log.mcap \
+  /path/to/your_log.mcap \
   --topic /lidar_top \
   --start-sec START_SEC \
   --end-sec END_SEC \
