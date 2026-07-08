@@ -83,6 +83,7 @@ Velune helps engineers find where to look first.
 - [Getting Started](docs/GETTING_STARTED.md)
 - [Validation Partner Program](docs/PARTNER_PROGRAM.md)
 - [Example Feedback Report](docs/EXAMPLE_FEEDBACK_REPORT.md)
+- [Reference Cohort Registry](docs/REFERENCE_COHORT_REGISTRY.md)
 - [External nuScenes Validation Summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)
 
 ---
