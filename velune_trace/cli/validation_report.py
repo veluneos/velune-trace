@@ -510,8 +510,8 @@ Velune Trace does not calculate liability.
     print(f"- {export_dir / 'evidence_windows.json'}")
     print(f"- {export_dir / 'SCHEMA.md'}")
     print("")
-    print("UPLOAD_NUDGE=To participate in the Velune Validation Partner Program, send only shareable_anonymous_report.json to: skagusdn1998@gmail.com")
-    print("UPLOAD_NUDGE_RAW_MCAP=Raw MCAP files are not required.")
+    print("LOCAL_ONLY_NOTICE=No telemetry or automatic upload was performed.")
+    print("LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report/summary.md first.")
 
     return 0
 

@@ -51,7 +51,7 @@ Important boundary:
 
 Velune Trace can generate an anonymous report for the Validation Partner Program.
 
-Participants may submit only:
+For direct validation engagements, participants may share only:
 
     velune_report/shareable_anonymous_report.json
 
@@ -88,6 +88,14 @@ Current public comparison capability:
     Public reference comparison: limited
     Matched anonymous cohort comparison: not yet available
     Global percentile dashboard: not yet available
+
+## Local-Only Trust Clarification
+
+The CLI no longer prints a submission nudge or personal email address after generating a validation report.
+
+Runtime output now emphasizes that no telemetry or automatic upload was performed and that all report files were written locally.
+
+This release line adds `docs/TRUST_AND_PRIVACY.md` to document the local-first trust model.
 
 ## Quick Start Placeholder Clarification
 
@@ -128,4 +136,4 @@ Engineers determine cause.
 
 ## Git Tag
 
-    v0.3.4
+    v0.3.5

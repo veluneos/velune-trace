@@ -39,7 +39,7 @@ If you choose to participate, send only:
 
 Send it to:
 
-    skagusdn1998@gmail.com
+    the agreed private validation channel
 
 ## What You Must Not Send
 
@@ -83,3 +83,8 @@ Velune does not assign fault.
 Velune does not make safety, liability, or risk determinations.
 
 Engineers determine cause.
+
+
+## Trust and Privacy
+
+See [Trust and Privacy Model](TRUST_AND_PRIVACY.md).

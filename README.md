@@ -81,7 +81,7 @@ Do not send raw MCAP files, sensor payloads, maps, credentials, or private opera
 
 Temporary submission address:
 
-    skagusdn1998@gmail.com
+    the agreed private validation channel
 
 Program details:
 
@@ -131,6 +131,7 @@ Engineers determine cause.
 
 - [Getting Started](docs/GETTING_STARTED.md)
 - [Validation Partner Program](docs/PARTNER_PROGRAM.md)
+- [Trust and Privacy Model](docs/TRUST_AND_PRIVACY.md)
 - [Example Feedback Report](docs/EXAMPLE_FEEDBACK_REPORT.md)
 - [Reference Cohort Registry](docs/REFERENCE_COHORT_REGISTRY.md)
 - [External nuScenes Validation Summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)

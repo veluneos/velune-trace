@@ -90,7 +90,7 @@ velune_report/shareable_anonymous_report.json
 
 Send to:
 
-skagusdn1998@gmail.com
+the agreed private validation channel
 
 Participants may receive:
 

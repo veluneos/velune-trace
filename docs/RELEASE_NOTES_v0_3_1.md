@@ -26,7 +26,7 @@ Raw MCAP files are not required for partner submission.
 
 Added a shareable anonymous report path for the Velune Validation Partner Program.
 
-Participants may submit only:
+For direct validation engagements, participants may share only:
 
     velune_report/shareable_anonymous_report.json
 
