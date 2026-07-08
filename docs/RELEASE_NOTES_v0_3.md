@@ -98,6 +98,8 @@ The following commands remain available for advanced users:
 - windowed-verify
 - evidence-window
 
+The CLI help now also presents validation-report as the first example.
+
 For first-time evaluation, use validation-report first.
 
 ## Boundary
@@ -122,4 +124,4 @@ Engineers determine cause.
 
 ## Git Tag
 
-    v0.3.2
+    v0.3.3
