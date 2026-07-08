@@ -1,22 +1,48 @@
 # Velune Trace
 
+Evidence-window extraction engine for large robotics MCAP / ROS2 runtime logs.
+
+Stop replaying the entire log.
+
+Start from the evidence windows worth reviewing first.
+
+Velune Trace helps engineers reduce large robotics logs into a small set of reproducible evidence windows.
+
+It runs locally.
+
+Raw MCAP files do not need to leave your environment.
+
+Velune does not determine root cause, assign fault, assign liability, or make safety-risk judgments.
+
+Engineers determine cause.
+
+---
+
+## Engine Proof: Large-Log Evidence Extraction
+
+Velune Trace has been validated on a large robotics log benchmark.
+
+- Input size: 10.7 GB
+- Indexed events: 9,237,885
+- Rows scanned for evidence extraction: 161
+- Related events returned: 17
+- Evidence-chain retrieval after indexing: approximately 0.002 seconds
+- Initial index build: approximately 276 seconds
+- Incremental append validation: 10,000 events in approximately 0.57 seconds
+
+The point is not to replay everything.
+
+The point is to reduce the investigation scope to the evidence windows worth reviewing first.
+
+---
+
 ## 3-Minute Validation Partner Quick Start
 
-Run Velune locally on your MCAP.
-
-Find the evidence windows worth reviewing first.
-
-Keep raw logs inside your own environment.
-
-Generate one anonymous report.
-
-Send only that report to the Validation Partner Program.
-
-Receive evidence-based feedback when a relevant reference cohort is available.
-
-### Step 1. Run the sample
+### Step 1. Create the sample MCAP
 
     python3 tools/create_sample_mcap.py
+
+### Step 2. Run Velune on the sample
 
     ./bin/velune validation-report examples/sample.mcap \
       --export-dir velune_report \
@@ -24,7 +50,7 @@ Receive evidence-based feedback when a relevant reference cohort is available.
       --top 5 \
       --allowed-lateness-sec 2
 
-### Step 2. Run your own MCAP
+### Step 3. Run Velune on your own MCAP
 
     ./bin/velune validation-report your_log.mcap \
       --export-dir velune_report \
@@ -32,7 +58,18 @@ Receive evidence-based feedback when a relevant reference cohort is available.
       --top 5 \
       --allowed-lateness-sec 2
 
-### Step 3. Send one anonymous report
+### Step 4. Review the local report
+
+Velune creates:
+
+    velune_report/
+    ├── summary.md
+    ├── shareable_anonymous_report.json
+    ├── topic_profile.json
+    ├── evidence_windows.json
+    └── SCHEMA.md
+
+### Step 5. Optional Validation Partner submission
 
 Send only:
 
@@ -52,31 +89,41 @@ Example feedback report:
 
     docs/EXAMPLE_FEEDBACK_REPORT.md
 
-Boundary:
+Reference cohort policy:
 
-Velune reports observable timing evidence and evidence windows worth reviewing first.
+    docs/REFERENCE_COHORT_REGISTRY.md
 
-Velune does not infer root cause, assign fault, or make safety, liability, or risk determinations.
+---
+
+## What You Get
+
+Velune Trace produces local evidence artifacts:
+
+- `summary.md` — human-readable timing evidence summary
+- `evidence_windows.json` — ranked evidence windows
+- `topic_profile.json` — topic-level timing profile
+- `shareable_anonymous_report.json` — optional anonymous report for the Validation Partner Program
+- `SCHEMA.md` — report schema description
+
+The shareable report is designed to avoid raw sensor payloads.
+
+---
+
+## What Velune Does Not Do
+
+Velune does not perform root-cause analysis.
+
+Velune does not assign fault.
+
+Velune does not assign liability.
+
+Velune does not make safety-risk determinations.
+
+Velune reports observable timing evidence.
 
 Engineers determine cause.
 
 ---
-
-
-Find the events.  
-Engineers find the cause.
-
-Velune Trace is an evidence-window extraction engine for large robotics logs.
-
-It helps engineers move from large ROS2 / MCAP runtime logs to a small set of reproducible evidence windows.
-
-Velune Trace is part of the broader VeluneOS evidence architecture.
-
-Velune does not perform root-cause analysis.  
-Velune does not assign fault.  
-Velune does not assign liability.
-
-Velune helps engineers find where to look first.
 
 ## Start Here
 
