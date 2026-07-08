@@ -167,116 +167,84 @@ Instead of starting from an entire log corpus, engineers start from ranked evide
 
 Without Velune
 
-~~~text
-400GB MCAP
-↓
-Manual replay
-↓
-Topic hopping
-↓
-Timestamp hunting
-↓
-Investigation
-~~~
+    400GB MCAP
+    ↓
+    Manual replay
+    ↓
+    Topic hopping
+    ↓
+    Timestamp hunting
+    ↓
+    Investigation
 
 With Velune
 
-~~~text
-400GB MCAP
-↓
-windowed-verify
-↓
-Top evidence windows
-↓
-evidence-window
-↓
-Investigation
-~~~
+    400GB MCAP
+    ↓
+    validation-report
+    ↓
+    Ranked evidence windows
+    ↓
+    Local evidence artifacts
+    ↓
+    Engineer investigation
 
-## Try the Included Sample
+The primary evaluation path is:
 
-Generate a small sample MCAP:
+    ./bin/velune validation-report your_log.mcap \
+      --export-dir velune_report \
+      --window-sec 1 \
+      --top 5 \
+      --allowed-lateness-sec 2
 
-~~~bash
-python3 tools/create_sample_mcap.py
-~~~
+This produces:
 
-Inspect it:
+    velune_report/
+    ├── summary.md
+    ├── shareable_anonymous_report.json
+    ├── topic_profile.json
+    ├── evidence_windows.json
+    └── SCHEMA.md
 
-~~~bash
-./bin/velune inspect examples/sample.mcap
-~~~
+---
 
-Rank timing windows:
+## Advanced CLI Commands
 
-~~~bash
-./bin/velune windowed-verify \
-  examples/sample.mcap \
-  --topic /lidar_top \
-  --window-sec 1 \
-  --top 5
-~~~
+The commands below are lower-level tools for engineers who want to inspect, profile, or extract specific evidence windows manually.
 
-## Try It On Your Own MCAP
+For first-time evaluation, start with `validation-report`.
 
-~~~bash
-./bin/velune inspect my_log.mcap
+### Inspect an MCAP file
 
-./bin/velune windowed-verify \
-  my_log.mcap \
-  --topic /lidar_top \
-  --window-sec 1 \
-  --top 5
-~~~
+    ./bin/velune inspect examples/sample.mcap
 
-Expected output:
+### Profile topic timing
 
-- ranked evidence windows
-- timing gaps
-- count ratios
-- reproducible evidence JSON
+    ./bin/velune profile incident.mcap \
+      --start-sec 1535489296.047916889 \
+      --end-sec 1535489315.948405981 \
+      --sort max_gap
 
-## 30-Second MCAP Example
+### Rank timing windows for a specific topic
 
-Inspect an MCAP file:
+    ./bin/velune windowed-verify \
+      incident.mcap \
+      --topic /lidar_top \
+      --window-sec 1 \
+      --top 5 \
+      --export-json windowed_report.json
 
-~~~bash
-./bin/velune inspect incident.mcap
-~~~
+### Extract a reproducible evidence window
 
-Profile topic timing:
+    ./bin/velune evidence-window \
+      incident.mcap \
+      --topic /lidar_top \
+      --start-sec 1535489307.047916889 \
+      --end-sec 1535489308.047916889 \
+      --expected-count 20 \
+      --export-json evidence_window.json
 
-~~~bash
-./bin/velune profile incident.mcap \
-  --start-sec 1535489296.047916889 \
-  --end-sec 1535489315.948405981 \
-  --sort max_gap
-~~~
-
-Rank suspicious timing windows:
-
-~~~bash
-./bin/velune windowed-verify \
-  incident.mcap \
-  --topic /lidar_top \
-  --window-sec 1 \
-  --top 5 \
-  --export-json windowed_report.json
-~~~
-
-Extract a reproducible evidence window:
-
-~~~bash
-./bin/velune evidence-window \
-  incident.mcap \
-  --topic /lidar_top \
-  --start-sec 1535489307.047916889 \
-  --end-sec 1535489308.047916889 \
-  --expected-count 20 \
-  --export-json evidence_window.json
-~~~
-
-Typical outputs include:
+Typical advanced outputs include:
 
 - ranked evidence windows
 - observed count
@@ -288,6 +256,7 @@ Typical outputs include:
 - reproducible JSON evidence
 
 ---
+
 
 ## How Velune Relates to Foxglove
 
