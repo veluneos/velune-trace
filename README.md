@@ -18,6 +18,32 @@ Engineers determine cause.
 
 ---
 
+## Where Velune Fits
+
+Velune does not replace Foxglove or existing MCAP viewers.
+
+Velune is a pre-viewer triage layer: it ranks candidate timing evidence windows first, then engineers can inspect those time ranges in Foxglove or their existing tools.
+
+In short:
+
+    Velune tells you where to start.
+    Foxglove shows you what happened there.
+
+## Performance Model
+
+Velune separates first-pass scanning/indexing from post-index evidence retrieval.
+
+In our benchmark, Velune built an index for a 10.7GB / ~9.2M-event log in about 4 minutes 36 seconds. After indexing, a related evidence-chain query took about 0.002 seconds.
+
+The 0.002 second figure is not the first full scan time for a raw MCAP file. Initial scan/indexing time and post-index retrieval time are measured separately.
+
+## Review Depth
+
+The quickstart uses `--top 5` by default.
+
+For a broader investigation view, users can set `--top 10`, `--top 15`, `--top 30`, or any review depth that makes sense for their workflow.
+
+
 ## Engine Proof: Large-Log Evidence Extraction
 
 Velune Trace has been validated on a large robotics log benchmark.

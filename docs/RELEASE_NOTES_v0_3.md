@@ -114,6 +114,25 @@ The CLI help now also presents validation-report as the first example.
 
 For first-time evaluation, use validation-report first.
 
+## README Positioning Clarification
+
+The README now clarifies that Velune Trace is not a Foxglove replacement.
+
+Velune is positioned as a pre-viewer triage layer: it ranks candidate timing evidence windows first, then engineers can inspect those time ranges in Foxglove or their existing tools.
+
+The README also clarifies the performance model:
+
+- first-pass scanning/indexing time
+- post-index evidence retrieval time
+
+The benchmark numbers are described as:
+
+- 10.7GB / ~9.2M-event log indexed in about 4 minutes 36 seconds
+- related evidence-chain query after indexing in about 0.002 seconds
+
+The README also explains that `--top` can be adjusted beyond the default top 5, for example `--top 10`, `--top 15`, or `--top 30`.
+
+
 ## Boundary
 
 Velune Trace reports observable timing evidence.
@@ -136,4 +155,4 @@ Engineers determine cause.
 
 ## Git Tag
 
-    v0.3.5
+    v0.3.6
