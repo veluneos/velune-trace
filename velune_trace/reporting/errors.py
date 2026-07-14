@@ -12,10 +12,27 @@ class EvidenceBundleError(Exception):
         *,
         code: str | None = None,
         hint: str | None = None,
+        stage: str | None = None,
     ) -> None:
         super().__init__(message)
         self.code = code or self.default_code
         self.hint = hint
+        self.stage = stage
+
+    def attach_stage(self, stage: str) -> None:
+        """Attach orchestration-stage context without wrapping the error."""
+
+        if not isinstance(stage, str):
+            raise TypeError("stage must be a string")
+
+        if not stage or stage != stage.strip():
+            raise ValueError(
+                "stage must be a non-empty string without "
+                "surrounding whitespace"
+            )
+
+        if self.stage is None:
+            self.stage = stage
 
     def cli_lines(self) -> list[str]:
         """Return user-facing CLI lines without a traceback."""
@@ -24,6 +41,9 @@ class EvidenceBundleError(Exception):
             f"[ERROR] {self}",
             f"[ERROR_CODE] {self.code}",
         ]
+
+        if self.stage:
+            lines.append(f"[STAGE] {self.stage}")
 
         if self.hint:
             lines.append(f"[HINT] {self.hint}")
