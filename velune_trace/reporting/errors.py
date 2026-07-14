@@ -41,3 +41,9 @@ class BundleAssemblyError(EvidenceBundleError):
     """Raised when Bundle identity or manifest assembly fails."""
 
     default_code = "VELUNE_BUNDLE_ASSEMBLY_FAILED"
+
+
+class BundleWriteError(EvidenceBundleError):
+    """Raised when a Bundle manifest cannot be written safely."""
+
+    default_code = "VELUNE_BUNDLE_WRITE_FAILED"

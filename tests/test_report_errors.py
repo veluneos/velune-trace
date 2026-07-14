@@ -3,6 +3,7 @@ import unittest
 from velune_trace.reporting.errors import (
     ArtifactDefinitionError,
     BundleAssemblyError,
+    BundleWriteError,
     EvidenceBundleError,
 )
 
@@ -64,6 +65,16 @@ class EvidenceBundleErrorTests(unittest.TestCase):
         self.assertEqual(
             error.code,
             "VELUNE_BUNDLE_ASSEMBLY_FAILED",
+        )
+
+    def test_write_error_uses_domain_default_code(self):
+        error = BundleWriteError(
+            "Bundle write failed"
+        )
+
+        self.assertEqual(
+            error.code,
+            "VELUNE_BUNDLE_WRITE_FAILED",
         )
 
 
