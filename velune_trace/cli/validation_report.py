@@ -8,6 +8,8 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 from velune_trace.adapters.mcap_reader import read_messages
+from velune_trace.reporting.errors import EvidenceBundleError
+from velune_trace.reporting.finalizer import finalize_private_report_bundle
 
 
 SCHEMA_NAME = "velune.anonymous_validation_report"
@@ -494,6 +496,80 @@ Velune Trace does not calculate liability.
 
     (export_dir / "summary.md").write_text("\n".join(lines), encoding="utf-8")
 
+    try:
+        finalized_bundle = finalize_private_report_bundle(
+            bundle_dir=export_dir,
+            generated_at=anonymous_report["generated_at"],
+            source={
+                "format": "mcap",
+                **anonymous_report["source"],
+            },
+            extraction={
+                "semantics": SEMANTICS,
+                **anonymous_report["runtime"],
+            },
+            identity_extraction={
+                "mode": "bounded_streaming_aggregation",
+                "timestamp_unit": "nanoseconds_int",
+                "window_ns": window_ns,
+                "allowed_lateness_ns": allowed_lateness_ns,
+                "top": args.top,
+                "semantics": SEMANTICS,
+            },
+            artifact_definitions=[
+                {
+                    "path": "summary.md",
+                    "role": "derived_human_readable",
+                    "media_type": "text/markdown",
+                    "source_of_truth": False,
+                },
+                {
+                    "path": "topic_profile.json",
+                    "role": "core_machine_readable",
+                    "media_type": "application/json",
+                    "source_of_truth": True,
+                },
+                {
+                    "path": "evidence_windows.json",
+                    "role": "core_machine_readable",
+                    "media_type": "application/json",
+                    "source_of_truth": True,
+                },
+                {
+                    "path": "shareable_anonymous_report.json",
+                    "role": "shareable_machine_readable",
+                    "media_type": "application/json",
+                    "source_of_truth": True,
+                },
+                {
+                    "path": "SCHEMA.md",
+                    "role": "schema_documentation",
+                    "media_type": "text/markdown",
+                    "source_of_truth": False,
+                },
+            ],
+            overwrite_manifest=True,
+        )
+    except EvidenceBundleError as e:
+        print(
+            "[ERROR] Evidence Report Bundle finalization failed.",
+            file=sys.stderr,
+        )
+        print(f"[ERROR] Detail: {e}", file=sys.stderr)
+
+        error_code = getattr(e, "code", None)
+        error_stage = getattr(e, "stage", None)
+        error_hint = getattr(e, "hint", None)
+
+        if error_code:
+            print(f"[ERROR] Code: {error_code}", file=sys.stderr)
+        if error_stage:
+            print(f"[ERROR] Stage: {error_stage}", file=sys.stderr)
+        if error_hint:
+            print(f"[HINT] {error_hint}", file=sys.stderr)
+
+        return 1
+
     print("VELUNE VALIDATION REPORT")
     print("MODE=bounded_streaming_aggregation")
     print(f"INPUT={input_path}")
@@ -509,6 +585,8 @@ Velune Trace does not calculate liability.
     print(f"- {export_dir / 'topic_profile.json'}")
     print(f"- {export_dir / 'evidence_windows.json'}")
     print(f"- {export_dir / 'SCHEMA.md'}")
+    print(f"- {finalized_bundle.manifest_path}")
+    print(f"REPORT_BUNDLE_ID={finalized_bundle.report_bundle_id}")
     print("")
     print("LOCAL_ONLY_NOTICE=No telemetry or automatic upload was performed.")
     print("LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report/summary.md first.")
