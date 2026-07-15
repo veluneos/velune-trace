@@ -16,12 +16,32 @@ It only reads observable MCAP metadata.
 """
 
 import time
+import io
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Any
 
 from mcap.reader import make_reader
 from mcap.exceptions import McapError
+from mcap.records import DataEnd, Footer
+from mcap.stream_reader import StreamReader
+
+
+# Velune Trace currently supports the MCAP0 terminal layout.
+# These constants describe the versioned binary record layout,
+# not private size constants from the Python library.
+_MCAP0_MAGIC = b"\x89MCAP0\r\n"
+_MCAP_RECORD_HEADER_SIZE = 1 + 8
+_MCAP_FOOTER_PAYLOAD_SIZE = 8 + 8 + 4
+_MCAP_FOOTER_RECORD_SIZE = (
+    _MCAP_RECORD_HEADER_SIZE
+    + _MCAP_FOOTER_PAYLOAD_SIZE
+)
+_MCAP_DATA_END_PAYLOAD_SIZE = 4
+_MCAP_DATA_END_RECORD_SIZE = (
+    _MCAP_RECORD_HEADER_SIZE
+    + _MCAP_DATA_END_PAYLOAD_SIZE
+)
 
 
 class VeluneError(Exception):
@@ -52,6 +72,28 @@ class McapInspectResult:
     has_summary: bool
 
 
+@dataclass(frozen=True)
+class McapTerminalMetadata:
+    """Values recorded in terminal MCAP records.
+
+    Recorded CRC values do not prove source authenticity,
+    payload correctness, or logical message integrity.
+    """
+
+    summary_start: int
+    summary_offset_start: int
+    summary_crc: int
+    data_section_crc: int
+
+    @property
+    def summary_crc_recorded(self) -> bool:
+        return self.summary_crc != 0
+
+    @property
+    def data_section_crc_recorded(self) -> bool:
+        return self.data_section_crc != 0
+
+
 class VeluneMcapReader:
     """
     MCAP metadata reader.
@@ -65,6 +107,155 @@ class VeluneMcapReader:
         self.path = Path(path)
         self.validate_crcs = validate_crcs
 
+
+    def inspect_terminal_metadata(
+        self,
+    ) -> McapTerminalMetadata:
+        """Read recorded Footer and DataEnd values with bounded seeks.
+
+        This requires a seekable file interface and is optimized for
+        local files. NFS, SMB, and other network-mounted files may work,
+        but their latency and failure behavior are not yet benchmarked.
+
+        This method reads CRC fields recorded by the MCAP writer. It
+        does not validate those CRCs, inspect payload correctness,
+        establish source authenticity, or prove logical integrity.
+        """
+
+        if not self.path.exists():
+            raise VeluneFileNotFoundError(
+                f"File not found: {self.path}"
+            )
+
+        if not self.path.is_file():
+            raise VeluneInvalidMcapError(
+                f"Path is not a file: {self.path}"
+            )
+
+        try:
+            with self.path.open("rb") as stream:
+                if not stream.seekable():
+                    raise McapError(
+                        "terminal metadata inspection requires "
+                        "a seekable file"
+                    )
+
+                stream.seek(0, io.SEEK_END)
+                file_size = stream.tell()
+
+                minimum_size = (
+                    len(_MCAP0_MAGIC)
+                    + _MCAP_DATA_END_RECORD_SIZE
+                    + _MCAP_FOOTER_RECORD_SIZE
+                    + len(_MCAP0_MAGIC)
+                )
+
+                if file_size < minimum_size:
+                    raise McapError(
+                        "file is too small to contain terminal "
+                        "MCAP0 records"
+                    )
+
+                stream.seek(
+                    -len(_MCAP0_MAGIC),
+                    io.SEEK_END,
+                )
+                trailing_magic = stream.read(
+                    len(_MCAP0_MAGIC)
+                )
+
+                if trailing_magic != _MCAP0_MAGIC:
+                    raise McapError(
+                        "invalid or unsupported trailing "
+                        "MCAP0 magic"
+                    )
+
+                footer_offset = (
+                    file_size
+                    - len(_MCAP0_MAGIC)
+                    - _MCAP_FOOTER_RECORD_SIZE
+                )
+                stream.seek(footer_offset, io.SEEK_SET)
+
+                footer = next(
+                    StreamReader(
+                        stream,
+                        skip_magic=True,
+                    ).records
+                )
+
+                if not isinstance(footer, Footer):
+                    raise McapError(
+                        "expected Footer at the end of the "
+                        f"MCAP file, found "
+                        f"{type(footer).__name__}"
+                    )
+
+                if footer.summary_start > 0:
+                    data_end_offset = (
+                        footer.summary_start
+                        - _MCAP_DATA_END_RECORD_SIZE
+                    )
+                else:
+                    data_end_offset = (
+                        footer_offset
+                        - _MCAP_DATA_END_RECORD_SIZE
+                    )
+
+                maximum_data_end_offset = (
+                    footer_offset
+                    - _MCAP_DATA_END_RECORD_SIZE
+                )
+
+                if not (
+                    len(_MCAP0_MAGIC)
+                    <= data_end_offset
+                    <= maximum_data_end_offset
+                ):
+                    raise McapError(
+                        "invalid DataEnd offset derived from "
+                        "terminal MCAP0 records"
+                    )
+
+                stream.seek(data_end_offset, io.SEEK_SET)
+
+                data_end = next(
+                    StreamReader(
+                        stream,
+                        skip_magic=True,
+                    ).records
+                )
+
+                if not isinstance(data_end, DataEnd):
+                    raise McapError(
+                        "expected DataEnd before the MCAP "
+                        f"summary, found "
+                        f"{type(data_end).__name__}"
+                    )
+
+        except McapError as exc:
+            raise VeluneInvalidMcapError(
+                f"MCAP terminal record parse error: {exc}"
+            ) from exc
+        except StopIteration as exc:
+            raise VeluneInvalidMcapError(
+                "MCAP terminal record is missing or incomplete"
+            ) from exc
+        except (OSError, ValueError) as exc:
+            raise VeluneInvalidMcapError(
+                f"File seek/read error: {exc}"
+            ) from exc
+
+        return McapTerminalMetadata(
+            summary_start=int(footer.summary_start),
+            summary_offset_start=int(
+                footer.summary_offset_start
+            ),
+            summary_crc=int(footer.summary_crc),
+            data_section_crc=int(
+                data_end.data_section_crc
+            ),
+        )
     def inspect(self) -> McapInspectResult:
         if not self.path.exists():
             raise VeluneFileNotFoundError(f"File not found: {self.path}")
