@@ -1144,14 +1144,17 @@ def build_bundle_comparison(
             EXCLUDED_FROM_CHANGE_EVALUATION
         ),
         "judgment_boundary": {
+            "root_cause_conclusion": False,
             "cause_inference": False,
+            "fault_assignment": False,
+            "liability_calculation": False,
+            "safety_certification": False,
+            "safety_classification": False,
             "severity_judgment": False,
             "normality_judgment": False,
             "superiority_judgment": False,
             "regression_judgment": False,
-            "fault_assignment": False,
-            "liability_calculation": False,
-            "safety_classification": False,
-            "automatic_improvement_label": False,
+            "automatic_regression_judgment": False,
+            "automatic_improvement_judgment": False,
         },
     }
