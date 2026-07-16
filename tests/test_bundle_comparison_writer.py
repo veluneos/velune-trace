@@ -485,6 +485,205 @@ class BundleComparisonWriterTests(unittest.TestCase):
             ):
                 result.output_dir = Path(root)
 
+    def test_markdown_code_handles_backticks_and_controls(
+        self,
+    ):
+        from velune_trace.comparison.writer import (
+            _markdown_code,
+        )
+
+        self.assertEqual(
+            _markdown_code("topic`name"),
+            "``topic`name``",
+        )
+        self.assertEqual(
+            _markdown_code("topic``name"),
+            "```topic``name```",
+        )
+        self.assertEqual(
+            _markdown_code("topic```name"),
+            "````topic```name````",
+        )
+        self.assertEqual(
+            _markdown_code("`topic`"),
+            "`` `topic` ``",
+        )
+        self.assertEqual(
+            _markdown_code("topic\nname"),
+            "`topic name`",
+        )
+        self.assertEqual(
+            _markdown_code("topic\rname"),
+            "`topic name`",
+        )
+        self.assertEqual(
+            _markdown_code("topic\tname"),
+            "`topic name`",
+        )
+        self.assertEqual(
+            _markdown_code("topic\u2028name"),
+            "`topic name`",
+        )
+        self.assertEqual(
+            _markdown_code("topic\x01name"),
+            "`topic�name`",
+        )
+        self.assertEqual(
+            _markdown_code("topic\\nname"),
+            "`topic\\nname`",
+        )
+
+
+    def test_markdown_caps_details_without_ranking(
+        self,
+    ):
+        from velune_trace.comparison.presentation_policy import (
+            MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT,
+            MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT,
+        )
+
+        report = self.report()
+        topic_count = (
+            MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT
+            + 5
+        )
+        topics = [
+            f"/topic_{index:03d}"
+            for index in range(topic_count)
+        ]
+        template = report[
+            "topic_comparisons"
+        ][0]
+
+        report["topic_comparisons"] = [
+            {
+                **template,
+                "topic": topic,
+                "changed_fields": [
+                    "evidence_summary.max_gap_ns",
+                    "profile.count",
+                ],
+            }
+            for topic in topics
+        ]
+        report["topic_set"][
+            "common_topics"
+        ] = topics
+        report["topic_set"][
+            "reference_only_topics"
+        ] = []
+        report["topic_set"][
+            "target_only_topics"
+        ] = []
+        report["summary"][
+            "reference_topic_count"
+        ] = topic_count
+        report["summary"][
+            "target_topic_count"
+        ] = topic_count
+        report["summary"][
+            "common_topic_count"
+        ] = topic_count
+        report["summary"][
+            "reference_only_topic_count"
+        ] = 0
+        report["summary"][
+            "target_only_topic_count"
+        ] = 0
+        report["summary"][
+            "changed_profile_topic_count"
+        ] = topic_count
+        report["summary"][
+            "identical_profile_topic_count"
+        ] = 0
+        report["summary"][
+            "changed_evidence_summary_topic_count"
+        ] = topic_count
+        report["summary"][
+            "identical_evidence_summary_topic_count"
+        ] = 0
+
+        rendered = render_comparison_summary(
+            report
+        )
+
+        self.assertIn(
+            (
+                "- Detailed changed topics shown: "
+                f"{MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT} "
+                f"of {topic_count}"
+            ),
+            rendered,
+        )
+        self.assertIn(
+            (
+                "Lexicographic topic order. "
+                "This does not imply importance, "
+                "severity, or priority."
+            ),
+            rendered,
+        )
+        self.assertIn(
+            "### `/topic_000`",
+            rendered,
+        )
+        self.assertIn(
+            (
+                "### "
+                f"`/topic_{MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT - 1:03d}`"
+            ),
+            rendered,
+        )
+        self.assertNotIn(
+            (
+                "### "
+                f"`/topic_{MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT:03d}`"
+            ),
+            rendered,
+        )
+        self.assertIn(
+            (
+                f"{topic_count - MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT} "
+                "additional changed topics"
+            ),
+            rendered,
+        )
+        self.assertIn(
+            (
+                "Detailed Markdown review omits "
+                f"{topic_count - MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT} "
+                "changed topics."
+            ),
+            rendered,
+        )
+        self.assertIn(
+            "comparison_report.json",
+            rendered,
+        )
+
+    def test_presentation_policy_is_centralized(
+        self,
+    ):
+        from velune_trace.comparison.presentation_policy import (
+            HUMAN_JUDGMENT_BOUNDARY_STATEMENT as policy_statement,
+            MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT,
+            MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT,
+            PRESENTATION_POLICY_VERSION,
+        )
+
+        self.assertEqual(
+            PRESENTATION_POLICY_VERSION,
+            "0.1.0",
+        )
+        self.assertEqual(
+            HUMAN_JUDGMENT_BOUNDARY_STATEMENT,
+            policy_statement,
+        )
+        self.assertGreater(
+            MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT,
+            MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

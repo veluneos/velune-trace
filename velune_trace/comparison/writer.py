@@ -17,7 +17,13 @@ from velune_trace.comparison.engine import (
     COMPARISON_VISIBILITY,
 )
 from velune_trace.reporting.errors import EvidenceBundleError
-
+from velune_trace.comparison.presentation_policy import (
+    HUMAN_COMPLETE_DETAIL_NOTICE,
+    HUMAN_JUDGMENT_BOUNDARY_DETAIL,
+    HUMAN_JUDGMENT_BOUNDARY_STATEMENT,
+    MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT,
+    MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT,
+)
 
 COMPARISON_REPORT_FILENAME = "comparison_report.json"
 COMPARISON_SUMMARY_FILENAME = "comparison_summary.md"
@@ -25,10 +31,6 @@ COMPARISON_SUMMARY_FILENAME = "comparison_summary.md"
 COMPARISON_DIRECTORY_MODE = 0o700
 COMPARISON_FILE_MODE = 0o600
 
-HUMAN_JUDGMENT_BOUNDARY_STATEMENT = (
-    "Velune reports observable differences between the Reference Bundle "
-    "and Target Bundle. Engineers determine their meaning and cause."
-)
 
 REQUIRED_TOP_LEVEL_FIELDS = frozenset({
     "schema_name",
@@ -637,11 +639,59 @@ def _serialize_report(
 
 
 def _markdown_code(value: Any) -> str:
-    text = str(value)
-    text = text.replace("\r", " ")
-    text = text.replace("\n", " ")
-    text = text.replace("`", "\\`")
-    return f"`{text}`"
+    """Render one value as a safe deterministic Markdown code span."""
+
+    raw_text = str(value)
+    normalized_characters: list[str] = []
+
+    for character in raw_text:
+        codepoint = ord(character)
+
+        if character in {
+            "\r",
+            "\n",
+            "\t",
+            "\u2028",
+            "\u2029",
+        }:
+            normalized_characters.append(" ")
+        elif codepoint < 32 or codepoint == 127:
+            normalized_characters.append("\uFFFD")
+        else:
+            normalized_characters.append(character)
+
+    text = "".join(normalized_characters)
+
+    longest_backtick_run = 0
+    current_backtick_run = 0
+
+    for character in text:
+        if character == "`":
+            current_backtick_run += 1
+            longest_backtick_run = max(
+                longest_backtick_run,
+                current_backtick_run,
+            )
+        else:
+            current_backtick_run = 0
+
+    delimiter = "`" * (
+        longest_backtick_run + 1
+    )
+
+    needs_padding = (
+        text.startswith(("`", " "))
+        or text.endswith(("`", " "))
+    )
+
+    if needs_padding:
+        return f"{delimiter} {text} {delimiter}"
+
+    return f"{delimiter}{text}{delimiter}"
+
+
+
+
 
 
 def _markdown_topic_list(
@@ -683,6 +733,82 @@ def render_comparison_summary(
                 "the comparison engine."
             ),
         )
+
+    topic_comparisons = report[
+        "topic_comparisons"
+    ]
+    changed_topic_comparisons = [
+        comparison
+        for comparison in topic_comparisons
+        if comparison["changed_fields"]
+    ]
+    unchanged_common_topic_count = (
+        len(topic_comparisons)
+        - len(changed_topic_comparisons)
+    )
+
+    preview_topic_comparisons = (
+        changed_topic_comparisons[
+            :MARKDOWN_CHANGED_TOPIC_PREVIEW_LIMIT
+        ]
+    )
+    detailed_topic_comparisons = (
+        changed_topic_comparisons[
+            :MARKDOWN_CHANGED_TOPIC_DETAIL_LIMIT
+        ]
+    )
+
+    preferred_group_order = (
+        "profile",
+        "profile_context",
+        "evidence_summary",
+    )
+    group_labels = {
+        "profile": "Profile fields",
+        "profile_context": (
+            "Profile-context fields"
+        ),
+        "evidence_summary": (
+            "Evidence-summary fields"
+        ),
+        "other": "Other fields",
+    }
+
+    field_group_counts: dict[str, int] = {}
+
+    for comparison in changed_topic_comparisons:
+        for field_name in comparison[
+            "changed_fields"
+        ]:
+            if "." in field_name:
+                namespace = field_name.split(
+                    ".",
+                    1,
+                )[0]
+            else:
+                namespace = "other"
+
+            field_group_counts[namespace] = (
+                field_group_counts.get(
+                    namespace,
+                    0,
+                )
+                + 1
+            )
+
+    ordered_field_groups = [
+        namespace
+        for namespace in preferred_group_order
+        if namespace in field_group_counts
+    ]
+    ordered_field_groups.extend(
+        sorted(
+            namespace
+            for namespace in field_group_counts
+            if namespace
+            not in preferred_group_order
+        )
+    )
 
     lines = [
         "# Velune Core Bundle Comparison",
@@ -785,53 +911,179 @@ def render_comparison_summary(
             f"{summary['identical_evidence_summary_topic_count']}"
         ),
         "",
-        "## Common Topic Review Points",
+        "## Common Topic Review Index",
+        "",
+        (
+            "- Changed common topic count: "
+            f"{len(changed_topic_comparisons)}"
+        ),
+        (
+            "- Unchanged common topic count: "
+            f"{unchanged_common_topic_count}"
+        ),
+        (
+            "- Detailed changed topics shown: "
+            f"{len(detailed_topic_comparisons)} of "
+            f"{len(changed_topic_comparisons)}"
+        ),
+        (
+            "- Ordering: Lexicographic topic order. "
+            "This does not imply importance, severity, "
+            "or priority."
+        ),
+        (
+            "- "
+            f"{HUMAN_COMPLETE_DETAIL_NOTICE}"
+        ),
         "",
     ]
 
-    topic_comparisons = report[
-        "topic_comparisons"
-    ]
-
-    if not topic_comparisons:
-        lines.append("No common topics were available.")
-        lines.append("")
+    if not changed_topic_comparisons:
+        lines.extend([
+            "No changed common topics were observed.",
+            "",
+        ])
     else:
-        for comparison in topic_comparisons:
+        lines.extend([
+            "### Changed Topic Preview",
+            "",
+        ])
+
+        for comparison in preview_topic_comparisons:
+            lines.append(
+                f"- {_markdown_code(comparison['topic'])}"
+            )
+
+        preview_omitted_count = (
+            len(changed_topic_comparisons)
+            - len(preview_topic_comparisons)
+        )
+
+        if preview_omitted_count > 0:
+            lines.append(
+                f"- {preview_omitted_count} additional "
+                "changed topics are available in "
+                f"{_markdown_code(COMPARISON_REPORT_FILENAME)}."
+            )
+
+        lines.extend([
+            "",
+            "### Changed Field Groups",
+            "",
+        ])
+
+        for namespace in ordered_field_groups:
+            label = group_labels.get(
+                namespace,
+                (
+                    namespace.replace(
+                        "_",
+                        " ",
+                    ).title()
+                    + " fields"
+                ),
+            )
+            lines.append(
+                f"- {label} across changed topic records: "
+                f"{field_group_counts[namespace]}"
+            )
+
+        lines.extend([
+            "",
+            "## Detailed Changed Topics",
+            "",
+        ])
+
+        for comparison in detailed_topic_comparisons:
             lines.append(
                 f"### {_markdown_code(comparison['topic'])}"
             )
             lines.append("")
 
-            changed_fields = comparison[
-                "changed_fields"
-            ]
+            grouped_fields: dict[
+                str,
+                list[str],
+            ] = {}
 
-            if changed_fields:
-                lines.append("- Changed fields:")
-                lines.extend(
-                    f"  - {_markdown_code(field_name)}"
-                    for field_name in changed_fields
+            for field_name in comparison[
+                "changed_fields"
+            ]:
+                if "." in field_name:
+                    namespace = field_name.split(
+                        ".",
+                        1,
+                    )[0]
+                else:
+                    namespace = "other"
+
+                grouped_fields.setdefault(
+                    namespace,
+                    [],
+                ).append(field_name)
+
+            ordered_groups = [
+                namespace
+                for namespace in preferred_group_order
+                if namespace in grouped_fields
+            ]
+            ordered_groups.extend(
+                sorted(
+                    namespace
+                    for namespace in grouped_fields
+                    if namespace
+                    not in preferred_group_order
                 )
-            else:
+            )
+
+            for namespace in ordered_groups:
+                fields = grouped_fields[namespace]
+                label = group_labels.get(
+                    namespace,
+                    (
+                        namespace.replace(
+                            "_",
+                            " ",
+                        ).title()
+                        + " fields"
+                    ),
+                )
+                rendered_fields = ", ".join(
+                    _markdown_code(field_name)
+                    for field_name in fields
+                )
+
                 lines.append(
-                    "- Changed fields: None observed"
+                    f"- {label} ({len(fields)}): "
+                    f"{rendered_fields}"
                 )
 
             lines.append("")
 
+        detailed_omitted_count = (
+            len(changed_topic_comparisons)
+            - len(detailed_topic_comparisons)
+        )
+
+        if detailed_omitted_count > 0:
+            lines.extend([
+                (
+                    f"Detailed Markdown review omits "
+                    f"{detailed_omitted_count} changed topics."
+                ),
+                HUMAN_COMPLETE_DETAIL_NOTICE,
+                "",
+            ])
+
     lines.extend([
         "## Judgment Boundary",
         "",
-        (
-            "This report does not determine root cause, "
-            "fault, liability, safety, severity, normality, "
-            "superiority, regression, or improvement."
-        ),
+        HUMAN_JUDGMENT_BOUNDARY_DETAIL,
         "",
     ])
 
     return "\n".join(lines)
+
+
 
 
 def _fsync_directory(directory: Path) -> None:
