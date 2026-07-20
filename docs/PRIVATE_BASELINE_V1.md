@@ -2,7 +2,7 @@
 
 ## Contract Metadata
 
-- Contract status: `DRAFT_FOR_REVIEW`
+- Contract status: `FROZEN_FOR_IMPLEMENTATION`
 - Product phase: `PHASE_2_PRIVATE_BASELINE`
 - Contract scope: `PRIVATE_LOCAL_REFERENCE_SET_AND_TARGET_EVALUATION`
 - Schema family version: `0.1.0`
@@ -383,11 +383,78 @@ The identifier must not encode:
 Private dimension values belong in the private revision record, not in
 the identifier.
 
-The exact canonical content-addressing algorithm is deferred until its
-canonicalization and migration behavior are independently specified
-and tested.
+Private Baseline identities are opaque random local identifiers.
 
-Private Baseline v1 must not invent an unvalidated hash identity scheme.
+Private Baseline v1 must not use content-addressed identity for:
+
+- `baseline_id`;
+- `baseline_revision_id`;
+- `evaluation_id`;
+- `review_record_id`.
+
+Content-addressed Bundle identity remains the responsibility of the
+existing Core Report Bundle contract.
+
+### Opaque Identifier Format
+
+Private Baseline v1 uses these exact formats:
+
+~~~text
+baseline_id          = vpb_<32 lowercase hexadecimal characters>
+baseline_revision_id = vpbr_<32 lowercase hexadecimal characters>
+evaluation_id        = vpbe_<32 lowercase hexadecimal characters>
+review_record_id     = vpbrr_<32 lowercase hexadecimal characters>
+~~~
+
+The 32 hexadecimal characters represent 16 bytes of cryptographically
+secure random data generated with the platform equivalent of:
+
+~~~python
+secrets.token_hex(16)
+~~~
+
+Identifiers must:
+
+- match their exact prefix and lowercase hexadecimal format;
+- contain no customer, robot, site, user, path, or timestamp data;
+- remain stable after successful installation;
+- be checked against the Registry and intended installation path before
+  use.
+
+### Identifier Collision Policy
+
+For each generated identifier:
+
+1. generate a candidate;
+2. check all corresponding Registry record IDs;
+3. check the intended local installation path;
+4. reject the candidate if either already exists;
+5. generate another candidate.
+
+Generation may be attempted at most 32 times.
+
+If no unused identifier is obtained after 32 attempts, the operation
+fails without installing or mutating Private Baseline state.
+
+Private Baseline v1 does not silently overwrite or reuse an existing
+identifier.
+
+### Reference Membership Identifier
+
+`membership_id` is revision-local and deterministic.
+
+After Reference memberships are sorted lexicographically by
+`report_bundle_id`, membership identifiers are assigned as:
+
+~~~text
+ref_0001
+ref_0002
+...
+ref_0032
+~~~
+
+A membership identifier has meaning only inside its immutable Baseline
+Revision.
 
 ## Baseline Revision Contract
 
@@ -547,7 +614,13 @@ Each Reference membership contains:
 
 ### Membership Rules
 
-A Baseline Revision must contain at least one Reference membership.
+A Baseline Revision must contain at least one and no more than 32
+Reference memberships.
+
+The Reference limit is a versioned v1 capacity boundary.
+
+Revision creation rejects a thirty-third Reference membership before
+any immutable record is installed.
 
 Reference memberships must be:
 
@@ -1204,10 +1277,10 @@ Private Baseline v1 defines four conceptual operations:
 3. evaluate one Target Bundle against one revision;
 4. append one human review record.
 
-Exact CLI command names are intentionally not frozen in this draft.
+The data contract and judgment boundary are frozen independently of the
+future CLI surface.
 
-The data contract and judgment boundary must be reviewed before the CLI
-surface is fixed.
+Exact CLI command names remain deferred until implementation packaging.
 
 ## Initial Acceptance Tests
 
@@ -1283,7 +1356,29 @@ Implementation is accepted only when tests prove:
     rejected;
 56. a review subject can have only one initial root record;
 57. every later review for that subject supersedes its unique current
-    terminal record.
+    terminal record;
+58. every opaque identifier matches its required prefix and 128-bit
+    lowercase hexadecimal format;
+59. identifier collision checks cover both the Registry and intended
+    installation path;
+60. identifier generation fails without mutation after 32 unsuccessful
+    collision attempts;
+61. membership identifiers are assigned deterministically after
+    Reference sorting;
+62. a Revision accepts 1 through 32 References and rejects a
+    thirty-third;
+63. Registry corruption or absence blocks all mutation without
+    automatic reconstruction;
+64. private text is NFC-normalized and validated under the field-specific
+    length and control-character policy;
+65. normalized dimension-key collisions are rejected;
+66. no separate review-summary artifact is created;
+67. immutable Baseline records do not require anchoring in v1;
+68. Evaluation Markdown uses the Private Baseline presentation policy;
+69. presentation truncation preserves complete information in the JSON
+    source of truth;
+70. existing atomic staging, synchronization, private-permission, and
+    no-overwrite guarantees remain required.
 
 ## Product Boundary
 
@@ -1328,25 +1423,212 @@ Find and organize the evidence.
 Engineers determine the meaning and cause.
 ~~~
 
-## Draft Review Questions
+## Frozen v1 Decisions
 
-Before implementation is frozen, review:
+### Registry Recovery Boundary
 
-1. the exact opaque identifier format and collision-handling policy;
-2. registry recovery behavior when the mutable index is missing or
-   corrupted;
-3. the maximum supported Reference count for one revision;
-4. maximum lengths and accepted Unicode controls for private dimension,
-   label, reviewer, and note values;
-5. whether a separate derived review-summary view is needed;
-6. whether immutable Baseline records require a later anchoring package;
-7. whether Evaluation Markdown needs its own presentation limits rather
-   than reusing Comparison v1 values.
+Private Baseline v1 does not automatically reconstruct, repair, or
+replace a missing or corrupted `baseline_registry.json`.
+
+When the Registry is:
+
+- missing;
+- invalid JSON;
+- schema-invalid;
+- inconsistent with an immutable record;
+- inconsistent with an immutable-record size or SHA-256;
+- inconsistent with an array-typed record identifier;
+
+all read-write operations fail closed.
+
+The implementation must not:
+
+- infer `current_revision_id`;
+- select a revision by timestamp;
+- rebuild review supersession state heuristically;
+- delete immutable records;
+- rewrite immutable records;
+- create a replacement Registry automatically.
+
+Immutable files remain untouched.
+
+Registry recovery requires restoration from an independently retained
+valid copy or a future explicit recovery contract and command.
+
+Automatic Registry recovery is outside v1.
+
+### Reference Capacity
+
+One Baseline Revision supports:
+
+~~~text
+minimum References = 1
+maximum References = 32
+~~~
+
+The limit exists because every Evaluation embeds one complete
+Comparison v1 report per Reference Bundle.
+
+The implementation must validate the limit before pairwise comparison
+or immutable installation begins.
+
+### Private Text Policy
+
+All private user-authored strings must be valid Unicode scalar values.
+
+Unpaired surrogate code points in the range `U+D800` through `U+DFFF`
+are rejected.
+
+All accepted strings are normalized to Unicode NFC before validation,
+comparison, uniqueness checks, deterministic ordering, and
+serialization.
+
+#### Single-Line Fields
+
+Single-line policy applies to:
+
+- `display_name`;
+- dimension keys;
+- dimension values;
+- `label`;
+- `reviewer`;
+- `created_by`;
+- `selected_by`;
+- comparison-axis custom values.
+
+Single-line fields:
+
+- must be strings;
+- must not contain leading or trailing whitespace;
+- must not contain CR, LF, tab, Unicode line separator `U+2028`, or
+  paragraph separator `U+2029`;
+- must not contain Unicode control-category characters;
+- must remain non-empty after NFC normalization;
+- must be checked for duplicate keys after NFC normalization.
+
+Maximum lengths, measured in Unicode code points after NFC
+normalization:
+
+| Field | Maximum |
+|---|---:|
+| dimension key | 64 |
+| dimension value | 256 |
+| display name | 256 |
+| human label | 128 |
+| reviewer identity | 256 |
+| creator or selector identity | 256 |
+| custom comparison-axis value | 64 |
+
+One dimensions object may contain at most 64 keys.
+
+#### Multiline Note Fields
+
+Multiline policy applies to:
+
+- `selection_note`;
+- Evaluation `note`;
+- Review `notes`.
+
+Before validation:
+
+- CRLF is converted to LF;
+- remaining CR is converted to LF;
+- text is normalized to NFC.
+
+Multiline notes:
+
+- may contain LF and tab;
+- must reject every other Unicode control-category character;
+- must reject `U+2028`, `U+2029`, and unpaired surrogates;
+- may be omitted or empty;
+- are limited to 4,096 Unicode code points after normalization.
+
+The JSON source of truth preserves accepted LF and tab characters.
+
+Markdown rendering must apply its separate safe presentation escaping
+and control-character policy.
+
+### Review Summary Decision
+
+Private Baseline v1 does not create a separate derived review-summary
+file.
+
+Human review state is derived on demand from:
+
+- Registry review entries;
+- immutable review records;
+- valid supersession chains.
+
+This decision preserves the fixed Evaluation output set:
+
+- `baseline_evaluation_report.json`
+- `baseline_evaluation_summary.md`
+
+A future review-oriented user interface or derived report requires a
+separate contract.
+
+### Anchoring Decision
+
+Private Baseline v1 does not require blockchain anchoring, timestamp
+anchoring, Merkle packaging, or an external notarization service for
+normal operation.
+
+Local size and SHA-256 verification provides local integrity checking
+only.
+
+An optional future anchoring package may reference immutable:
+
+- Baseline Revisions;
+- Evaluations;
+- Review Records.
+
+Such a package must not alter the underlying immutable records and
+requires a separate lineage and canonicalization contract.
+
+### Private Baseline Presentation Policy
+
+Evaluation Markdown uses its own versioned policy rather than importing
+Comparison v1 limits as its normative contract.
+
+Initial policy:
+
+~~~text
+PRIVATE_BASELINE_PRESENTATION_POLICY_VERSION=0.1.0
+MARKDOWN_REFERENCE_PREVIEW_LIMIT=10
+MARKDOWN_TOPIC_PREVIEW_LIMIT=5
+MARKDOWN_TOPIC_DETAIL_LIMIT=20
+MARKDOWN_FIELD_DETAIL_LIMIT_PER_TOPIC=50
+~~~
+
+Presentation rules:
+
+- Reference records are ordered lexicographically by
+  `reference_report_bundle_id`;
+- topics are ordered lexicographically;
+- fields are ordered lexicographically by canonical field path;
+- ordering never represents importance, severity, similarity, or
+  priority;
+- at most 10 Reference records receive detailed Markdown presentation;
+- at most 5 changed topics appear in the initial preview;
+- at most 20 changed topics receive detailed sections;
+- at most 50 changed fields are shown per detailed topic;
+- omitted counts must be stated explicitly;
+- complete data remains available in
+  `baseline_evaluation_report.json`;
+- Markdown must display the human judgment boundary;
+- Markdown must use safe dynamic code-span delimiters;
+- actual CR, LF, tab, `U+2028`, and `U+2029` are normalized for
+  single-line Markdown code presentation;
+- other disallowed control characters are replaced safely in the
+  derived Markdown view.
+
+The presentation policy is versioned independently from the
+machine-readable Evaluation schema.
 
 ## Contract Status
 
 ~~~text
-PRIVATE_BASELINE_V1_CONTRACT=DRAFT_FOR_REVIEW
+PRIVATE_BASELINE_V1_CONTRACT=FROZEN_FOR_IMPLEMENTATION
 COMPARISON_V1_ENGINE_REUSE=REQUIRED
 PRIVATE_LOCAL_ONLY=REQUIRED
 REFERENCE_SELECTION=HUMAN_EXPLICIT
@@ -1358,6 +1640,15 @@ EVALUATION_REVIEW_STATE=DERIVED_NOT_STORED
 REGISTRY_SEMANTICS=LOCAL_ATOMIC_MUTABLE_INDEX
 REGISTRY_IMMUTABLE_RECORD_SIZE_AND_SHA256=REQUIRED
 REGISTRY_RECORD_ID_MAPPING=ARRAY_TYPED
+REGISTRY_AUTOMATIC_RECOVERY=PROHIBITED
+OPAQUE_IDENTIFIER_FORMAT=PREFIXED_RANDOM_128_BIT
+IDENTIFIER_COLLISION_RETRY_LIMIT=32
+REFERENCE_MEMBERSHIP_LIMIT=32
+PRIVATE_TEXT_NORMALIZATION=NFC
+PRIVATE_TEXT_CONTROL_POLICY=FIELD_SPECIFIC
+SEPARATE_REVIEW_SUMMARY=PROHIBITED
+BASELINE_ANCHORING=OPTIONAL_FUTURE_CONTRACT
+PRIVATE_BASELINE_PRESENTATION_POLICY_VERSION=0.1.0
 INITIAL_BASELINE_AND_FIRST_REVISION=ATOMIC
 EVALUATION_GENERATED_AT=SINGLE_CAPTURED_VALUE
 EVALUATION_AXIS_KEYS=REVISION_VARY_KEYS_ONLY
