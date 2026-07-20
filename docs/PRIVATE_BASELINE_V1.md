@@ -418,26 +418,59 @@ Identifiers must:
 - match their exact prefix and lowercase hexadecimal format;
 - contain no customer, robot, site, user, path, or timestamp data;
 - remain stable after successful installation;
-- be checked against the Registry and intended installation path before
-  use.
+- be generated independently from storage ordering;
+- be atomically claimed by the storage installer before use.
 
-### Identifier Collision Policy
+### Identifier Collision and Reservation Policy
 
-For each generated identifier:
+Candidate generation does not establish uniqueness.
 
-1. generate a candidate;
-2. check all corresponding Registry record IDs;
-3. check the intended local installation path;
-4. reject the candidate if either already exists;
-5. generate another candidate.
+For each candidate:
 
-Generation may be attempted at most 32 times.
+1. generate 16 bytes with a cryptographically secure random source;
+2. construct and validate the prefixed identifier;
+3. attempt one atomic storage claim for the intended record or
+   directory;
+4. install only when the atomic claim succeeds;
+5. move to the next candidate when the storage layer reports that the
+   identifier is already claimed.
 
-If no unused identifier is obtained after 32 attempts, the operation
-fails without installing or mutating Private Baseline state.
+A Registry lookup or path-existence check may be used as an early
+rejection optimization.
+
+A lookup or existence check alone must not be treated as a uniqueness
+guarantee because another process may claim the identifier before
+installation.
+
+The current local filesystem implementation must use an exclusive
+atomic creation primitive appropriate to the installed object.
+
+A future database implementation must use a database uniqueness
+constraint or equivalent atomic insert.
+
+Machine IDs, process IDs, thread IDs, customer values, and timestamps
+must not be added to the external identifier.
+
+Generation and atomic-claim attempts are limited to 32 candidates.
+
+If no candidate can be atomically claimed after 32 attempts, the
+operation fails without installing or mutating existing Private
+Baseline state.
 
 Private Baseline v1 does not silently overwrite or reuse an existing
 identifier.
+
+### Identifier and Storage Ordering
+
+Private Baseline external identifiers are not chronological ordering
+keys and must not be treated as implicit clustered-storage keys.
+
+A future relational database deployment may use a separate internal
+ordered primary key and keep the Private Baseline identifier under a
+unique constraint.
+
+Creation-time queries must use explicit timestamp fields and indexes
+rather than infer time from the external identifier.
 
 ### Reference Membership Identifier
 
@@ -1359,25 +1392,34 @@ Implementation is accepted only when tests prove:
     terminal record;
 58. every opaque identifier matches its required prefix and 128-bit
     lowercase hexadecimal format;
-59. identifier collision checks cover both the Registry and intended
-    installation path;
-60. identifier generation fails without mutation after 32 unsuccessful
-    collision attempts;
-61. membership identifiers are assigned deterministically after
+59. every production identifier candidate uses a cryptographically
+    secure 16-byte random source;
+60. a Registry lookup or path-existence check alone cannot install or
+    reserve an identifier;
+61. identifier uniqueness is established by one atomic storage claim;
+62. storage collisions move to the next candidate without overwriting
+    existing state;
+63. identifier generation and atomic-claim attempts stop after 32
+    candidates without partial mutation;
+64. machine, process, thread, customer, path, and timestamp values are
+    absent from external identifiers;
+65. external identifiers are not used as implicit chronological or
+    clustered-storage ordering keys;
+66. membership identifiers are assigned deterministically after
     Reference sorting;
-62. a Revision accepts 1 through 32 References and rejects a
+67. a Revision accepts 1 through 32 References and rejects a
     thirty-third;
-63. Registry corruption or absence blocks all mutation without
+68. Registry corruption or absence blocks all mutation without
     automatic reconstruction;
-64. private text is NFC-normalized and validated under the field-specific
+69. private text is NFC-normalized and validated under the field-specific
     length and control-character policy;
-65. normalized dimension-key collisions are rejected;
-66. no separate review-summary artifact is created;
-67. immutable Baseline records do not require anchoring in v1;
-68. Evaluation Markdown uses the Private Baseline presentation policy;
-69. presentation truncation preserves complete information in the JSON
+70. normalized dimension-key collisions are rejected;
+71. no separate review-summary artifact is created;
+72. immutable Baseline records do not require anchoring in v1;
+73. Evaluation Markdown uses the Private Baseline presentation policy;
+74. presentation truncation preserves complete information in the JSON
     source of truth;
-70. existing atomic staging, synchronization, private-permission, and
+75. existing atomic staging, synchronization, private-permission, and
     no-overwrite guarantees remain required.
 
 ## Product Boundary
@@ -1642,6 +1684,8 @@ REGISTRY_IMMUTABLE_RECORD_SIZE_AND_SHA256=REQUIRED
 REGISTRY_RECORD_ID_MAPPING=ARRAY_TYPED
 REGISTRY_AUTOMATIC_RECOVERY=PROHIBITED
 OPAQUE_IDENTIFIER_FORMAT=PREFIXED_RANDOM_128_BIT
+IDENTIFIER_RESERVATION=ATOMIC_STORAGE_CLAIM
+IDENTIFIER_STORAGE_ORDERING=SEPARATE_INTERNAL_KEY
 IDENTIFIER_COLLISION_RETRY_LIMIT=32
 REFERENCE_MEMBERSHIP_LIMIT=32
 PRIVATE_TEXT_NORMALIZATION=NFC
