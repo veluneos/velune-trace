@@ -37,12 +37,36 @@ from velune_trace.private_baseline.contract import (
     normalize_single_line_text,
     validate_opaque_identifier,
 )
+from velune_trace.private_baseline.revision import (
+    BASELINE_REVISION_SCHEMA_NAME,
+    BASELINE_REVISION_SEMANTICS,
+    ISO8601_TIMESTAMP_MAX_LENGTH,
+    MEMBERSHIP_ID_PREFIX,
+    MEMBERSHIP_ID_WIDTH,
+    REPORT_BUNDLE_ID_PREFIX,
+    SHA256_HEX_LENGTH,
+    PrivateBaselineRevisionError,
+    build_baseline_revision,
+    normalize_dimension_policy,
+    validate_baseline_revision,
+)
 from velune_trace.private_baseline.errors import (
     PrivateBaselineContractError,
 )
 
 
 __all__ = [
+    "BASELINE_REVISION_SCHEMA_NAME",
+    "BASELINE_REVISION_SEMANTICS",
+    "ISO8601_TIMESTAMP_MAX_LENGTH",
+    "MEMBERSHIP_ID_PREFIX",
+    "MEMBERSHIP_ID_WIDTH",
+    "REPORT_BUNDLE_ID_PREFIX",
+    "SHA256_HEX_LENGTH",
+    "PrivateBaselineRevisionError",
+    "build_baseline_revision",
+    "normalize_dimension_policy",
+    "validate_baseline_revision",
     "ACTOR_IDENTITY_MAX_LENGTH",
     "BASELINE_ID_KIND",
     "BASELINE_REVISION_ID_KIND",
