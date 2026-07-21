@@ -37,6 +37,15 @@ from velune_trace.private_baseline.contract import (
     normalize_single_line_text,
     validate_opaque_identifier,
 )
+from velune_trace.private_baseline.registry import (
+    BASELINE_REGISTRY_FILENAME,
+    BASELINE_REGISTRY_SCHEMA_NAME,
+    BASELINE_REGISTRY_SEMANTICS,
+    LoadedPrivateBaselineRegistry,
+    LoadedRegistryRecord,
+    PrivateBaselineRegistryError,
+    load_private_baseline_registry,
+)
 from velune_trace.private_baseline.revision import (
     BASELINE_REVISION_SCHEMA_NAME,
     BASELINE_REVISION_SEMANTICS,
@@ -56,6 +65,13 @@ from velune_trace.private_baseline.errors import (
 
 
 __all__ = [
+    "BASELINE_REGISTRY_FILENAME",
+    "BASELINE_REGISTRY_SCHEMA_NAME",
+    "BASELINE_REGISTRY_SEMANTICS",
+    "LoadedPrivateBaselineRegistry",
+    "LoadedRegistryRecord",
+    "PrivateBaselineRegistryError",
+    "load_private_baseline_registry",
     "BASELINE_REVISION_SCHEMA_NAME",
     "BASELINE_REVISION_SEMANTICS",
     "ISO8601_TIMESTAMP_MAX_LENGTH",
