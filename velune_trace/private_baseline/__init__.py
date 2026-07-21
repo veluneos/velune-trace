@@ -160,3 +160,15 @@ __all__ += [
     "render_private_baseline_evaluation_summary",
     "write_private_baseline_evaluation_outputs",
 ]
+
+from velune_trace.private_baseline.evaluation_service import (
+    EvaluatedPrivateBaseline,
+    PrivateBaselineEvaluationServiceError,
+    evaluate_private_baseline,
+)
+
+__all__ += [
+    "EvaluatedPrivateBaseline",
+    "PrivateBaselineEvaluationServiceError",
+    "evaluate_private_baseline",
+]
