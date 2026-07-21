@@ -63,8 +63,16 @@ from velune_trace.private_baseline.errors import (
     PrivateBaselineContractError,
 )
 
+from velune_trace.private_baseline.service import (
+    CreatedPrivateBaseline,
+    PrivateBaselineServiceError,
+    create_private_baseline,
+)
 
 __all__ = [
+    "CreatedPrivateBaseline",
+    "PrivateBaselineServiceError",
+    "create_private_baseline",
     "BASELINE_REGISTRY_FILENAME",
     "BASELINE_REGISTRY_SCHEMA_NAME",
     "BASELINE_REGISTRY_SEMANTICS",
