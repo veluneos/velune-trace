@@ -128,3 +128,35 @@ __all__ = [
     "normalize_single_line_text",
     "validate_opaque_identifier",
 ]
+
+from velune_trace.private_baseline.evaluation import (
+    EVALUATION_REPORT_FILENAME,
+    EVALUATION_SCHEMA_NAME,
+    EVALUATION_SEMANTICS,
+    EVALUATION_SUMMARY_FILENAME,
+    HUMAN_JUDGMENT_BOUNDARY_STATEMENT,
+    PrivateBaselineEvaluationError,
+    aggregate_reference_comparisons,
+    build_private_baseline_evaluation_report,
+    normalize_evaluation_context,
+)
+from velune_trace.private_baseline.evaluation_writer import (
+    WrittenPrivateBaselineEvaluation,
+    render_private_baseline_evaluation_summary,
+    write_private_baseline_evaluation_outputs,
+)
+
+__all__ += [
+    "EVALUATION_REPORT_FILENAME",
+    "EVALUATION_SCHEMA_NAME",
+    "EVALUATION_SEMANTICS",
+    "EVALUATION_SUMMARY_FILENAME",
+    "HUMAN_JUDGMENT_BOUNDARY_STATEMENT",
+    "PrivateBaselineEvaluationError",
+    "WrittenPrivateBaselineEvaluation",
+    "aggregate_reference_comparisons",
+    "build_private_baseline_evaluation_report",
+    "normalize_evaluation_context",
+    "render_private_baseline_evaluation_summary",
+    "write_private_baseline_evaluation_outputs",
+]
