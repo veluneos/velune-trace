@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <meta
+    name="description"
+    content="VeluneOS reconstructs robotics evidence timelines and compares Target executions against private Reference sets."
+  >
+  <title>VeluneOS | Evidence for Embodied AI</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family:
+        Inter, ui-sans-serif, system-ui,
+        -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #080b10;
+      color: #f4f7fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, #152133 0, #080b10 42%);
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    nav a,
+    .button {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 110px 0 120px;
+      max-width: 900px;
+    }
+
+    .eyebrow {
+      color: #8fbaff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 24px;
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: #b8c2cf;
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 19px;
+      border: 1px solid #33445c;
+      border-radius: 9px;
+      font-weight: 650;
+    }
+
+    .button.primary {
+      background: #f4f7fb;
+      border-color: #f4f7fb;
+      color: #080b10;
+    }
+
+    section {
+      padding: 80px 0;
+      border-top: 1px solid #202a38;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: clamp(30px, 4vw, 48px);
+      letter-spacing: -0.035em;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      color: #b8c2cf;
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .card {
+      min-height: 180px;
+      padding: 24px;
+      background: rgba(18, 25, 35, 0.8);
+      border: 1px solid #273447;
+      border-radius: 14px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #aab5c3;
+    }
+
+    .metric {
+      font-size: 32px;
+      font-weight: 750;
+    }
+
+    footer {
+      padding: 50px 0 70px;
+      color: #8491a1;
+      border-top: 1px solid #202a38;
+    }
+
+    footer a {
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <nav>
+      <div class="brand">VeluneOS</div>
+      <a href="mailto:contact@veluneos.ai">
+        contact@veluneos.ai
+      </a>
+    </nav>
+
+    <header class="hero">
+      <div class="eyebrow">
+        Evidence Infrastructure for Embodied AI
+      </div>
+
+      <h1>
+        Find the events.<br>
+        Engineers find the cause.
+      </h1>
+
+      <p>
+        VeluneOS reconstructs evidence timelines from robotics logs
+        and shows where a Target execution differs from a
+        user-selected private Reference set.
+      </p>
+
+      <div class="actions">
+        <a
+          class="button primary"
+          href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
+        >
+          Request Private Validation
+        </a>
+
+        <a
+          class="button"
+          href="#validation"
+        >
+          View Validation
+        </a>
+      </div>
+    </header>
+
+    <section id="problem">
+      <h2>Stop searching the entire log.</h2>
+
+      <p class="section-copy">
+        Large robotics logs force engineers to manually inspect
+        topics, timestamps, gaps, jitter, commands, and motion.
+        VeluneOS narrows the investigation surface and produces
+        reproducible evidence reports for human review.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <strong>Local-first</strong>
+          <p>
+            Process MCAP and ROS2-derived evidence without requiring
+            centralized raw-log upload.
+          </p>
+        </div>
+
+        <div class="card">
+          <strong>Reference comparison</strong>
+          <p>
+            Compare one explicit Target against every
+            user-selected private Reference.
+          </p>
+        </div>
+
+        <div class="card">
+          <strong>Reproducible handoff</strong>
+          <p>
+            Preserve JSON as the source of truth with a bounded
+            Markdown summary for engineering review.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="validation">
+      <h2>Validated end to end.</h2>
+
+      <p class="section-copy">
+        The current MVP has been tested using real-derived robotics
+        Core Report Bundles and a 10GB Target validation corpus.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="metric">10GB+</div>
+          <p>Large-corpus validation</p>
+        </div>
+
+        <div class="card">
+          <div class="metric">2</div>
+          <p>Private Reference comparisons</p>
+        </div>
+
+        <div class="card">
+          <div class="metric">316</div>
+          <p>Automated tests passing</p>
+        </div>
+
+        <div class="card">
+          <div class="metric">0</div>
+          <p>Compatibility warnings in the real Service E2E</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="boundary">
+      <h2>Evidence, not judgment.</h2>
+
+      <p class="section-copy">
+        VeluneOS reports observed differences and evidence windows.
+        It does not automatically determine root cause, fault,
+        liability, safety, severity, normality, or regression.
+      </p>
+    </section>
+
+    <section id="contact">
+      <h2>Validate it on your own logs.</h2>
+
+      <p class="section-copy">
+        Select one Target execution and a small private Reference set.
+        VeluneOS will run a local compatibility preflight, generate
+        pairwise evidence comparisons, and provide reproducible JSON
+        and Markdown outputs.
+      </p>
+
+      <div class="actions">
+        <a
+          class="button primary"
+          href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
+        >
+          contact@veluneos.ai
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      © 2026 VeluneOS ·
+      <a href="mailto:contact@veluneos.ai">
+        contact@veluneos.ai
+      </a>
+    </footer>
+  </main>
+</body>
+</html>
