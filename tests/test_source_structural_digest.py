@@ -1,6 +1,11 @@
+import tempfile
 import unittest
 from dataclasses import replace
+from pathlib import Path
 
+from tools.create_sample_mcap import (
+    create_sample_mcap,
+)
 from velune_trace.adapters.mcap_reader import (
     VeluneMcapReader,
 )
@@ -12,13 +17,27 @@ from velune_trace.reporting.source_structural_digest import (
 class SourceStructuralDigestTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        reader = VeluneMcapReader(
-            "examples/sample.mcap"
+        cls.temporary_directory = (
+            tempfile.TemporaryDirectory()
         )
+
+        cls.sample_path = create_sample_mcap(
+            Path(cls.temporary_directory.name)
+            / "sample.mcap"
+        )
+
+        reader = VeluneMcapReader(
+            cls.sample_path
+        )
+
         cls.inspection = reader.inspect()
         cls.terminal = (
             reader.inspect_terminal_metadata()
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temporary_directory.cleanup()
 
     def build_digest(
         self,

@@ -9,6 +9,9 @@ from mcap.reader import make_reader
 from tools.build_mcap_benchmark_corpus import (
     build_corpus,
 )
+from tools.create_sample_mcap import (
+    create_sample_mcap,
+)
 from velune_trace.adapters.mcap_reader import (
     VeluneMcapReader,
 )
@@ -19,18 +22,22 @@ class McapBenchmarkCorpusBuilderTests(
 ):
     @classmethod
     def setUpClass(cls):
-        cls.repository_root = (
-            Path(__file__).resolve().parents[1]
+        cls.temporary_directory = (
+            tempfile.TemporaryDirectory()
         )
-        cls.sample_path = (
-            cls.repository_root
-            / "examples"
+
+        cls.sample_path = create_sample_mcap(
+            Path(cls.temporary_directory.name)
             / "sample.mcap"
         )
 
         cls.sample_inspection = VeluneMcapReader(
             cls.sample_path
         ).inspect()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temporary_directory.cleanup()
 
     def test_builds_replicated_real_payload_corpus(
         self,

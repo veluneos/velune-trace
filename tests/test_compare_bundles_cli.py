@@ -1,3 +1,4 @@
+import sys
 from contextlib import (
     redirect_stderr,
     redirect_stdout,
@@ -492,6 +493,14 @@ class CompareBundlesCliTests(unittest.TestCase):
     ):
         wrapper = Path("bin/velune").resolve()
 
+        environment = os.environ.copy()
+        environment.pop("PYTHONPATH", None)
+        environment.pop("PYTHONHOME", None)
+        environment["PYTHONNOUSERSITE"] = "1"
+        environment["VELUNE_PYTHON"] = (
+            sys.executable
+        )
+
         with tempfile.TemporaryDirectory() as other:
             completed = subprocess.run(
                 [
@@ -499,6 +508,7 @@ class CompareBundlesCliTests(unittest.TestCase):
                     "unknown-command",
                 ],
                 cwd=other,
+                env=environment,
                 text=True,
                 capture_output=True,
                 check=False,

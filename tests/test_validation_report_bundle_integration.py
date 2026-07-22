@@ -5,6 +5,9 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
+from tools.create_sample_mcap import (
+    create_sample_mcap,
+)
 from velune_trace.cli.validation_report import main
 
 
@@ -28,13 +31,16 @@ MANIFEST_ARTIFACT_FILES = {
 
 class ValidationReportBundleIntegrationTests(unittest.TestCase):
     def test_sample_mcap_generates_complete_core_bundle(self):
-        repository_root = Path(__file__).resolve().parents[1]
-        sample_path = repository_root / "examples" / "sample.mcap"
-
-        self.assertTrue(sample_path.is_file())
-
         with tempfile.TemporaryDirectory() as temporary_directory:
-            bundle_dir = Path(temporary_directory) / "bundle"
+            temporary_root = Path(
+                temporary_directory
+            )
+
+            sample_path = create_sample_mcap(
+                temporary_root / "sample.mcap"
+            )
+
+            bundle_dir = temporary_root / "bundle"
             stdout = io.StringIO()
             stderr = io.StringIO()
 
