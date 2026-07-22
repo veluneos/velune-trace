@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta
@@ -8,9 +8,9 @@
   >
   <meta
     name="description"
-    content="VeluneOS는 로봇 로그에서 증거 타임라인을 재구성하고 Target 실행과 비공개 Reference Set의 관찰된 차이를 비교합니다."
+    content="VeluneOS reconstructs robotics evidence timelines and compares Target executions against private Reference sets."
   >
-  <title>VeluneOS | 로봇 증거 타임라인</title>
+  <title>VeluneOS | Evidence for Embodied AI</title>
   <link rel="alternate" hreflang="ko" href="index.html">
   <link rel="alternate" hreflang="en" href="en.html">
 
@@ -193,9 +193,9 @@
 
       <div class="nav-actions">
         <div class="language-switch">
-          <strong>KR</strong>
+          <a href="index.html">KR</a>
           <span>|</span>
-          <a href="en.html">EN</a>
+          <strong>EN</strong>
         </div>
 
         <a href="mailto:contact@veluneos.ai">
@@ -206,7 +206,7 @@
 
     <header class="hero">
       <div class="eyebrow">
-        Embodied AI를 위한 증거 인프라
+        Evidence Infrastructure for Embodied AI
       </div>
 
       <h1>
@@ -215,9 +215,9 @@
       </h1>
 
       <p>
-        VeluneOS는 로봇 로그에서 증거 타임라인을 재구성하고,
-        Target 실행이 사용자가 선택한 비공개 Reference Set과
-        어디에서 달라졌는지 보여줍니다.
+        VeluneOS reconstructs evidence timelines from robotics logs
+        and shows where a Target execution differs from a
+        user-selected private Reference set.
       </p>
 
       <div class="actions">
@@ -225,103 +225,104 @@
           class="button primary"
           href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
         >
-          비공개 검증 요청
+          Request Private Validation
         </a>
 
         <a
           class="button"
           href="#validation"
         >
-          검증 결과 보기
+          View Validation
         </a>
       </div>
     </header>
 
     <section id="problem">
-      <h2>전체 로그를 직접 뒤지지 마세요.</h2>
+      <h2>Stop searching the entire log.</h2>
 
       <p class="section-copy">
-        대규모 로봇 로그에서는 엔지니어가 토픽, 타임스탬프,
-        데이터 공백, 지터, 명령과 움직임을 직접 추적해야 합니다.
-        VeluneOS는 조사 범위를 좁히고 사람이 검토할 수 있는
-        재현 가능한 증거 리포트를 생성합니다.
+        Large robotics logs force engineers to manually inspect
+        topics, timestamps, gaps, jitter, commands, and motion.
+        VeluneOS narrows the investigation surface and produces
+        reproducible evidence reports for human review.
       </p>
 
       <div class="grid">
         <div class="card">
-          <strong>로컬 우선</strong>
+          <strong>Local-first</strong>
           <p>
-            원본 로그를 중앙 서버에 업로드하지 않고
-            MCAP과 ROS2 기반 증거를 처리합니다.
+            Process MCAP and ROS2-derived evidence without requiring
+            centralized raw-log upload.
           </p>
         </div>
 
         <div class="card">
-          <strong>Reference 비교</strong>
+          <strong>Reference comparison</strong>
           <p>
-            하나의 명시적인 Target을 사용자가 선택한
-            모든 비공개 Reference와 비교합니다.
+            Compare one explicit Target against every
+            user-selected private Reference.
           </p>
         </div>
 
         <div class="card">
-          <strong>재현 가능한 인계</strong>
+          <strong>Reproducible handoff</strong>
           <p>
-            JSON을 원본 기준으로 보존하고 엔지니어 검토를 위한
-            제한된 범위의 Markdown 요약을 제공합니다.
+            Preserve JSON as the source of truth with a bounded
+            Markdown summary for engineering review.
           </p>
         </div>
       </div>
     </section>
 
     <section id="validation">
-      <h2>End-to-End 검증 완료.</h2>
+      <h2>Validated end to end.</h2>
 
       <p class="section-copy">
-        현재 MVP는 실제 데이터에서 파생된 로봇
-        Core Report Bundle과 10GB Target 검증 코퍼스로 테스트했습니다.
+        The current MVP has been tested using real-derived robotics
+        Core Report Bundles and a 10GB Target validation corpus.
       </p>
 
       <div class="grid">
         <div class="card">
           <div class="metric">10GB+</div>
-          <p>대용량 코퍼스 검증</p>
+          <p>Large-corpus validation</p>
         </div>
 
         <div class="card">
           <div class="metric">2</div>
-          <p>비공개 Reference 비교</p>
+          <p>Private Reference comparisons</p>
         </div>
 
         <div class="card">
           <div class="metric">316</div>
-          <p>자동화 테스트 통과</p>
+          <p>Automated tests passing</p>
         </div>
 
         <div class="card">
           <div class="metric">0</div>
-          <p>실제 Service E2E 호환성 경고</p>
+          <p>Compatibility warnings in the real Service E2E</p>
         </div>
       </div>
     </section>
 
     <section id="boundary">
-      <h2>판정이 아닌 증거.</h2>
+      <h2>Evidence, not judgment.</h2>
 
       <p class="section-copy">
-        VeluneOS는 관찰된 차이와 증거 구간을 보고합니다.
-        근본 원인, 과실, 책임, 안전성, 심각도, 정상 여부 또는
-        회귀 여부를 자동으로 판정하지 않습니다.
+        VeluneOS reports observed differences and evidence windows.
+        It does not automatically determine root cause, fault,
+        liability, safety, severity, normality, or regression.
       </p>
     </section>
 
     <section id="contact">
-      <h2>자체 로그로 검증해 보세요.</h2>
+      <h2>Validate it on your own logs.</h2>
 
       <p class="section-copy">
-        하나의 Target 실행과 소규모 비공개 Reference Set을 선택하세요.
-        VeluneOS가 로컬 호환성 사전 검사를 실행하고, 쌍별 증거 비교와
-        재현 가능한 JSON 및 Markdown 결과물을 제공합니다.
+        Select one Target execution and a small private Reference set.
+        VeluneOS will run a local compatibility preflight, generate
+        pairwise evidence comparisons, and provide reproducible JSON
+        and Markdown outputs.
       </p>
 
       <div class="actions">
