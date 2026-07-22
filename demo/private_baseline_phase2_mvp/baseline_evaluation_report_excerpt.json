@@ -1,0 +1,435 @@
+{
+  "aggregate_observations_excerpt": {
+    "field_observations_preview": [
+      {
+        "changed_against_reference_count": 1,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_jitter_ns",
+        "observation_scope": "some_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 1
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_max_gap_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_observed_irregularity_score",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.mean_observed_irregularity_score",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 1,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.min_count_ratio",
+        "observation_scope": "some_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 1
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.avg_gap_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.count",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.duration_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 1,
+        "eligible_reference_count": 2,
+        "field": "profile.expected_count_per_window",
+        "observation_scope": "some_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 1
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.finalized_window_count",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.jitter_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.max_gap_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/annotations",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_jitter_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_max_gap_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.max_observed_irregularity_score",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.mean_observed_irregularity_score",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "evidence_summary.min_count_ratio",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.avg_gap_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.count",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      },
+      {
+        "changed_against_reference_count": 2,
+        "eligible_reference_count": 2,
+        "field": "profile.duration_ns",
+        "observation_scope": "all_references",
+        "topic": "/cam_back/camera_info",
+        "unchanged_against_reference_count": 0
+      }
+    ],
+    "numeric_aggregation": {
+      "anomaly_probabilities": false,
+      "confidence_intervals": false,
+      "means_of_ratios": false,
+      "medians_of_deltas": false,
+      "percentiles": false,
+      "severity_scores": false,
+      "standard_deviations": false,
+      "weighted_scores": false
+    },
+    "reference_count": 2,
+    "reference_weighting": {
+      "enabled": false,
+      "semantics": "equal_descriptive_occurrence_counts_only"
+    },
+    "summary": {
+      "all_references_field_count": 430,
+      "changed_field_record_count": 481,
+      "changed_topic_count": 41,
+      "observed_topic_count": 41,
+      "some_references_field_count": 51
+    },
+    "topic_set_observations_preview": [
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back/annotations",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back/camera_info",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back/image_rect_compressed",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back/lidar",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_left/annotations",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_left/camera_info",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_left/image_rect_compressed",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_left/lidar",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_right/annotations",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_right/camera_info",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_right/image_rect_compressed",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_back_right/lidar",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front/annotations",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front/camera_info",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front/image_rect_compressed",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front/lidar",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front_left/annotations",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front_left/camera_info",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front_left/image_rect_compressed",
+        "total_reference_count": 2
+      },
+      {
+        "absent_from_both_count": 0,
+        "common_with_target_count": 2,
+        "reference_only_against_target_count": 0,
+        "target_only_against_reference_count": 0,
+        "topic": "/cam_front_left/lidar",
+        "total_reference_count": 2
+      }
+    ]
+  },
+  "disclosure": {
+    "contains_local_filesystem_paths": false,
+    "contains_raw_robot_log": false,
+    "contains_regression_judgment": false,
+    "contains_root_cause_judgment": false,
+    "is_complete_internal_report": false,
+    "target_is_independent_commercial_run": false
+  },
+  "evaluation_context": {
+    "axis_keys": [
+      "scene_id"
+    ],
+    "comparison_axis": "custom",
+    "dimensions": {
+      "dataset_family": "nuScenes",
+      "scene_id": "scene-1100-replicated-10g-cold"
+    },
+    "note": "Real-derived public Service E2E. This Target is not claimed as an independent robot execution."
+  },
+  "judgment_boundary": {
+    "automatic_improvement_judgment": false,
+    "automatic_reference_selection": false,
+    "automatic_regression_judgment": false,
+    "cause_inference": false,
+    "fault_assignment": false,
+    "liability_calculation": false,
+    "normality_judgment": false,
+    "regression_judgment": false,
+    "root_cause_conclusion": false,
+    "safety_certification": false,
+    "safety_classification": false,
+    "severity_judgment": false,
+    "superiority_judgment": false
+  },
+  "reference_comparison_previews": [
+    {
+      "compatibility_status": "compatible",
+      "reference_report_bundle_id": "vrb_sha256_01df81a98ce891f2f2364fe49bcd25561315a74517e2a072a03943d9e4b674aa",
+      "schema_name": "velune.bundle_comparison_report",
+      "summary": {
+        "changed_evidence_summary_topic_count": 41,
+        "changed_profile_topic_count": 41,
+        "common_topic_count": 41,
+        "identical_evidence_summary_topic_count": 0,
+        "identical_profile_topic_count": 0,
+        "reference_only_topic_count": 0,
+        "reference_topic_count": 41,
+        "target_only_topic_count": 0,
+        "target_topic_count": 41
+      }
+    },
+    {
+      "compatibility_status": "compatible",
+      "reference_report_bundle_id": "vrb_sha256_e1f6251f9d96747a8d22326d57773b95bebe1837f824fc56763321cbfc84c4a2",
+      "schema_name": "velune.bundle_comparison_report",
+      "summary": {
+        "changed_evidence_summary_topic_count": 41,
+        "changed_profile_topic_count": 41,
+        "common_topic_count": 41,
+        "identical_evidence_summary_topic_count": 0,
+        "identical_profile_topic_count": 0,
+        "reference_only_topic_count": 0,
+        "reference_topic_count": 41,
+        "target_only_topic_count": 0,
+        "target_topic_count": 41
+      }
+    }
+  ],
+  "schema_name": "velune.private_baseline_evaluation_public_excerpt",
+  "schema_version": "0.1.0",
+  "source_evaluation": {
+    "baseline_id": "vpb_fc0d272646283d44be358ea9d84e7f86",
+    "baseline_revision_id": "vpbr_43a99be29aded718ebc2ec9ad0fc3851",
+    "evaluation_id": "vpbe_723ae40736450490c75ea88c83c79f0e",
+    "generated_at": "2026-07-21T17:44:43+09:00"
+  },
+  "target": {
+    "dimensions": {
+      "dataset_family": "nuScenes",
+      "scene_id": "scene-1100-replicated-10g-cold"
+    },
+    "report_bundle_id": "vrb_sha256_dd37c3768b435526f87047d4264508c38ec66825b1ff9db3d2c2a3586670c187",
+    "report_manifest_sha256": "683f017c95761c785e1e8aec2f05131922789af918524c3cad2ce6d51cbcd45d"
+  },
+  "visibility": "public_sanitized_excerpt"
+}

@@ -91,6 +91,7 @@ Replace `/path/to/your_log.mcap` with the path to your own MCAP file.
 Velune creates:
 
     velune_report/
+    ├── report_manifest.json
     ├── summary.md
     ├── shareable_anonymous_report.json
     ├── topic_profile.json
@@ -127,6 +128,7 @@ Reference cohort policy:
 
 Velune Trace produces local evidence artifacts:
 
+- `report_manifest.json` — Bundle identity, provenance, and artifact-integrity metadata
 - `summary.md` — human-readable timing evidence summary
 - `evidence_windows.json` — ranked evidence windows
 - `topic_profile.json` — topic-level timing profile
@@ -134,6 +136,52 @@ Velune Trace produces local evidence artifacts:
 - `SCHEMA.md` — report schema description
 
 The shareable report is designed to avoid raw sensor payloads.
+
+---
+
+## Compare Two Core Report Bundles
+
+After generating two completed Core Report Bundles, compare their
+observed evidence locally:
+
+    ./bin/velune compare-bundles \
+      /path/to/reference_bundle \
+      /path/to/target_bundle \
+      --export-dir comparison_output
+
+Velune creates exactly:
+
+    comparison_output/
+    ├── comparison_report.json
+    └── comparison_summary.md
+
+`comparison_report.json` is the machine-readable source of truth.
+
+`comparison_summary.md` is a bounded human-readable view. Changed
+topics are presented in lexicographic order, not importance or
+severity order.
+
+Comparison operates from completed Core Bundle artifacts and does not
+require raw MCAP rescanning.
+
+The comparison reports observed differences only. It does not
+determine importance, severity, normality, superiority, regression,
+improvement, root cause, fault, liability, or safety status.
+
+The recorded operational validation covered two measured paths:
+
+- independently generated Bundles representing the same evidence:
+  0 changed topics and 0 changed fields;
+- one validated pair of different real nuScenes-derived scene Bundles:
+  39 changed topics and 425 changed fields.
+
+Complete contract:
+
+- [Core Bundle Comparison v1](docs/BUNDLE_COMPARISON_V1.md)
+
+Operational validation:
+
+- [Core Bundle Comparison v1 Validation Record](benchmarks/core_bundle_comparison_v1_validation_record.md)
 
 ---
 
@@ -156,6 +204,8 @@ Engineers determine cause.
 ## Start Here
 
 - [Getting Started](docs/GETTING_STARTED.md)
+- [Core Bundle Comparison v1](docs/BUNDLE_COMPARISON_V1.md)
+- [Core Bundle Comparison v1 Validation Record](benchmarks/core_bundle_comparison_v1_validation_record.md)
 - [Validation Partner Program](docs/PARTNER_PROGRAM.md)
 - [Trust and Privacy Model](docs/TRUST_AND_PRIVACY.md)
 - [Example Feedback Report](docs/EXAMPLE_FEEDBACK_REPORT.md)
@@ -229,6 +279,7 @@ The primary evaluation path is:
 This produces:
 
     velune_report/
+    ├── report_manifest.json
     ├── summary.md
     ├── shareable_anonymous_report.json
     ├── topic_profile.json
@@ -325,6 +376,7 @@ It is designed to work before or alongside visualization tools.
 | Incremental append validation | 10,000 events in 0.57 sec |
 | External nuScenes MCAP validation | PASS |
 | Controlled dropout recovery validation | PASS |
+| Core Bundle Comparison v1 operational validation | PASS |
 
 Important note:
 

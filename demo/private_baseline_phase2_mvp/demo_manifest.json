@@ -1,0 +1,40 @@
+{
+  "contains_local_filesystem_paths": false,
+  "contains_raw_robot_log": false,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "a61763b6afaefc35e874847b67238346e2b6230fd166ffae9f8f43a360ae6ae8",
+      "size_bytes": 1116
+    },
+    {
+      "path": "baseline_evaluation_report_excerpt.json",
+      "sha256": "ff1f18f73bebc1a96104bb5337b834a6f1b563d50a10275fbe25e20358417747",
+      "size_bytes": 15210
+    },
+    {
+      "path": "baseline_evaluation_summary_demo.md",
+      "sha256": "5ae9b9d2ff8eae1a5e5ed2d048fd602e59588c1e9088cc39934152b534d96dff",
+      "size_bytes": 28020
+    },
+    {
+      "path": "private_validation_offer.md",
+      "sha256": "78e021e1a44b2139ec71c58d8cbb1d11dacf004322118b43c348c96c11586d9f",
+      "size_bytes": 1281
+    },
+    {
+      "path": "product_claims.md",
+      "sha256": "7ac007bcb9a3e2421da9a6a1a74bc1783173a62bf0c6a476b29cc26f21f8b5cd",
+      "size_bytes": 1064
+    }
+  ],
+  "generated_at": "2026-07-22T00:54:53+00:00",
+  "official_contact": "contact@veluneos.ai",
+  "official_domain": "veluneos.ai",
+  "package_name": "private_baseline_phase2_mvp",
+  "schema_name": "velune.external_demo_manifest",
+  "schema_version": "0.1.0",
+  "source_evaluation_id": "vpbe_723ae40736450490c75ea88c83c79f0e",
+  "source_is_independent_commercial_run": false,
+  "source_is_real_derived": true
+}

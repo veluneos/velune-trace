@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$#" -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ] || [ "$1" = "help" ]; then
+SCRIPT_DIR="$(
+  cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+  pwd
+)"
+REPO_ROOT="$(
+  cd -- "${SCRIPT_DIR}/.."
+  pwd
+)"
+
+if [ "$#" -eq 0 ] || \
+   [ "$1" = "--help" ] || \
+   [ "$1" = "-h" ] || \
+   [ "$1" = "help" ]; then
   cat <<'HELP'
 Velune Trace CLI
 
@@ -9,14 +21,15 @@ Usage:
   ./bin/velune <command> [args]
 
 Commands:
-  inspect          Inspect MCAP metadata
-  chunks           List MCAP chunk index information
-  read             Read selected MCAP chunk/time window
-  profile          Profile topic frequency and timing stability
-  compare          Compare one topic between two windows
-  compare-all      Compare all common topics between two windows
-  windowed-verify  Rank timing-irregular windows for one topic
-  evidence-window  Extract a reproducible evidence window
+  inspect            Inspect MCAP metadata
+  chunks             List MCAP chunk index information
+  read               Read selected MCAP chunk/time window
+  profile            Profile topic frequency and timing stability
+  compare            Compare one topic between two windows
+  compare-all        Compare all common topics between two windows
+  compare-bundles    Compare two verified Core Report Bundles
+  windowed-verify    Rank timing-irregular windows for one topic
+  evidence-window    Extract a reproducible evidence window
   validation-report  Generate anonymous validation report
 
 Examples:
@@ -25,6 +38,11 @@ Examples:
     --window-sec 1 \
     --top 5 \
     --allowed-lateness-sec 2
+
+  ./bin/velune compare-bundles \
+    /path/to/reference_bundle \
+    /path/to/target_bundle \
+    --export-dir comparison_output
 
   ./bin/velune inspect /path/to/your_log.mcap
 
@@ -41,9 +59,25 @@ Examples:
     --end-sec END_SEC \
     --expected-count 20
 
+Debugging:
+  VELUNE_DEBUG=1 ./bin/velune compare-bundles ...
+
+Interpreter override:
+  VELUNE_PYTHON=/path/to/python ./bin/velune <command> ...
+
 Velune Trace does not infer root cause or assign fault.
 HELP
-  exit 0
-fi
+else
+  if [ -n "${VELUNE_PYTHON:-}" ]; then
+    PYTHON_BIN="${VELUNE_PYTHON}"
+  elif [ -x "${REPO_ROOT}/.venv/bin/python" ]; then
+    PYTHON_BIN="${REPO_ROOT}/.venv/bin/python"
+  else
+    PYTHON_BIN="python3"
+  fi
 
-PYTHONPATH="$(pwd):${PYTHONPATH}" python3 -m velune_trace.cli.main "$@"
+  PYTHONPATH="${REPO_ROOT}${PYTHONPATH:+:${PYTHONPATH}}" \
+    "${PYTHON_BIN}" \
+    -m velune_trace.cli.main \
+    "$@"
+fi
