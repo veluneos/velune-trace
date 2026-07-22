@@ -2,6 +2,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from tools.create_sample_mcap import (
+    create_sample_mcap,
+)
 from velune_trace.adapters.mcap_reader import (
     VeluneFileNotFoundError,
     VeluneInvalidMcapError,
@@ -12,12 +15,22 @@ from velune_trace.adapters.mcap_reader import (
 class McapTerminalMetadataTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.repository_root = Path(__file__).resolve().parents[1]
-        cls.sample_path = (
-            cls.repository_root
-            / "examples"
+        cls.repository_root = (
+            Path(__file__).resolve().parents[1]
+        )
+
+        cls.temporary_directory = (
+            tempfile.TemporaryDirectory()
+        )
+
+        cls.sample_path = create_sample_mcap(
+            Path(cls.temporary_directory.name)
             / "sample.mcap"
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temporary_directory.cleanup()
 
     def test_reads_recorded_terminal_metadata(self):
         metadata = VeluneMcapReader(

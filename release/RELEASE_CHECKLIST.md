@@ -1,0 +1,24 @@
+# Velune Trace v0.4.0 — Release Checklist
+
+- [ ] Release branch starts from the intended source commit
+- [ ] Original worktree is clean before release preparation
+- [ ] Target version is greater than the recorded source version
+- [ ] Exactly one `__version__` assignment is found
+- [ ] Dependency lock contains only validated packages
+- [ ] Candidate changes pass `git diff --cached --check`
+- [ ] Full 316-test suite passes in a clean exported Git index
+- [ ] ROS `PYTHONPATH` is excluded from release validation
+- [ ] Sample MCAP creation passes
+- [ ] Validation Report generation passes
+- [ ] All six required report artifacts are present
+- [ ] Download ZIP is built from an explicit allowlist
+- [ ] ZIP contains no tests, website sources, Git metadata, or raw logs
+- [ ] ZIP is extracted into another clean directory
+- [ ] A new virtual environment is created after extraction
+- [ ] Installation from `requirements-lock.txt` passes
+- [ ] Extracted-package sample E2E passes
+- [ ] Final ZIP checksum is written to `SHA256SUMS`
+- [ ] `sha256sum -c SHA256SUMS` passes
+- [ ] Release commit and annotated tag identify the same source
+- [ ] GitHub Release assets are downloaded and verified again
+- [ ] Website download and documentation links are checked
