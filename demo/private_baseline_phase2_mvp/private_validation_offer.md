@@ -47,4 +47,4 @@ separate written agreement explicitly permits it.
 
 Replace before external distribution:
 
-`contact@YOUR_DOMAIN`
+`contact@veluneos.ai`

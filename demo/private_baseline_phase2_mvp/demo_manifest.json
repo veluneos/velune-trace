@@ -19,7 +19,7 @@
     },
     {
       "path": "private_validation_offer.md",
-      "sha256": "82fbf4d8ceca2038e78a4f52fb825f62e280f23c54d72c09018e2bc1c82bc46e",
+      "sha256": "78e021e1a44b2139ec71c58d8cbb1d11dacf004322118b43c348c96c11586d9f",
       "size_bytes": 1281
     },
     {
@@ -28,7 +28,9 @@
       "size_bytes": 1064
     }
   ],
-  "generated_at": "2026-07-22T00:49:12+00:00",
+  "generated_at": "2026-07-22T00:54:53+00:00",
+  "official_contact": "contact@veluneos.ai",
+  "official_domain": "veluneos.ai",
   "package_name": "private_baseline_phase2_mvp",
   "schema_name": "velune.external_demo_manifest",
   "schema_version": "0.1.0",
