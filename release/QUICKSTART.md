@@ -1,4 +1,4 @@
-# Velune Trace v0.4.0 — Quick Start
+# Velune Trace v0.4.1 — Quick Start
 
 ## 1. Create the deterministic sample MCAP
 
@@ -32,6 +32,15 @@ velune_report/
 
 Review `velune_report/summary.md` first.
 
+When a completely unobserved aligned range is derived from adjacent
+observed timestamps, the ranked evidence record includes:
+
+- `evidence_kind=sparse_missing_interval`
+- `derivation=adjacent_observed_timestamps`
+
+This remains observed timing evidence rather than a root-cause or
+fault conclusion.
+
 ## 4. Run on your own MCAP
 
 ```bash
@@ -43,6 +52,10 @@ env -u PYTHONPATH -u PYTHONHOME       PYTHONNOUSERSITE=1       VELUNE_PYTHON="$P
 ```bash
 env -u PYTHONPATH -u PYTHONHOME       PYTHONNOUSERSITE=1       VELUNE_PYTHON="$PWD/.venv/bin/python"       ./bin/velune compare-bundles       /path/to/reference_bundle       /path/to/target_bundle       --export-dir comparison_output
 ```
+
+`comparison_report.json` remains the machine-readable source of truth.
+`comparison_summary.md` includes observed Reference, Target, Delta,
+Ratio, and Ratio-state values for changed comparable fields.
 
 Comparison reports observed evidence differences only.
 Engineers determine their meaning and cause.

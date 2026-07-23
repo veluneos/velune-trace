@@ -1,4 +1,4 @@
-# Velune Trace v0.4.0 — Release Checklist
+# Velune Trace v0.4.1 — Release Checklist
 
 - [ ] Release branch starts from the intended source commit
 - [ ] Original worktree is clean before release preparation
@@ -6,7 +6,7 @@
 - [ ] Exactly one `__version__` assignment is found
 - [ ] Dependency lock contains only validated packages
 - [ ] Candidate changes pass `git diff --cached --check`
-- [ ] Full 316-test suite passes in a clean exported Git index
+- [ ] Full 318-test suite passes in a clean exported Git index
 - [ ] ROS `PYTHONPATH` is excluded from release validation
 - [ ] Sample MCAP creation passes
 - [ ] Validation Report generation passes
