@@ -104,7 +104,22 @@ class BundleComparisonWriterTests(unittest.TestCase):
                     "reference_profile_context": {},
                     "target_profile_context": {},
                     "profile_context_comparisons": {},
-                    "profile_metric_comparisons": {},
+                    "profile_metric_comparisons": {
+                        "count": {
+                            "reference": 100,
+                            "target": 120,
+                            "delta": 20,
+                            "ratio": 1.2,
+                            "ratio_state": "finite",
+                        },
+                        "jitter_ns": {
+                            "reference": 1_000_000,
+                            "target": 2_000_000,
+                            "delta": 1_000_000,
+                            "ratio": 2.0,
+                            "ratio_state": "finite",
+                        },
+                    },
                     "timestamp_provenance": {},
                     "reference_evidence_summary": {},
                     "target_evidence_summary": {},
@@ -239,6 +254,95 @@ class BundleComparisonWriterTests(unittest.TestCase):
         )
         self.assertIn(
             "`profile.jitter_ns`",
+            rendered,
+        )
+        self.assertIn(
+            "#### Profile fields (2)",
+            rendered,
+        )
+        self.assertIn(
+            "- Reference: `100`",
+            rendered,
+        )
+        self.assertIn(
+            "- Target: `120`",
+            rendered,
+        )
+        self.assertIn(
+            "- Delta: `20`",
+            rendered,
+        )
+        self.assertIn(
+            "- Ratio: `1.2`",
+            rendered,
+        )
+        self.assertIn(
+            "- Ratio state: `finite`",
+            rendered,
+        )
+
+
+    def test_markdown_renders_evidence_summary_values(self):
+        report = self.report()
+        comparison = report[
+            "topic_comparisons"
+        ][0]
+
+        comparison[
+            "evidence_summary_comparisons"
+        ] = {
+            "min_count_ratio": {
+                "reference": 0.9,
+                "target": 0.0,
+                "delta": -0.9,
+                "ratio": 0.0,
+                "ratio_state": "finite",
+            },
+        }
+
+        comparison["changed_fields"] = sorted(
+            comparison["changed_fields"]
+            + [
+                (
+                    "evidence_summary."
+                    "min_count_ratio"
+                ),
+            ]
+        )
+
+        report["summary"][
+            "changed_evidence_summary_topic_count"
+        ] = 1
+        report["summary"][
+            "identical_evidence_summary_topic_count"
+        ] = 0
+
+        rendered = render_comparison_summary(
+            report
+        )
+
+        self.assertIn(
+            "#### Evidence-summary fields (1)",
+            rendered,
+        )
+        self.assertIn(
+            "`evidence_summary.min_count_ratio`",
+            rendered,
+        )
+        self.assertIn(
+            "- Reference: `0.9`",
+            rendered,
+        )
+        self.assertIn(
+            "- Target: `0.0`",
+            rendered,
+        )
+        self.assertIn(
+            "- Delta: `-0.9`",
+            rendered,
+        )
+        self.assertIn(
+            "- Ratio: `0.0`",
             rendered,
         )
 

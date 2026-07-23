@@ -3,6 +3,7 @@ import json
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from unittest.mock import patch
 from pathlib import Path
 
 from tools.create_sample_mcap import (
@@ -132,6 +133,194 @@ class ValidationReportBundleIntegrationTests(unittest.TestCase):
                 manifest["judgment_boundary"][
                     "liability_calculation"
                 ]
+            )
+
+
+    def test_full_empty_window_is_ranked_as_sparse_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary_root = Path(
+                temporary_directory
+            )
+
+            input_path = temporary_root / "dropout.mcap"
+            input_path.write_bytes(b"fixture")
+
+            messages = []
+
+            for index in range(400):
+                timestamp_ns = index * 50_000_000
+
+                if (
+                    10_000_000_000
+                    <= timestamp_ns
+                    < 11_000_000_000
+                ):
+                    continue
+
+                messages.append({
+                    "topic": "/lidar_top",
+                    "log_time": timestamp_ns,
+                })
+
+            bundle_dir = temporary_root / "bundle"
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with patch(
+                "velune_trace.cli.validation_report.read_messages",
+                return_value=iter(messages),
+            ):
+                with redirect_stdout(stdout), redirect_stderr(stderr):
+                    exit_code = main([
+                        str(input_path),
+                        "--export-dir",
+                        str(bundle_dir),
+                        "--window-sec",
+                        "1",
+                        "--top",
+                        "5",
+                        "--allowed-lateness-sec",
+                        "2",
+                    ])
+
+            self.assertEqual(
+                exit_code,
+                0,
+                msg=stderr.getvalue(),
+            )
+
+            evidence = json.loads(
+                (
+                    bundle_dir
+                    / "evidence_windows.json"
+                ).read_text(
+                    encoding="utf-8"
+                )
+            )
+
+            lidar_windows = evidence["/lidar_top"]
+
+            self.assertLessEqual(
+                len(lidar_windows),
+                5,
+            )
+
+            missing_windows = [
+                window
+                for window in lidar_windows
+                if window["count"] == 0
+            ]
+
+            self.assertGreaterEqual(
+                len(missing_windows),
+                1,
+            )
+
+            missing = missing_windows[0]
+
+            self.assertEqual(
+                missing["count_ratio"],
+                0.0,
+            )
+
+            self.assertGreaterEqual(
+                missing["max_gap_ns"],
+                1_000_000_000,
+            )
+
+            self.assertLessEqual(
+                missing["start_ns"],
+                10_000_000_000,
+            )
+
+            self.assertGreaterEqual(
+                missing["end_ns"],
+                11_000_000_000,
+            )
+
+            self.assertEqual(
+                missing["evidence_kind"],
+                "sparse_missing_interval",
+            )
+            self.assertEqual(
+                missing["derivation"],
+                "adjacent_observed_timestamps",
+            )
+            self.assertEqual(
+                missing["missing_window_count"],
+                1,
+            )
+            self.assertEqual(
+                missing["previous_observed_ns"],
+                9_950_000_000,
+            )
+            self.assertEqual(
+                missing["next_observed_ns"],
+                11_000_000_000,
+            )
+
+            for window in lidar_windows:
+                self.assertIn(
+                    window["evidence_kind"],
+                    {
+                        "observed_window",
+                        "sparse_missing_interval",
+                    },
+                )
+                self.assertIn(
+                    "derivation",
+                    window,
+                )
+                self.assertIn(
+                    "missing_window_count",
+                    window,
+                )
+
+            schema = (
+                bundle_dir
+                / "SCHEMA.md"
+            ).read_text(
+                encoding="utf-8"
+            )
+
+            self.assertIn(
+                "## Evidence Window Provenance",
+                schema,
+            )
+            self.assertIn(
+                "`sparse_missing_interval`",
+                schema,
+            )
+            self.assertIn(
+                "`adjacent_observed_timestamps`",
+                schema,
+            )
+            self.assertIn(
+                "`previous_observed_ns`",
+                schema,
+            )
+            self.assertIn(
+                "`next_observed_ns`",
+                schema,
+            )
+
+            profile = json.loads(
+                (
+                    bundle_dir
+                    / "topic_profile.json"
+                ).read_text(
+                    encoding="utf-8"
+                )
+            )
+
+            self.assertEqual(
+                profile["/lidar_top"]["count"],
+                380,
+            )
+
+            self.assertGreaterEqual(
+                profile["/lidar_top"]["max_gap_ns"],
+                1_000_000_000,
             )
 
 
