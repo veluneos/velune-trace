@@ -240,18 +240,6 @@
       letter-spacing: 0.12em;
     }
 
-    .command {
-      margin: 20px 0 0;
-      padding: 15px 17px;
-      overflow-x: auto;
-      border: 1px solid #273449;
-      border-radius: 9px;
-      background: #05080d;
-      color: #d9e3ef;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
     .release-links {
       display: flex;
       flex-wrap: wrap;
@@ -275,13 +263,6 @@
       border-top: 1px solid #202a38;
       color: #8491a1;
       font-size: 14px;
-    }
-
-    .release-hash {
-      overflow-wrap: anywhere;
-      color: #aeb9c7;
-      font-family: monospace;
-      font-size: 12px;
     }
 
     @media (max-width: 720px) {
@@ -369,11 +350,11 @@
           </span>
 
           <span>
-            Package <strong>174,259 bytes</strong>
+            실행 방식 <strong>Local</strong>
           </span>
 
           <span>
-            Validated <strong>Ubuntu 24.04 · Python 3.12</strong>
+            검증 환경 <strong>Ubuntu 24.04 · Python 3.12</strong>
           </span>
         </div>
 
@@ -384,8 +365,8 @@
             <h3>패키지 다운로드</h3>
 
             <p>
-              테스트, 웹사이트 소스, Git 메타데이터 및 원본 MCAP을
-              제외한 명시적 공개 파일 69개로 구성된 로컬 실행 패키지입니다.
+              Velune Trace v0.4.0을 내려받아 로컬 환경에서
+              MCAP 로그 분석을 바로 시작할 수 있습니다.
             </p>
 
             <div class="actions">
@@ -401,14 +382,12 @@
           <article class="release-card">
             <div class="release-step">STEP 02</div>
 
-            <h3>무결성 확인 후 설치</h3>
+            <h3>설치 가이드 확인</h3>
 
             <p>
-              ZIP과 SHA256SUMS를 같은 디렉터리에 내려받고
-              압축을 풀기 전에 패키지 해시를 검증하세요.
+              지원 환경, 가상환경 생성 및 실행 방법을
+              설치 가이드에서 순서대로 확인할 수 있습니다.
             </p>
-
-            <pre class="command"><code>sha256sum -c SHA256SUMS</code></pre>
 
             <div class="actions">
               <a
@@ -417,7 +396,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                전체 설치 안내
+                설치 가이드 보기
               </a>
             </div>
           </article>
@@ -429,15 +408,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            릴리스 노트 및 자산
-          </a>
-
-          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/SHA256SUMS">
-            SHA256SUMS
-          </a>
-
-          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.release-manifest.json">
-            Release Manifest
+            릴리스 정보 보기
           </a>
 
           <a
@@ -456,9 +427,6 @@
           자동으로 판정하지 않습니다.
         </p>
 
-        <p class="release-hash">
-          SHA-256: d719e7d03be8a6963c3e2141b846064c56805d9b2c288dc6683bfa86ebc83ad6
-        </p>
       </div>
     </section>
 

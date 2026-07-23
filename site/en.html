@@ -240,18 +240,6 @@
       letter-spacing: 0.12em;
     }
 
-    .command {
-      margin: 20px 0 0;
-      padding: 15px 17px;
-      overflow-x: auto;
-      border: 1px solid #273449;
-      border-radius: 9px;
-      background: #05080d;
-      color: #d9e3ef;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
     .release-links {
       display: flex;
       flex-wrap: wrap;
@@ -275,13 +263,6 @@
       border-top: 1px solid #202a38;
       color: #8491a1;
       font-size: 14px;
-    }
-
-    .release-hash {
-      overflow-wrap: anywhere;
-      color: #aeb9c7;
-      font-family: monospace;
-      font-size: 12px;
     }
 
     @media (max-width: 720px) {
@@ -369,11 +350,11 @@
           </span>
 
           <span>
-            Package <strong>174,259 bytes</strong>
+            Execution <strong>Local</strong>
           </span>
 
           <span>
-            Validated <strong>Ubuntu 24.04 · Python 3.12</strong>
+            Validated on <strong>Ubuntu 24.04 · Python 3.12</strong>
           </span>
         </div>
 
@@ -384,9 +365,8 @@
             <h3>Download the package</h3>
 
             <p>
-              A local runtime package containing 69 explicitly
-              allowlisted public files, with tests, website sources,
-              Git metadata, and raw MCAP files excluded.
+              Download Velune Trace v0.4.0 and begin analyzing
+              MCAP logs directly in your local environment.
             </p>
 
             <div class="actions">
@@ -402,14 +382,12 @@
           <article class="release-card">
             <div class="release-step">STEP 02</div>
 
-            <h3>Verify before installation</h3>
+            <h3>Follow the installation guide</h3>
 
             <p>
-              Download the ZIP and SHA256SUMS into the same directory,
-              then verify the package before extracting it.
+              Review the supported environment, virtual environment
+              setup, and CLI instructions in the installation guide.
             </p>
-
-            <pre class="command"><code>sha256sum -c SHA256SUMS</code></pre>
 
             <div class="actions">
               <a
@@ -418,7 +396,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Full installation guide
+                View installation guide
               </a>
             </div>
           </article>
@@ -430,15 +408,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            Release notes &amp; assets
-          </a>
-
-          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/SHA256SUMS">
-            SHA256SUMS
-          </a>
-
-          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.release-manifest.json">
-            Release Manifest
+            View release information
           </a>
 
           <a
@@ -457,9 +427,6 @@
           cause, fault, liability, safety, or regression.
         </p>
 
-        <p class="release-hash">
-          SHA-256: d719e7d03be8a6963c3e2141b846064c56805d9b2c288dc6683bfa86ebc83ad6
-        </p>
       </div>
     </section>
 
