@@ -1214,6 +1214,112 @@ python3 tools/create_sample_mcap.py
     </article>
   </div>
 
+  <div class="comparison-case">
+    <div class="comparison-case-heading">
+      <span class="comparison-case-kicker">
+        MEASURED CASE · nuScenes scene-0553
+      </span>
+
+      <h3>
+        실제 Bundle 비교에서 한 Topic의 timing 변화가
+        분리되었습니다.
+      </h3>
+
+      <p>
+        동일한 scene의 원본 MCAP과
+        <code>/lidar_top</code> 메시지 20개를 제거한
+        검증용 Target fixture를 같은 설정으로 분석했습니다.
+      </p>
+    </div>
+
+    <div class="comparison-case-bundles">
+      <article class="comparison-case-bundle">
+        <span class="comparison-case-role">REFERENCE</span>
+        <strong>Original MCAP</strong>
+
+        <div class="comparison-case-values">
+          <div>
+            <span>Topics</span>
+            <strong>41</strong>
+          </div>
+
+          <div>
+            <span>/lidar_top</span>
+            <strong>398 messages</strong>
+          </div>
+
+          <div>
+            <span>Maximum gap</span>
+            <strong>100.089 ms</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="comparison-case-bundle target">
+        <span class="comparison-case-role">TARGET FIXTURE</span>
+        <strong>20 LiDAR messages removed</strong>
+
+        <div class="comparison-case-values">
+          <div>
+            <span>Topics</span>
+            <strong>41</strong>
+          </div>
+
+          <div>
+            <span>/lidar_top</span>
+            <strong>378 messages</strong>
+          </div>
+
+          <div>
+            <span>Maximum gap</span>
+            <strong>1,050.060 ms</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="comparison-case-observations">
+      <div class="comparison-case-observation">
+        <span>Changed common topic</span>
+        <strong>1 · /lidar_top</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Message count</span>
+        <strong>398 → 378</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Profile maximum gap</span>
+        <strong>100.089 → 1,050.060 ms</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Minimum Top-K count ratio</span>
+        <strong>0.904762 → 0.0</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Target review position</span>
+        <strong>Top-5 · Rank 1</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Max active windows</span>
+        <strong>119 → 119</strong>
+      </div>
+    </div>
+
+    <p class="comparison-case-note">
+      Velune Trace는 인접한 두 관측 timestamp 사이에서
+      완전히 관측되지 않은 정렬 구간을
+      <code>sparse_missing_interval</code>로 파생하고,
+      Target의 첫 번째 검토 구간으로 제시했습니다.
+      이는 관측 timing evidence이며 원인, 고장, 안전성 또는
+      regression 판정이 아닙니다.
+    </p>
+  </div>
+
   <div class="comparison-use-cases">
     <span>Before vs After</span>
     <span>Version vs Version</span>

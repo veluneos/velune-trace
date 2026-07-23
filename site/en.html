@@ -1215,6 +1215,112 @@ python3 tools/create_sample_mcap.py
     </article>
   </div>
 
+  <div class="comparison-case">
+    <div class="comparison-case-heading">
+      <span class="comparison-case-kicker">
+        MEASURED CASE · nuScenes scene-0553
+      </span>
+
+      <h3>
+        A timing change in one topic was isolated in a real
+        Bundle comparison.
+      </h3>
+
+      <p>
+        The original MCAP and a validation Target fixture with
+        20 removed <code>/lidar_top</code> messages were analyzed
+        with the same extraction settings.
+      </p>
+    </div>
+
+    <div class="comparison-case-bundles">
+      <article class="comparison-case-bundle">
+        <span class="comparison-case-role">REFERENCE</span>
+        <strong>Original MCAP</strong>
+
+        <div class="comparison-case-values">
+          <div>
+            <span>Topics</span>
+            <strong>41</strong>
+          </div>
+
+          <div>
+            <span>/lidar_top</span>
+            <strong>398 messages</strong>
+          </div>
+
+          <div>
+            <span>Maximum gap</span>
+            <strong>100.089 ms</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="comparison-case-bundle target">
+        <span class="comparison-case-role">TARGET FIXTURE</span>
+        <strong>20 LiDAR messages removed</strong>
+
+        <div class="comparison-case-values">
+          <div>
+            <span>Topics</span>
+            <strong>41</strong>
+          </div>
+
+          <div>
+            <span>/lidar_top</span>
+            <strong>378 messages</strong>
+          </div>
+
+          <div>
+            <span>Maximum gap</span>
+            <strong>1,050.060 ms</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="comparison-case-observations">
+      <div class="comparison-case-observation">
+        <span>Changed common topic</span>
+        <strong>1 · /lidar_top</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Message count</span>
+        <strong>398 → 378</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Profile maximum gap</span>
+        <strong>100.089 → 1,050.060 ms</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Minimum Top-K count ratio</span>
+        <strong>0.904762 → 0.0</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Target review position</span>
+        <strong>Top-5 · Rank 1</strong>
+      </div>
+
+      <div class="comparison-case-observation">
+        <span>Max active windows</span>
+        <strong>119 → 119</strong>
+      </div>
+    </div>
+
+    <p class="comparison-case-note">
+      Velune Trace derived the fully unobserved aligned range
+      between two adjacent observed timestamps as a
+      <code>sparse_missing_interval</code> and presented it as
+      the first Target review range. This is observed timing
+      evidence, not a determination of cause, failure, safety,
+      or regression.
+    </p>
+  </div>
+
   <div class="comparison-use-cases">
     <span>Before vs After</span>
     <span>Version vs Version</span>
