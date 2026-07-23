@@ -706,6 +706,129 @@ def _markdown_topic_list(
     ]
 
 
+def _markdown_metric_value(value: Any) -> str:
+    """Render one JSON-compatible scalar as Markdown code."""
+
+    if value is None:
+        rendered = "null"
+
+    elif isinstance(value, bool):
+        rendered = (
+            "true"
+            if value
+            else "false"
+        )
+
+    elif isinstance(value, float):
+        rendered = json.dumps(
+            value,
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+
+    else:
+        rendered = str(value)
+
+    return _markdown_code(rendered)
+
+
+def _comparison_record_for_field(
+    comparison: Mapping[str, Any],
+    field_name: str,
+) -> Mapping[str, Any] | None:
+    """Resolve one changed field to its comparison record."""
+
+    if "." not in field_name:
+        return None
+
+    namespace, metric_name = field_name.split(
+        ".",
+        1,
+    )
+
+    record_container_names = {
+        "profile": "profile_metric_comparisons",
+        "profile_context": (
+            "profile_context_comparisons"
+        ),
+        "evidence_summary": (
+            "evidence_summary_comparisons"
+        ),
+    }
+
+    container_name = record_container_names.get(
+        namespace
+    )
+
+    if container_name is None:
+        return None
+
+    container = comparison.get(
+        container_name
+    )
+
+    if not isinstance(container, Mapping):
+        return None
+
+    record = container.get(metric_name)
+
+    if not isinstance(record, Mapping):
+        return None
+
+    return record
+
+
+def _render_changed_field_detail(
+    comparison: Mapping[str, Any],
+    field_name: str,
+) -> list[str]:
+    """Render bounded observed values for one changed field."""
+
+    lines = [
+        f"- {_markdown_code(field_name)}",
+    ]
+
+    record = _comparison_record_for_field(
+        comparison,
+        field_name,
+    )
+
+    if record is None:
+        lines.append(
+            "  - Values: available in "
+            f"{_markdown_code(COMPARISON_REPORT_FILENAME)}"
+        )
+        return lines
+
+    display_fields = (
+        ("Reference", "reference"),
+        ("Target", "target"),
+        ("Delta", "delta"),
+        ("Ratio", "ratio"),
+        ("Ratio state", "ratio_state"),
+    )
+
+    rendered_value_count = 0
+
+    for label, key in display_fields:
+        if key not in record:
+            continue
+
+        lines.append(
+            f"  - {label}: "
+            f"{_markdown_metric_value(record[key])}"
+        )
+        rendered_value_count += 1
+
+    if rendered_value_count == 0:
+        lines.append(
+            "  - Values: available in "
+            f"{_markdown_code(COMPARISON_REPORT_FILENAME)}"
+        )
+
+    return lines
+
+
 def render_comparison_summary(
     report: Mapping[str, Any],
 ) -> str:
@@ -1047,15 +1170,20 @@ def render_comparison_summary(
                         + " fields"
                     ),
                 )
-                rendered_fields = ", ".join(
-                    _markdown_code(field_name)
-                    for field_name in fields
-                )
 
                 lines.append(
-                    f"- {label} ({len(fields)}): "
-                    f"{rendered_fields}"
+                    f"#### {label} ({len(fields)})"
                 )
+                lines.append("")
+
+                for field_name in fields:
+                    lines.extend(
+                        _render_changed_field_detail(
+                            comparison,
+                            field_name,
+                        )
+                    )
+                    lines.append("")
 
             lines.append("")
 

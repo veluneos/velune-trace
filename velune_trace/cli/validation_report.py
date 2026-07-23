@@ -109,7 +109,36 @@ def finalize_window(topic, w, expected_count, top_heap, top):
         "jitter_sec": ns_to_sec(jitter_ns),
         "observed_irregularity_score": float(score),
         "score_semantics": "ranking_heuristic_only_no_root_cause_inference",
+        "evidence_kind": str(
+            w.get(
+                "evidence_kind",
+                "observed_window",
+            )
+        ),
+        "derivation": str(
+            w.get(
+                "derivation",
+                "observed_messages_within_window",
+            )
+        ),
+        "missing_window_count": int(
+            w.get(
+                "missing_window_count",
+                0,
+            )
+        ),
     }
+
+    if w.get("previous_observed_ns") is not None:
+        item["previous_observed_ns"] = int(
+            w["previous_observed_ns"]
+        )
+
+    if w.get("next_observed_ns") is not None:
+        item["next_observed_ns"] = int(
+            w["next_observed_ns"]
+        )
+
     update_topk(top_heap, item, top)
 
 
@@ -159,6 +188,7 @@ def main(argv=None):
     top_windows = {}
     finalized_window_counts = {}
     inferred_count_samples = {}
+    missing_interval_heaps = {}
 
     total_messages = 0
     parse_errors = 0
@@ -193,6 +223,7 @@ def main(argv=None):
         top_windows[topic] = []
         finalized_window_counts[topic] = 0
         inferred_count_samples[topic] = []
+        missing_interval_heaps[topic] = []
 
     def make_window(window_id):
         start_ns = global_start_ns + window_id * window_ns
@@ -270,6 +301,56 @@ def main(argv=None):
                 late_dropped_count += 1
                 continue
 
+            previous_ns = stats["previous_ns"]
+
+            if (
+                previous_ns is not None
+                and t_ns >= previous_ns
+            ):
+                previous_window_id = (
+                    previous_ns - global_start_ns
+                ) // window_ns
+
+                current_window_id = (
+                    t_ns - global_start_ns
+                ) // window_ns
+
+                missing_window_count = (
+                    current_window_id
+                    - previous_window_id
+                    - 1
+                )
+
+                if missing_window_count > 0:
+                    first_missing_window_id = (
+                        previous_window_id + 1
+                    )
+
+                    gap_ns = t_ns - previous_ns
+
+                    candidate = (
+                        int(gap_ns),
+                        int(first_missing_window_id),
+                        int(current_window_id),
+                        int(missing_window_count),
+                        int(previous_ns),
+                        int(t_ns),
+                    )
+
+                    heap = missing_interval_heaps[topic]
+
+                    if len(heap) < args.top:
+                        heapq.heappush(
+                            heap,
+                            candidate,
+                        )
+
+                    elif candidate > heap[0]:
+                        heapq.heapreplace(
+                            heap,
+                            candidate,
+                        )
+
             prev = stats["previous_ns"]
             if prev is not None and t_ns >= prev:
                 gap = t_ns - prev
@@ -319,6 +400,69 @@ def main(argv=None):
         return 1
 
     flush_old_windows(force=True)
+
+    for topic, heap in missing_interval_heaps.items():
+        stats = topic_stats[topic]
+        expected_count = stats[
+            "expected_count_per_window"
+        ]
+
+        for (
+            gap_ns,
+            first_missing_window_id,
+            current_window_id,
+            missing_window_count,
+            previous_observed_ns,
+            next_observed_ns,
+        ) in heap:
+            start_ns = (
+                global_start_ns
+                + first_missing_window_id * window_ns
+            )
+
+            end_ns = (
+                global_start_ns
+                + current_window_id * window_ns
+            )
+
+            missing_window = {
+                "window": int(
+                    first_missing_window_id
+                ),
+                "start_ns": int(start_ns),
+                "end_ns": int(end_ns),
+                "count": 0,
+                "first_ns": None,
+                "last_ns": None,
+                "previous_ns": None,
+                "gap_count": 0,
+                "gap_sum_ns": 0,
+                "gap_sum_sq_ns": 0,
+                "max_gap_ns": int(gap_ns),
+                "evidence_kind": (
+                    "sparse_missing_interval"
+                ),
+                "derivation": (
+                    "adjacent_observed_timestamps"
+                ),
+                "missing_window_count": int(
+                    missing_window_count
+                ),
+                "previous_observed_ns": int(
+                    previous_observed_ns
+                ),
+                "next_observed_ns": int(
+                    next_observed_ns
+                ),
+            }
+
+            finalize_window(
+                topic,
+                missing_window,
+                expected_count,
+                top_windows[topic],
+                args.top,
+            )
 
     topic_profile = {}
     evidence_windows = {}
@@ -420,6 +564,34 @@ Optional topic profile fields:
 
 - sensor_category
 - expected_hz
+
+## Evidence Window Provenance
+
+Every ranked evidence-window record includes:
+
+- `evidence_kind`
+- `derivation`
+- `missing_window_count`
+
+Ordinary observed windows use:
+
+- `evidence_kind`: `observed_window`
+- `derivation`: `observed_messages_within_window`
+- `missing_window_count`: `0`
+
+A sparse missing interval uses:
+
+- `evidence_kind`: `sparse_missing_interval`
+- `derivation`: `adjacent_observed_timestamps`
+- `count`: `0`
+- `missing_window_count`: number of fully unobserved aligned windows
+- `previous_observed_ns`: timestamp immediately before the interval
+- `next_observed_ns`: timestamp immediately after the interval
+
+For a sparse missing interval, `max_gap_ns` is the observed timestamp
+difference between `previous_observed_ns` and `next_observed_ns`.
+The record is timing evidence derived from adjacent observations. It is
+not a root-cause, fault, safety, severity, or regression conclusion.
 
 ## Judgment Boundary
 
