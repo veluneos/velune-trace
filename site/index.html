@@ -671,20 +671,22 @@
     </p>
 
     <h1>
-      전체 로그를 뒤지는 동안,<br />
-      실제 원인 분석은 아직 시작되지 않습니다.
+      <span>전체 로그를 재생하기 전에,</span>
+      <span class="hero-accent">
+        먼저 볼 구간을 좁히세요.
+      </span>
     </h1>
 
     <p>
-      Velune Trace는 MCAP / ROS2 로그를 로컬에서 읽고,
-      먼저 확인할 timing evidence window를 우선순위로
-      정리합니다. 반복적인 replay와 timestamp 탐색을 줄여
-      엔지니어가 실제 조사에 더 빨리 들어가도록 돕습니다.
+      Velune Trace는 MCAP / ROS2 로그에서 timing evidence
+      window를 우선순위로 정리합니다. 전체 replay 전에
+      먼저 검토할 시간대를 제시해 엔지니어의 조사 시작점을
+      줄입니다.
     </p>
 
     <p class="hero-proof">
-      <strong>원인을 대신 판단하지 않습니다.</strong>
-      엔지니어가 어디부터 봐야 할지 줄여줍니다.
+      <strong>Find the events.</strong>
+      Engineers find the cause.
     </p>
 
     <div class="actions">
@@ -709,63 +711,113 @@
   </div>
 
   <aside
-    class="evidence-console"
-    aria-label="Evidence window ranking 예시 화면"
+    class="triage-explainer"
+    aria-label="전체 로그에서 먼저 볼 구간을 좁히는 과정"
   >
-    <div class="console-topbar">
-      <div class="console-window-dots" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <span class="console-title">velune / evidence-windows</span>
-      <span class="console-status">local</span>
+    <div class="triage-example-label">
+      <span>동작 예시</span>
+      <strong>LOCAL ANALYSIS</strong>
     </div>
 
-    <div class="console-summary">
-      <span>REVIEW QUEUE</span>
-      <strong>TOP 5 WINDOWS</strong>
-    </div>
-
-    <div class="timeline-visual" aria-hidden="true">
-      <div class="timeline-axis"></div>
-      <span class="timeline-window one"></span>
-      <span class="timeline-window two"></span>
-      <span class="timeline-window three"></span>
-    </div>
-
-    <div class="evidence-list">
-      <div class="evidence-row">
-        <span class="evidence-priority">#01</span>
-        <div class="evidence-time">
-          <strong>00:18:42.100 — 00:18:43.100</strong>
-          <span>/scan gap · /odom jitter</span>
+    <div class="triage-source">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">INPUT</span>
+          <strong>42분 전체 MCAP 로그</strong>
         </div>
-        <span class="evidence-tag">review first</span>
+
+        <span class="triage-duration">00:00 — 42:00</span>
       </div>
 
-      <div class="evidence-row">
-        <span class="evidence-priority">#02</span>
-        <div class="evidence-time">
-          <strong>00:23:11.400 — 00:23:12.400</strong>
-          <span>out-of-order timing</span>
-        </div>
-        <span class="evidence-tag">timing</span>
+      <div
+        class="full-log-timeline"
+        aria-label="42분 전체 로그 타임라인"
+      >
+        <span class="review-point point-one"></span>
+        <span class="review-point point-two"></span>
+        <span class="review-point point-three"></span>
+        <span class="review-point point-four"></span>
+        <span class="review-point point-five"></span>
       </div>
 
-      <div class="evidence-row">
-        <span class="evidence-priority">#03</span>
-        <div class="evidence-time">
-          <strong>00:31:07.800 — 00:31:08.800</strong>
-          <span>count ratio observation</span>
-        </div>
-        <span class="evidence-tag">count</span>
+      <div class="timeline-scale">
+        <span>전체 로그</span>
+        <span>5개 후보 구간</span>
       </div>
     </div>
 
-    <p class="console-footnote">
-      Illustrative evidence view · review order, not cause probability
+    <div class="triage-connector">
+      <span class="connector-arrow" aria-hidden="true">↓</span>
+
+      <div>
+        <strong>Velune Trace</strong>
+        <span>
+          관측된 timing evidence를 기준으로
+          먼저 확인할 구간을 정리
+        </span>
+      </div>
+    </div>
+
+    <div class="triage-result">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">OUTPUT</span>
+          <strong>먼저 확인할 Top 5 구간</strong>
+        </div>
+
+        <span class="triage-result-badge">review queue</span>
+      </div>
+
+      <div class="review-window-list">
+        <div class="review-window featured">
+          <span class="review-rank">01</span>
+
+          <div class="review-window-copy">
+            <strong>18:42.100 — 18:43.100</strong>
+            <span>/scan gap · /odom jitter</span>
+          </div>
+
+          <span class="review-action">먼저 확인</span>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">02</span>
+
+          <div class="review-window-copy">
+            <strong>23:11.400 — 23:12.400</strong>
+            <span>out-of-order timing</span>
+          </div>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">03</span>
+
+          <div class="review-window-copy">
+            <strong>31:07.800 — 31:08.800</strong>
+            <span>count ratio observation</span>
+          </div>
+        </div>
+
+        <div class="more-windows">
+          <span>+ 2개 구간</span>
+          <span>사용자가 지정한 review depth에 따라 확장</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="viewer-handoff">
+      <span class="viewer-handoff-label">NEXT</span>
+
+      <div>
+        <strong>선택한 구간부터 상세 조사</strong>
+        <span>
+          Foxglove 또는 기존 분석 도구에서 해당 시간대 확인
+        </span>
+      </div>
+    </div>
+
+    <p class="triage-disclaimer">
+      우선 검토 순서이며 원인 가능성·위험도 판정이 아닙니다.
     </p>
   </aside>
 </header>
@@ -1060,7 +1112,126 @@ python3 tools/create_sample_mcap.py
   </div>
 </section>
 
-    <section id="validation">
+    <section id="comparison">
+  <p class="eyebrow">Core Bundle Comparison v1</p>
+
+  <h2>
+    두 로그를 번갈아 보지 말고,
+    달라진 evidence부터 확인하세요.
+  </h2>
+
+  <p class="section-intro">
+    Velune Trace는 완료되고 검증된 두 Core Report Bundle을
+    로컬에서 비교합니다. Topic 구성, timing profile,
+    ranked evidence-window 요약에서 관측된 차이를 구조화해
+    엔지니어가 달라진 지점부터 검토하도록 돕습니다.
+  </p>
+
+  <div class="bundle-compare-shell">
+    <div class="bundle-pair">
+      <article class="bundle-node">
+        <span class="bundle-role">REFERENCE</span>
+        <strong>Reference Bundle</strong>
+        <p>
+          사용자가 비교 기준으로 선택한
+          완료된 Core Report Bundle
+        </p>
+      </article>
+
+      <div class="compare-vs" aria-hidden="true">
+        <span>VS</span>
+      </div>
+
+      <article class="bundle-node target">
+        <span class="bundle-role">TARGET</span>
+        <strong>Target Bundle</strong>
+        <p>
+          변경 이후 또는 비교 대상으로 선택한
+          완료된 Core Report Bundle
+        </p>
+      </article>
+    </div>
+
+    <div class="difference-strip">
+      <div class="difference-title">
+        <span>OBSERVED DIFFERENCES</span>
+        <strong>비교 리포트가 정리하는 항목</strong>
+      </div>
+
+      <div class="difference-items">
+        <div class="difference-item">
+          <span>01</span>
+          <strong>Topic set</strong>
+          <small>추가·제거·공통 topic</small>
+        </div>
+
+        <div class="difference-item">
+          <span>02</span>
+          <strong>Timing profile</strong>
+          <small>비교 가능한 관측 지표의 차이</small>
+        </div>
+
+        <div class="difference-item">
+          <span>03</span>
+          <strong>Evidence windows</strong>
+          <small>각 Bundle의 ranked-window 요약 차이</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-route-grid">
+    <article class="comparison-command">
+      <div class="terminal-heading">
+        <span>Local comparison</span>
+        <strong>compare-bundles</strong>
+      </div>
+
+      <pre><code>./bin/velune compare-bundles   /path/to/reference_bundle   /path/to/target_bundle   --export-dir comparison_output</code></pre>
+    </article>
+
+    <article class="comparison-artifacts">
+      <span class="artifact-heading">LOCAL OUTPUT</span>
+
+      <h3>두 개의 비교 결과를 생성합니다.</h3>
+
+      <ul class="comparison-artifact-list">
+        <li>
+          <code>comparison_report.json</code>
+          <span>기계 판독 가능한 source of truth</span>
+        </li>
+
+        <li>
+          <code>comparison_summary.md</code>
+          <span>엔지니어가 읽는 제한된 요약</span>
+        </li>
+      </ul>
+
+      <p>
+        비교에는 원본 MCAP이 필요하지 않으며,
+        완료된 Core Report Bundle만 사용합니다.
+      </p>
+    </article>
+  </div>
+
+  <div class="comparison-use-cases">
+    <span>Before vs After</span>
+    <span>Version vs Version</span>
+    <span>Robot vs Robot</span>
+    <span>Site vs Site</span>
+    <span>Reference vs Target</span>
+  </div>
+
+  <p class="technical-note comparison-boundary">
+    Reference는 정답이나 정상 상태를 의미하지 않습니다.
+    비교 리포트는 관측된 차이만 보여주며 root cause,
+    fault, safety risk 또는 regression을 판정하지 않습니다.
+    이 기능은 pairwise Core Bundle Comparison이며,
+    전체 Private Baseline workflow와는 구분됩니다.
+  </p>
+</section>
+
+<section id="validation">
   <p class="eyebrow">Measured Separately</p>
 
   <h2>첫 indexing과 이후 evidence 조회를 분리합니다.</h2>

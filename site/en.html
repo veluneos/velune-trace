@@ -671,20 +671,21 @@
     </p>
 
     <h1>
-      While you search the entire log,<br />
-      root-cause investigation has not even started.
+      <span>Before replaying the entire log,</span>
+      <span class="hero-accent">
+        narrow the investigation window.
+      </span>
     </h1>
 
     <p>
-      Velune Trace reads MCAP and ROS2 logs locally and prioritizes
-      timing evidence windows worth reviewing first. It reduces
-      repetitive replay and timestamp search so engineers can begin
-      the actual investigation sooner.
+      Velune Trace prioritizes timing evidence windows from MCAP and
+      ROS2 logs. It gives engineers a focused starting range before
+      full replay and detailed investigation.
     </p>
 
     <p class="hero-proof">
-      <strong>It does not decide the cause.</strong>
-      It reduces where engineers need to start looking.
+      <strong>Find the events.</strong>
+      Engineers find the cause.
     </p>
 
     <div class="actions">
@@ -709,63 +710,113 @@
   </div>
 
   <aside
-    class="evidence-console"
-    aria-label="Example evidence-window ranking interface"
+    class="triage-explainer"
+    aria-label="How Velune narrows a full log into review windows"
   >
-    <div class="console-topbar">
-      <div class="console-window-dots" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <span class="console-title">velune / evidence-windows</span>
-      <span class="console-status">local</span>
+    <div class="triage-example-label">
+      <span>Workflow example</span>
+      <strong>LOCAL ANALYSIS</strong>
     </div>
 
-    <div class="console-summary">
-      <span>REVIEW QUEUE</span>
-      <strong>TOP 5 WINDOWS</strong>
-    </div>
-
-    <div class="timeline-visual" aria-hidden="true">
-      <div class="timeline-axis"></div>
-      <span class="timeline-window one"></span>
-      <span class="timeline-window two"></span>
-      <span class="timeline-window three"></span>
-    </div>
-
-    <div class="evidence-list">
-      <div class="evidence-row">
-        <span class="evidence-priority">#01</span>
-        <div class="evidence-time">
-          <strong>00:18:42.100 — 00:18:43.100</strong>
-          <span>/scan gap · /odom jitter</span>
+    <div class="triage-source">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">INPUT</span>
+          <strong>42-minute MCAP log</strong>
         </div>
-        <span class="evidence-tag">review first</span>
+
+        <span class="triage-duration">00:00 — 42:00</span>
       </div>
 
-      <div class="evidence-row">
-        <span class="evidence-priority">#02</span>
-        <div class="evidence-time">
-          <strong>00:23:11.400 — 00:23:12.400</strong>
-          <span>out-of-order timing</span>
-        </div>
-        <span class="evidence-tag">timing</span>
+      <div
+        class="full-log-timeline"
+        aria-label="Full 42-minute log timeline"
+      >
+        <span class="review-point point-one"></span>
+        <span class="review-point point-two"></span>
+        <span class="review-point point-three"></span>
+        <span class="review-point point-four"></span>
+        <span class="review-point point-five"></span>
       </div>
 
-      <div class="evidence-row">
-        <span class="evidence-priority">#03</span>
-        <div class="evidence-time">
-          <strong>00:31:07.800 — 00:31:08.800</strong>
-          <span>count ratio observation</span>
-        </div>
-        <span class="evidence-tag">count</span>
+      <div class="timeline-scale">
+        <span>Full log</span>
+        <span>5 candidate windows</span>
       </div>
     </div>
 
-    <p class="console-footnote">
-      Illustrative evidence view · review order, not cause probability
+    <div class="triage-connector">
+      <span class="connector-arrow" aria-hidden="true">↓</span>
+
+      <div>
+        <strong>Velune Trace</strong>
+        <span>
+          Orders the ranges worth reviewing first using
+          observable timing evidence
+        </span>
+      </div>
+    </div>
+
+    <div class="triage-result">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">OUTPUT</span>
+          <strong>Top 5 ranges to review first</strong>
+        </div>
+
+        <span class="triage-result-badge">review queue</span>
+      </div>
+
+      <div class="review-window-list">
+        <div class="review-window featured">
+          <span class="review-rank">01</span>
+
+          <div class="review-window-copy">
+            <strong>18:42.100 — 18:43.100</strong>
+            <span>/scan gap · /odom jitter</span>
+          </div>
+
+          <span class="review-action">review first</span>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">02</span>
+
+          <div class="review-window-copy">
+            <strong>23:11.400 — 23:12.400</strong>
+            <span>out-of-order timing</span>
+          </div>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">03</span>
+
+          <div class="review-window-copy">
+            <strong>31:07.800 — 31:08.800</strong>
+            <span>count ratio observation</span>
+          </div>
+        </div>
+
+        <div class="more-windows">
+          <span>+ 2 more ranges</span>
+          <span>Expanded by the selected review depth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="viewer-handoff">
+      <span class="viewer-handoff-label">NEXT</span>
+
+      <div>
+        <strong>Investigate the selected ranges</strong>
+        <span>
+          Open the timestamps in Foxglove or an existing analysis tool
+        </span>
+      </div>
+    </div>
+
+    <p class="triage-disclaimer">
+      Review order only—not cause probability or safety-risk judgment.
     </p>
   </aside>
 </header>
@@ -1062,7 +1113,126 @@ python3 tools/create_sample_mcap.py
   </div>
 </section>
 
-    <section id="validation">
+    <section id="comparison">
+  <p class="eyebrow">Core Bundle Comparison v1</p>
+
+  <h2>
+    Stop replaying two logs side by side.
+    Start with the evidence that changed.
+  </h2>
+
+  <p class="section-intro">
+    Velune Trace compares two completed and verified Core Report
+    Bundles locally. It structures observed differences in topic
+    sets, timing profiles, and ranked evidence-window summaries
+    so engineers can begin with what changed.
+  </p>
+
+  <div class="bundle-compare-shell">
+    <div class="bundle-pair">
+      <article class="bundle-node">
+        <span class="bundle-role">REFERENCE</span>
+        <strong>Reference Bundle</strong>
+        <p>
+          A completed Core Report Bundle selected by the user
+          as the comparison reference
+        </p>
+      </article>
+
+      <div class="compare-vs" aria-hidden="true">
+        <span>VS</span>
+      </div>
+
+      <article class="bundle-node target">
+        <span class="bundle-role">TARGET</span>
+        <strong>Target Bundle</strong>
+        <p>
+          A completed Core Report Bundle selected after a
+          change or as the comparison target
+        </p>
+      </article>
+    </div>
+
+    <div class="difference-strip">
+      <div class="difference-title">
+        <span>OBSERVED DIFFERENCES</span>
+        <strong>What the comparison report structures</strong>
+      </div>
+
+      <div class="difference-items">
+        <div class="difference-item">
+          <span>01</span>
+          <strong>Topic set</strong>
+          <small>Added, removed, and common topics</small>
+        </div>
+
+        <div class="difference-item">
+          <span>02</span>
+          <strong>Timing profile</strong>
+          <small>Differences in comparable observed metrics</small>
+        </div>
+
+        <div class="difference-item">
+          <span>03</span>
+          <strong>Evidence windows</strong>
+          <small>Ranked-window summary differences</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-route-grid">
+    <article class="comparison-command">
+      <div class="terminal-heading">
+        <span>Local comparison</span>
+        <strong>compare-bundles</strong>
+      </div>
+
+      <pre><code>./bin/velune compare-bundles   /path/to/reference_bundle   /path/to/target_bundle   --export-dir comparison_output</code></pre>
+    </article>
+
+    <article class="comparison-artifacts">
+      <span class="artifact-heading">LOCAL OUTPUT</span>
+
+      <h3>Two comparison artifacts are generated.</h3>
+
+      <ul class="comparison-artifact-list">
+        <li>
+          <code>comparison_report.json</code>
+          <span>Machine-readable source of truth</span>
+        </li>
+
+        <li>
+          <code>comparison_summary.md</code>
+          <span>Bounded human-readable summary</span>
+        </li>
+      </ul>
+
+      <p>
+        Comparison does not require the original MCAP files.
+        It operates from completed Core Report Bundles.
+      </p>
+    </article>
+  </div>
+
+  <div class="comparison-use-cases">
+    <span>Before vs After</span>
+    <span>Version vs Version</span>
+    <span>Robot vs Robot</span>
+    <span>Site vs Site</span>
+    <span>Reference vs Target</span>
+  </div>
+
+  <p class="technical-note comparison-boundary">
+    A Reference Bundle is not ground truth or a definition of
+    normality. The report presents observed differences only.
+    It does not determine root cause, fault, safety risk, or
+    regression. This is pairwise Core Bundle Comparison, not
+    the complete Private Baseline workflow.
+  </p>
+</section>
+
+<section id="validation">
   <p class="eyebrow">Measured Separately</p>
 
   <h2>Initial indexing and post-index retrieval are separate.</h2>
