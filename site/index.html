@@ -183,6 +183,117 @@
     footer a {
       color: #cbd5e1;
     }
+
+    .release-panel {
+      margin-top: 34px;
+      padding: 32px;
+      border: 1px solid #2a3749;
+      border-radius: 16px;
+      background: #0c1118;
+    }
+
+    .release-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 28px;
+      color: #8491a1;
+      font-size: 14px;
+    }
+
+    .release-meta strong {
+      color: #f4f7fb;
+    }
+
+    .release-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .release-card {
+      padding: 25px;
+      border: 1px solid #202a38;
+      border-radius: 12px;
+      background: #090d13;
+    }
+
+    .release-card h3 {
+      margin: 12px 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .release-card p {
+      margin: 0;
+      color: #9ca8b7;
+    }
+
+    .release-card .actions {
+      margin-top: 22px;
+    }
+
+    .release-step {
+      color: #8fbaff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .command {
+      margin: 20px 0 0;
+      padding: 15px 17px;
+      overflow-x: auto;
+      border: 1px solid #273449;
+      border-radius: 9px;
+      background: #05080d;
+      color: #d9e3ef;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .release-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px 24px;
+      margin-top: 24px;
+    }
+
+    .release-links a {
+      color: #8fbaff;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .release-links a:hover {
+      text-decoration: underline;
+    }
+
+    .release-boundary {
+      margin: 25px 0 0;
+      padding-top: 22px;
+      border-top: 1px solid #202a38;
+      color: #8491a1;
+      font-size: 14px;
+    }
+
+    .release-hash {
+      overflow-wrap: anywhere;
+      color: #aeb9c7;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .release-panel {
+        padding: 22px;
+      }
+
+      .release-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 
@@ -223,19 +334,133 @@
       <div class="actions">
         <a
           class="button primary"
-          href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
+          href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.zip"
         >
-          비공개 검증 요청
+          Velune Trace v0.4.0 다운로드
         </a>
 
         <a
           class="button"
-          href="#validation"
+          href="#download"
         >
-          검증 결과 보기
+          설치 및 검증 방법
         </a>
       </div>
     </header>
+
+
+    <section id="download">
+      <div class="eyebrow">
+        Public Release · v0.4.0
+      </div>
+
+      <h2>로컬에서 바로 실행하세요.</h2>
+
+      <p class="section-copy">
+        VeluneOS의 로컬 증거 엔진 Velune Trace v0.4.0을 내려받아
+        MCAP 로그에서 토픽 프로파일, 증거 구간 및 재현 가능한
+        Core Report Bundle을 생성할 수 있습니다.
+      </p>
+
+      <div class="release-panel">
+        <div class="release-meta">
+          <span>
+            Version <strong>v0.4.0</strong>
+          </span>
+
+          <span>
+            Package <strong>174,259 bytes</strong>
+          </span>
+
+          <span>
+            Validated <strong>Ubuntu 24.04 · Python 3.12</strong>
+          </span>
+        </div>
+
+        <div class="release-grid">
+          <article class="release-card">
+            <div class="release-step">STEP 01</div>
+
+            <h3>패키지 다운로드</h3>
+
+            <p>
+              테스트, 웹사이트 소스, Git 메타데이터 및 원본 MCAP을
+              제외한 명시적 공개 파일 69개로 구성된 로컬 실행 패키지입니다.
+            </p>
+
+            <div class="actions">
+              <a
+                class="button primary"
+                href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.zip"
+              >
+                ZIP 다운로드
+              </a>
+            </div>
+          </article>
+
+          <article class="release-card">
+            <div class="release-step">STEP 02</div>
+
+            <h3>무결성 확인 후 설치</h3>
+
+            <p>
+              ZIP과 SHA256SUMS를 같은 디렉터리에 내려받고
+              압축을 풀기 전에 패키지 해시를 검증하세요.
+            </p>
+
+            <pre class="command"><code>sha256sum -c SHA256SUMS</code></pre>
+
+            <div class="actions">
+              <a
+                class="button"
+                href="https://github.com/veluneos/velune-trace/blob/v0.4.0/release/INSTALL.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                전체 설치 안내
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <div class="release-links">
+          <a
+            href="https://github.com/veluneos/velune-trace/releases/tag/v0.4.0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            릴리스 노트 및 자산
+          </a>
+
+          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/SHA256SUMS">
+            SHA256SUMS
+          </a>
+
+          <a href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.release-manifest.json">
+            Release Manifest
+          </a>
+
+          <a
+            href="https://github.com/veluneos/velune-trace"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub 저장소
+          </a>
+        </div>
+
+        <p class="release-boundary">
+          Velune Trace는 로컬에서 실행되며 텔레메트리나 원본 로그의
+          자동 업로드를 수행하지 않습니다. 관찰된 증거와 차이를
+          구조화하지만 근본 원인, 과실, 책임, 안전성 또는 회귀 여부를
+          자동으로 판정하지 않습니다.
+        </p>
+
+        <p class="release-hash">
+          SHA-256: d719e7d03be8a6963c3e2141b846064c56805d9b2c288dc6683bfa86ebc83ad6
+        </p>
+      </div>
+    </section>
 
     <section id="problem">
       <h2>전체 로그를 직접 뒤지지 마세요.</h2>
