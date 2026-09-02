@@ -2,6 +2,38 @@
 
 All notable changes to Velune Trace are recorded here.
 
+## [0.5.0] - 2026-09-02
+
+### Fixed
+
+- Fresh-clone test execution no longer silently depends on an
+  undocumented pre-existing `examples/sample.mcap`. A pytest session
+  bootstrap now generates the deterministic sample automatically if it
+  is missing.
+- `docs/architecture.md` contained malformed, stale content that did
+  not match the current implementation. Rewritten with an accurate
+  description of the current MCAP evidence pipeline and the legacy
+  JSONL/SQLite indexing pipeline.
+
+### Removed
+
+- Two unused CLI modules (`verify_dataset.py`, `dataset_report.py`)
+  that were not wired into the `velune` command dispatcher, untested,
+  and undocumented. Their sole dependency, PyYAML, was removed from
+  `requirements.txt` / `requirements-lock.txt`. The public command
+  set is unchanged.
+
+### Changed
+
+- Release-process documentation and version references brought
+  current for this release.
+
+### Boundaries
+
+Velune Trace reports observed evidence and differences. It does not
+automatically determine root cause, fault, liability, safety, severity,
+normality, superiority, regression, or improvement.
+
 ## [0.4.1] - 2026-07-23
 
 ### Added

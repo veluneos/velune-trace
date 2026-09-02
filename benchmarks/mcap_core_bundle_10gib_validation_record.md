@@ -7,10 +7,7 @@
 - Validation date: `2026-07-16`
 - Validation scope: `MCAP_INPUT_TO_COMPLETE_LOCAL_CORE_REPORT_BUNDLE`
 - Benchmark target: Complete the end-to-end Core Report Bundle workflow in less than 300 seconds
-- Repository branch: `phase1-evidence-report-bundle`
-- Source commit: `186443d29f9dc0bc4e7efd24bdb5e66cbcef2d90`
-- Commit date: `2026-07-16T11:29:25+09:00`
-- Commit subject: `Add reproducible MCAP benchmark corpus builder`
+- Provenance: historical validation run against the reproducible MCAP benchmark corpus builder (`tools/build_mcap_benchmark_corpus.py`)
 
 ## Executive Result
 
@@ -57,7 +54,6 @@ No telemetry or automatic upload was performed.
 
 | Item | Value |
 |---|---|
-| Host | `velune-lab` |
 | Operating system | Ubuntu 24.04.4 LTS |
 | Kernel | `6.17.0-35-generic` |
 | Architecture | `x86_64` |

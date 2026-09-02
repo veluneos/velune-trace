@@ -1,3 +1,2 @@
 mcap
 zstandard
-PyYAML

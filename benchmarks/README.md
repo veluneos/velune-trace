@@ -23,6 +23,8 @@
 | trace_chain_extraction_10gb_benchmark_report.txt | Event chain extraction benchmark |
 | chain_extractor_v0_2_validation_report.txt | Chain extractor validation |
 | trace_viewer_v0_4_streaming_validation_report.txt | Streaming viewer validation |
+| benchmark_10gb_summary.md | 10GB JSONL/SQLite indexing benchmark summary |
+| mcap_core_bundle_10gib_validation_record.md | End-to-end MCAP-to-Core-Report-Bundle 10GiB validation record |
 
 ## Important Notes
 
