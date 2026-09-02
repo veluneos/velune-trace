@@ -1,0 +1,16 @@
+TRACE_VIEWER_V0_4_STREAMING_VALIDATION_REPORT
+viewer=velune_trace_viewer_v0_4_streaming.py
+input_v0_4=velune_trace_logs/converted/trace_lite_v0_4_from_real_v0_3_log.jsonl
+input_legacy_v0_3=velune_trace_logs/trace_lite_v0_3_ros.jsonl
+event_type_search=PASS
+topic_search=PASS
+backward_compatibility=PASS
+legacy_missing_clock_fields_displayed=PASS
+match_count_ordering=PASS
+weighted_ranking=NOT_USED
+risk_scoring=NOT_USED
+fault_priority=NOT_USED
+root_cause_priority=NOT_USED
+default_order=file
+memory_policy=streaming_by_default_with_bounded_buffer_for_explicit_sort
+result=PASS

@@ -1,0 +1,22 @@
+VELUNE_TRACE_INDEXER_v0_2_INCREMENTAL_VALIDATION_REPORT
+RESULT=PASS
+SOURCE=synthetic_logs/trace_lite_v0_4_synthetic_10gb.jsonl
+INDEX=synthetic_logs/trace_lite_v0_4_synthetic_10gb.index.sqlite
+SOURCE_SIZE_BYTES=10737420159
+PREVIOUS_LAST_INDEXED_SEQ=9237884
+PREVIOUS_LAST_INDEXED_END_OFFSET=10737418410
+NEW_LAST_INDEXED_SEQ=9237887
+NEW_LAST_INDEXED_END_OFFSET=10737420159
+INCREMENTAL_EVENTS_INDEXED=3
+BAD_JSON_RECORDS=0
+PREFIX_PROBE_CHECK=PASS
+SOURCE_TRUNCATION_CHECK=PASS
+SEQUENCE_CONTINUITY_CHECK=PASS
+LAST_EVENT_HASH_CONTINUITY_CHECK=PASS
+TRANSACTION_ROLLBACK_SAFETY=PASS
+FULL_SOURCE_SHA256_RECALCULATION=NOT_USED
+INCREMENTAL_INDEX_TIME_SECONDS=0.036777
+NON_JUDGMENT_STATEMENT=This index maps immutable trace events to byte offsets for retrieval only. It does not assign fault, liability, risk score, blame, or root cause.
+CLAIM_SCOPE=append-only incremental indexing with prefix probe and hash continuity checks
+NON_CLAIM=does not claim full corpus tamper detection, causal discovery, root cause judgment, or liability assignment
+UPDATED_AT_UTC=2026-06-13T08:55:28.452599Z

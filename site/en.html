@@ -1,0 +1,1238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <meta name="description" content="Velune Trace reads MCAP and ROS2 logs locally and ranks timing evidence windows to reduce where engineers need to begin an investigation." />
+  <title>Velune Trace | Local Robotics Log Triage</title>
+  <link rel="alternate" hreflang="ko" href="index.html">
+  <link rel="alternate" hreflang="en" href="en.html">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family:
+        Inter, ui-sans-serif, system-ui,
+        -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #080b10;
+      color: #f4f7fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, #152133 0, #080b10 42%);
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #8491a1;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .language-switch strong {
+      color: #f4f7fb;
+    }
+
+    nav a,
+    .button {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 110px 0 120px;
+      max-width: 900px;
+    }
+
+    .eyebrow {
+      color: #8fbaff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 24px;
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: #b8c2cf;
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 19px;
+      border: 1px solid #33445c;
+      border-radius: 9px;
+      font-weight: 650;
+    }
+
+    .button.primary {
+      background: #f4f7fb;
+      border-color: #f4f7fb;
+      color: #080b10;
+    }
+
+    section {
+      padding: 80px 0;
+      border-top: 1px solid #202a38;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: clamp(30px, 4vw, 48px);
+      letter-spacing: -0.035em;
+    }
+
+    .section-copy {
+      max-width: 760px;
+      color: #b8c2cf;
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .card {
+      min-height: 180px;
+      padding: 24px;
+      background: rgba(18, 25, 35, 0.8);
+      border: 1px solid #273447;
+      border-radius: 14px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #aab5c3;
+    }
+
+    .metric {
+      font-size: 32px;
+      font-weight: 750;
+    }
+
+    footer {
+      padding: 50px 0 70px;
+      color: #8491a1;
+      border-top: 1px solid #202a38;
+    }
+
+    footer a {
+      color: #cbd5e1;
+    }
+
+    .release-panel {
+      margin-top: 34px;
+      padding: 32px;
+      border: 1px solid #2a3749;
+      border-radius: 16px;
+      background: #0c1118;
+    }
+
+    .release-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 28px;
+      color: #8491a1;
+      font-size: 14px;
+    }
+
+    .release-meta strong {
+      color: #f4f7fb;
+    }
+
+    .release-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .release-card {
+      padding: 25px;
+      border: 1px solid #202a38;
+      border-radius: 12px;
+      background: #090d13;
+    }
+
+    .release-card h3 {
+      margin: 12px 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .release-card p {
+      margin: 0;
+      color: #9ca8b7;
+    }
+
+    .release-card .actions {
+      margin-top: 22px;
+    }
+
+    .release-step {
+      color: #8fbaff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .release-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px 24px;
+      margin-top: 24px;
+    }
+
+    .release-links a {
+      color: #8fbaff;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .release-links a:hover {
+      text-decoration: underline;
+    }
+
+    .release-boundary {
+      margin: 25px 0 0;
+      padding-top: 22px;
+      border-top: 1px solid #202a38;
+      color: #8491a1;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .release-panel {
+        padding: 22px;
+      }
+
+      .release-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+    /* VELUNE_PRODUCT_FLOW_V1 */
+
+    .hero-proof {
+      max-width: 820px;
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 3px solid #68a8ff;
+      border-radius: 0 10px 10px 0;
+      background: rgba(74, 132, 214, 0.1);
+    }
+
+    .hero-proof strong {
+      color: #ffffff;
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .trust-row span {
+      padding: 8px 11px;
+      border: 1px solid #273449;
+      border-radius: 999px;
+      background: rgba(8, 14, 23, 0.72);
+      color: #aeb9c7;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .section-intro {
+      max-width: 820px;
+      margin-bottom: 30px;
+    }
+
+    .loss-line {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border: 1px solid #3a2e2e;
+      border-radius: 10px;
+      background: rgba(106, 55, 55, 0.1);
+      color: #d8dde6;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .comparison-card {
+      padding: 24px;
+      border: 1px solid #273449;
+      border-radius: 12px;
+      background: rgba(7, 12, 20, 0.72);
+    }
+
+    .comparison-card h3 {
+      margin-top: 0;
+    }
+
+    .comparison-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 6px 9px;
+      border: 1px solid #31425a;
+      border-radius: 999px;
+      color: #9ebce3;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .flow-list li {
+      position: relative;
+      padding: 13px 14px 13px 38px;
+      border: 1px solid #202c3d;
+      border-radius: 8px;
+      background: #080d15;
+    }
+
+    .flow-list li::before {
+      position: absolute;
+      left: 14px;
+      content: "↓";
+      color: #68a8ff;
+      font-weight: 700;
+    }
+
+    .flow-list li:first-child::before {
+      content: "●";
+      font-size: 9px;
+      top: 17px;
+    }
+
+    .rank-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .rank-chip {
+      min-width: 82px;
+      padding: 14px 16px;
+      border: 1px solid #31547e;
+      border-radius: 10px;
+      background: rgba(45, 91, 148, 0.14);
+      text-align: center;
+    }
+
+    .rank-chip strong {
+      display: block;
+      color: #ffffff;
+      font-size: 20px;
+    }
+
+    .rank-chip span {
+      color: #9fabb9;
+      font-size: 12px;
+    }
+
+    .technical-note {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border: 1px solid #29384d;
+      border-radius: 9px;
+      background: rgba(10, 18, 29, 0.8);
+      color: #aeb9c7;
+      font-size: 14px;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .signal-card {
+      padding: 21px;
+      border: 1px solid #273449;
+      border-radius: 11px;
+      background: rgba(7, 12, 20, 0.72);
+    }
+
+    .signal-card h3 {
+      margin-top: 0;
+      color: #ffffff;
+      font-size: 16px;
+    }
+
+    .signal-card p {
+      margin-bottom: 0;
+      color: #9fabb9;
+      font-size: 14px;
+    }
+
+    .quickstart-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 22px;
+      margin-top: 30px;
+    }
+
+    .command-panel,
+    .output-panel {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid #273449;
+      border-radius: 12px;
+      background: rgba(7, 12, 20, 0.78);
+    }
+
+    .command-panel h3,
+    .output-panel h3 {
+      margin-top: 0;
+    }
+
+    .command-panel pre {
+      margin: 16px 0 0;
+      padding: 18px;
+      overflow-x: auto;
+      border: 1px solid #202d3f;
+      border-radius: 9px;
+      background: #04070c;
+      color: #dbe7f5;
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre;
+    }
+
+    .command-panel code {
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+    }
+
+    .output-list {
+      display: grid;
+      gap: 9px;
+      margin: 17px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .output-list li {
+      padding: 10px 12px;
+      border: 1px solid #202d3f;
+      border-radius: 7px;
+      background: #070c13;
+      color: #c8d3df;
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .release-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .workflow-step {
+      position: relative;
+      padding: 24px;
+      border: 1px solid #273449;
+      border-radius: 11px;
+      background: rgba(7, 12, 20, 0.72);
+    }
+
+    .workflow-step strong {
+      display: block;
+      margin-bottom: 11px;
+      color: #ffffff;
+    }
+
+    .workflow-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-bottom: 16px;
+      border: 1px solid #4777ad;
+      border-radius: 50%;
+      color: #9bc6f7;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .metric-card {
+      padding: 22px;
+      border: 1px solid #273449;
+      border-radius: 11px;
+      background: rgba(7, 12, 20, 0.72);
+    }
+
+    .metric-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffffff;
+      font-size: 25px;
+    }
+
+    .metric-card span {
+      color: #9fabb9;
+      font-size: 13px;
+    }
+
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .boundary-card {
+      padding: 23px;
+      border: 1px solid #273449;
+      border-radius: 11px;
+      background: rgba(7, 12, 20, 0.72);
+    }
+
+    .boundary-card h3 {
+      margin-top: 0;
+    }
+
+    .boundary-card ul {
+      margin-bottom: 0;
+      padding-left: 20px;
+    }
+
+    .boundary-card li + li {
+      margin-top: 9px;
+    }
+
+    @media (max-width: 900px) {
+      .signal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .quickstart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .comparison-grid,
+      .workflow-grid,
+      .metric-grid,
+      .boundary-grid,
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .command-panel,
+      .output-panel,
+      .comparison-card,
+      .workflow-step,
+      .metric-card,
+      .boundary-card,
+      .signal-card {
+        padding: 19px;
+      }
+
+      .rank-chip {
+        flex: 1 1 42%;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="design-v3.css" />
+</head>
+
+<body>
+  <main>
+    <nav>
+      <div class="brand">VeluneOS</div>
+
+      <div class="nav-actions">
+        <div class="language-switch">
+          <a href="index.html">KR</a>
+          <span>|</span>
+          <strong>EN</strong>
+        </div>
+
+        <a href="mailto:contact@veluneos.ai">
+          contact@veluneos.ai
+        </a>
+      </div>
+    </nav>
+
+    <header class="hero hero-v2">
+  <div class="hero-copy">
+    <p class="eyebrow">
+      Robotics Incident Triage · Local Evidence Engine
+    </p>
+
+    <h1>
+      <span>Before replaying the entire log,</span>
+      <span class="hero-accent">
+        narrow the investigation window.
+      </span>
+    </h1>
+
+    <p>
+      Velune Trace prioritizes timing evidence windows from MCAP and
+      ROS2 logs. It gives engineers a focused starting range before
+      full replay and detailed investigation.
+    </p>
+
+    <p class="hero-proof">
+      <strong>Find the events.</strong>
+      Engineers find the cause.
+    </p>
+
+    <div class="actions">
+      <a
+        class="button primary"
+        href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.zip"
+      >
+        Download the free Local Engine
+      </a>
+
+      <a class="button" href="#download">
+        Test with a sample log
+      </a>
+    </div>
+
+    <div class="trust-row" aria-label="Runtime and privacy boundary">
+      <span>Local-only</span>
+      <span>No telemetry</span>
+      <span>No automatic raw-log upload</span>
+      <span>Human final judgment</span>
+    </div>
+  </div>
+
+  <aside
+    class="triage-explainer"
+    aria-label="How Velune narrows a full log into review windows"
+  >
+    <div class="triage-example-label">
+      <span>Workflow example</span>
+      <strong>LOCAL ANALYSIS</strong>
+    </div>
+
+    <div class="triage-source">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">INPUT</span>
+          <strong>42-minute MCAP log</strong>
+        </div>
+
+        <span class="triage-duration">00:00 — 42:00</span>
+      </div>
+
+      <div
+        class="full-log-timeline"
+        aria-label="Full 42-minute log timeline"
+      >
+        <span class="review-point point-one"></span>
+        <span class="review-point point-two"></span>
+        <span class="review-point point-three"></span>
+        <span class="review-point point-four"></span>
+        <span class="review-point point-five"></span>
+      </div>
+
+      <div class="timeline-scale">
+        <span>Full log</span>
+        <span>5 candidate windows</span>
+      </div>
+    </div>
+
+    <div class="triage-connector">
+      <span class="connector-arrow" aria-hidden="true">↓</span>
+
+      <div>
+        <strong>Velune Trace</strong>
+        <span>
+          Orders the ranges worth reviewing first using
+          observable timing evidence
+        </span>
+      </div>
+    </div>
+
+    <div class="triage-result">
+      <div class="triage-block-heading">
+        <div>
+          <span class="triage-step-label">OUTPUT</span>
+          <strong>Top 5 ranges to review first</strong>
+        </div>
+
+        <span class="triage-result-badge">review queue</span>
+      </div>
+
+      <div class="review-window-list">
+        <div class="review-window featured">
+          <span class="review-rank">01</span>
+
+          <div class="review-window-copy">
+            <strong>18:42.100 — 18:43.100</strong>
+            <span>/scan gap · /odom jitter</span>
+          </div>
+
+          <span class="review-action">review first</span>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">02</span>
+
+          <div class="review-window-copy">
+            <strong>23:11.400 — 23:12.400</strong>
+            <span>out-of-order timing</span>
+          </div>
+        </div>
+
+        <div class="review-window">
+          <span class="review-rank">03</span>
+
+          <div class="review-window-copy">
+            <strong>31:07.800 — 31:08.800</strong>
+            <span>count ratio observation</span>
+          </div>
+        </div>
+
+        <div class="more-windows">
+          <span>+ 2 more ranges</span>
+          <span>Expanded by the selected review depth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="viewer-handoff">
+      <span class="viewer-handoff-label">NEXT</span>
+
+      <div>
+        <strong>Investigate the selected ranges</strong>
+        <span>
+          Open the timestamps in Foxglove or an existing analysis tool
+        </span>
+      </div>
+    </div>
+
+    <p class="triage-disclaimer">
+      Review order only—not cause probability or safety-risk judgment.
+    </p>
+  </aside>
+</header>
+
+
+    <section id="problem">
+  <p class="eyebrow">The Cost Before Investigation</p>
+
+  <h2>
+    Searching the entire log is recurring work before
+    root-cause analysis begins.
+  </h2>
+
+  <p class="section-intro">
+    When an autonomous robot issue occurs, replaying the full
+    log, searching topics one by one, and repeatedly aligning
+    timestamps consumes engineering time before the actual
+    cause can even be examined.
+  </p>
+
+  <div class="comparison-grid">
+    <article class="comparison-card">
+      <span class="comparison-label">Without triage</span>
+      <h3>An investigation with no starting point</h3>
+
+      <ul class="flow-list">
+        <li>Replay the full MCAP or ROS2 log</li>
+        <li>Search large topic sets manually</li>
+        <li>Repeatedly align timestamps and message flows</li>
+        <li>Only then begin root-cause investigation</li>
+      </ul>
+    </article>
+
+    <article class="comparison-card">
+      <span class="comparison-label">With Velune Trace</span>
+      <h3>An investigation with prioritized starting points</h3>
+
+      <ul class="flow-list">
+        <li>Read the log locally</li>
+        <li>Summarize observable timing evidence</li>
+        <li>Review Top-K evidence windows</li>
+        <li>Investigate selected ranges in existing tools</li>
+      </ul>
+    </article>
+  </div>
+
+  <p class="loss-line">
+    As logs grow, this search cost returns with every incident.
+    Failing to narrow the first review range is an expensive
+    use of engineering time.
+  </p>
+</section>
+
+<section id="ranking">
+  <p class="eyebrow">Ranked Evidence Windows</p>
+
+  <h2>Choose the review depth needed for the investigation.</h2>
+
+  <p class="section-intro">
+    The default Quickstart returns the top five timing evidence
+    windows. For a broader investigation view, use
+    <code>--top 10</code>, <code>--top 15</code>, or
+    <code>--top 30</code> to change the number of results
+    presented for review.
+  </p>
+
+  <div class="rank-row" aria-label="Top-K review depth">
+    <div class="rank-chip">
+      <strong>Top 5</strong>
+      <span>Fast first review</span>
+    </div>
+
+    <div class="rank-chip">
+      <strong>Top 10</strong>
+      <span>Expanded review</span>
+    </div>
+
+    <div class="rank-chip">
+      <strong>Top 15</strong>
+      <span>Broader range</span>
+    </div>
+
+    <div class="rank-chip">
+      <strong>Top 30</strong>
+      <span>Deeper review</span>
+    </div>
+  </div>
+
+  <p class="technical-note">
+    <code>--top</code> controls the number of evidence windows,
+    not their duration. Ranking orders review candidates using
+    observed timing evidence. It is not a root-cause probability
+    or safety-risk score.
+  </p>
+</section>
+
+<section id="signals">
+  <p class="eyebrow">Observable Timing Evidence</p>
+
+  <h2>Observable timing evidence, not a system judgment.</h2>
+
+  <p class="section-intro">
+    Velune Trace structures timing signals visible in the log.
+    It does not conclude that a signal represents a defect or
+    the cause of an incident.
+  </p>
+
+  <div class="signal-grid">
+    <article class="signal-card">
+      <h3>Topic gap</h3>
+      <p>
+        Summarizes observed time gaps in message flows at the
+        evidence-window level.
+      </p>
+    </article>
+
+    <article class="signal-card">
+      <h3>Jitter</h3>
+      <p>
+        Observes timing variation in message arrival or
+        timestamp intervals.
+      </p>
+    </article>
+
+    <article class="signal-card">
+      <h3>Count ratio</h3>
+      <p>
+        Structures observed message-count ratios across
+        compared topics or windows.
+      </p>
+    </article>
+
+    <article class="signal-card">
+      <h3>Out-of-order timing</h3>
+      <p>
+        Observes ordering differences between recorded
+        sequences and timestamp flows.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section id="download">
+          <p class="eyebrow">Quick Test to Real Workflow</p>
+
+          <h2>Do not take the description on trust. Run the sample.</h2>
+
+          <p class="section-intro">
+            You can test the ranked evidence-window workflow without
+            providing an internal log or raw MCAP file. After the sample
+            run, replace only the input path to apply the same local
+            workflow to your own MCAP.
+          </p>
+
+          <div class="quickstart-grid">
+            <article class="command-panel">
+              <h3>1. Sample-log Quick Test</h3>
+
+              <pre><code>git clone https://github.com/veluneos/velune-trace.git
+cd velune-trace
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+python3 tools/create_sample_mcap.py
+
+./bin/velune validation-report examples/sample.mcap \
+  --export-dir velune_report \
+  --window-sec 1 \
+  --top 5 \
+  --allowed-lateness-sec 2</code></pre>
+            </article>
+
+            <article class="output-panel">
+              <h3>Local Evidence Report output</h3>
+
+              <p>
+                The command creates the following files locally without
+                modifying the source log or uploading it to a Velune
+                server.
+              </p>
+
+              <ul class="output-list">
+                <li>velune_report/summary.md</li>
+                <li>velune_report/shareable_anonymous_report.json</li>
+                <li>velune_report/topic_profile.json</li>
+                <li>velune_report/evidence_windows.json</li>
+                <li>velune_report/SCHEMA.md</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="quickstart-grid">
+            <article class="command-panel">
+              <h3>2. Run locally on your own MCAP</h3>
+
+              <pre><code>./bin/velune validation-report /path/to/your-log.mcap \
+  --export-dir velune_report \
+  --window-sec 1 \
+  --top 10 \
+  --allowed-lateness-sec 2</code></pre>
+            </article>
+
+            <article class="output-panel">
+              <h3>Adjust the review depth</h3>
+
+              <p>
+                Use <code>--top 5</code> for a fast first review or
+                <code>--top 10</code>, <code>--top 15</code>, and
+                <code>--top 30</code> for a broader investigation view.
+              </p>
+
+              <p class="technical-note">
+                Processing remains local. Velune Trace performs no
+                automatic raw-log upload, telemetry, or Velune server
+                call.
+              </p>
+            </article>
+          </div>
+
+          <div class="release-actions">
+            <a class="button primary" href="https://github.com/veluneos/velune-trace/releases/download/v0.4.0/velune-trace-v0.4.0.zip">
+              Download Velune Trace v0.4.0 ZIP
+            </a>
+
+            <a
+              class="button"
+              href="https://github.com/veluneos/velune-trace/blob/v0.4.0/release/INSTALL.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Full installation guide
+            </a>
+
+            <a
+              class="button"
+              href="https://github.com/veluneos/velune-trace/releases/tag/v0.4.0"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Release information
+            </a>
+
+            <a
+              class="button"
+              href="https://github.com/veluneos/velune-trace"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub repository
+            </a>
+          </div>
+        </section>
+
+    <section id="workflow">
+  <p class="eyebrow">Pre-viewer Triage Layer</p>
+
+  <h2>Velune Trace does not replace your existing viewer.</h2>
+
+  <p class="section-intro">
+    It is a pre-viewer triage layer that narrows the timestamps
+    and topic ranges worth reviewing before opening Foxglove,
+    PlotJuggler, or an existing analysis workflow.
+  </p>
+
+  <div class="workflow-grid">
+    <article class="workflow-step">
+      <span class="workflow-number">1</span>
+      <strong>Review ranked windows</strong>
+      <p>
+        Inspect prioritized evidence windows and observed topic
+        signals in the Velune Trace report.
+      </p>
+    </article>
+
+    <article class="workflow-step">
+      <span class="workflow-number">2</span>
+      <strong>Select a timestamp range</strong>
+      <p>
+        Choose the start time, end time, and topics relevant to
+        the engineering question.
+      </p>
+    </article>
+
+    <article class="workflow-step">
+      <span class="workflow-number">3</span>
+      <strong>Investigate in existing tools</strong>
+      <p>
+        Replay the selected range in Foxglove or the existing
+        engineering workflow and determine the final cause.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section id="validation">
+  <p class="eyebrow">Measured Separately</p>
+
+  <h2>Initial indexing and post-index retrieval are separate.</h2>
+
+  <p class="section-intro">
+    In an internal large-scale expansion benchmark, the initial
+    scan and indexing of a 10.7GB log containing 9,237,885
+    events took approximately 276 seconds. Retrieval of a
+    selected evidence chain after indexing took approximately
+    0.002 seconds.
+  </p>
+
+  <div class="metric-grid">
+    <article class="metric-card">
+      <strong>10.7GB</strong>
+      <span>Internal expansion benchmark log</span>
+    </article>
+
+    <article class="metric-card">
+      <strong>About 4.6 min</strong>
+      <span>Initial full scan and indexing</span>
+    </article>
+
+    <article class="metric-card">
+      <strong>About 0.002 sec</strong>
+      <span>Post-index evidence retrieval</span>
+    </article>
+  </div>
+
+  <p class="technical-note">
+    This was a synthetic large-scale expansion benchmark.
+    Results depend on hardware, storage, compression, message
+    structure, and dataset characteristics. Initial indexing
+    time and post-index retrieval time are reported separately.
+  </p>
+</section>
+
+    <section id="boundary">
+  <p class="eyebrow">Evidence, Not Judgment</p>
+
+  <h2>Velune narrows the starting point and leaves judgment open.</h2>
+
+  <div class="boundary-grid">
+    <article class="boundary-card">
+      <h3>What Velune Trace does</h3>
+      <ul>
+        <li>Processes MCAP and ROS2 logs locally</li>
+        <li>Generates timing evidence windows</li>
+        <li>Prioritizes observed evidence for review</li>
+        <li>Creates reproducible Markdown and JSON output</li>
+        <li>Provides timestamp ranges for existing viewers</li>
+      </ul>
+    </article>
+
+    <article class="boundary-card">
+      <h3>What Velune Trace does not determine</h3>
+      <ul>
+        <li>Root cause</li>
+        <li>Fault or liability</li>
+        <li>Safety risk or severity</li>
+        <li>Normality, abnormality, or regression</li>
+        <li>The final engineering conclusion</li>
+      </ul>
+    </article>
+  </div>
+
+  <p class="technical-note">
+    Velune Trace performs no automatic raw-log upload, telemetry,
+    or Velune server call. Engineers with system and operational
+    context make the final cause determination.
+  </p>
+</section>
+
+    <section id="contact">
+  <p class="eyebrow">Private Validation</p>
+
+  <h2>
+    Validate whether it reduces the starting range in a
+    real operational investigation.
+  </h2>
+
+  <p class="section-intro">
+    The validation question is deliberately narrow: does
+    evidence-window ranking reduce the time engineers spend
+    searching logs during real autonomous-robot incidents?
+  </p>
+
+  <p>
+    Private Validation does not require external upload of a
+    raw MCAP or internal log. Validation can use results produced
+    in the team's local environment and feedback on the existing
+    investigation workflow.
+  </p>
+
+  <div class="actions">
+    <a
+      class="button primary"
+      href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
+    >
+      Contact Private Validation
+    </a>
+
+    <a
+      class="button"
+      href="https://github.com/veluneos/velune-trace"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Review GitHub first
+    </a>
+  </div>
+</section>
+
+    <footer>
+      © 2026 VeluneOS ·
+      <a href="mailto:contact@veluneos.ai">
+        contact@veluneos.ai
+      </a>
+    </footer>
+  </main>
+</body>
+</html>

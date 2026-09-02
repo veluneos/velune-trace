@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite
+*.db
+*.mcap
+*.jsonl
+windowed_report.json
+evidence_window.json
+examples/*.mcap
+examples/*.json
+velune_report/

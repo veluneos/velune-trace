@@ -1,0 +1,4 @@
+PyYAML==6.0.3
+lz4==4.4.5
+mcap==1.4.0
+zstandard==0.25.0
