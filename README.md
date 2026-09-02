@@ -135,7 +135,7 @@ Engineers determine cause.
 
 - [Getting Started](docs/GETTING_STARTED.md)
 - [Trust and Privacy Model](docs/TRUST_AND_PRIVACY.md)
-- [External nuScenes Validation Summary](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)
+- [nuScenes Public Dataset Validation Summary](docs/validation/MASTER_NUSCENES_PUBLIC_DATASET_VALIDATION_SUMMARY.md)
 
 ---
 
@@ -145,11 +145,11 @@ Engineers determine cause.
 
 - 10.7 GB benchmark corpus
 - 9,237,885 indexed events
-- External nuScenes MCAP dataset
+- MCAP files generated from the public nuScenes dataset
 - Controlled dropout recovery fixture
 - Incremental indexing validation
 
-Velune has been validated on both internal robotics datasets and external autonomous-driving MCAP datasets.
+Velune has been validated on internal robotics datasets and on MCAP files generated from the publicly available nuScenes dataset.
 
 ---
 
@@ -171,7 +171,7 @@ Instead of starting from an entire log corpus, engineers start from ranked evide
 
 Without Velune
 
-    400GB MCAP
+    Large Robotics Log
     ↓
     Manual replay
     ↓
@@ -183,7 +183,7 @@ Without Velune
 
 With Velune
 
-    400GB MCAP
+    Large Robotics Log
     ↓
     validation-report
     ↓
@@ -299,7 +299,7 @@ It is designed to work before or alongside visualization tools.
 | SQLite index size | ~4.8 GB |
 | Indexed evidence-chain retrieval | 0.002 sec |
 | Incremental append validation | 10,000 events in 0.57 sec |
-| External nuScenes MCAP validation | PASS |
+| nuScenes Public Dataset Validation | PASS |
 | Controlled dropout recovery validation | PASS |
 
 Important note:
@@ -310,9 +310,9 @@ Velune does not claim raw 10GB parsing in 0.002 sec.
 
 ---
 
-## External Validation
+## Public Dataset Validation
 
-Velune Trace has been validated against external autonomous-driving MCAP datasets generated through the Foxglove `nuscenes2mcap` pipeline.
+Velune Trace has been validated on MCAP files generated from the publicly available nuScenes dataset through the Foxglove `nuscenes2mcap` pipeline.
 
 Dataset summary:
 
@@ -334,7 +334,7 @@ Validation scope:
 
 See:
 
-- [MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY](docs/validation/MASTER_NUSCENES_EXTERNAL_SWEEP_SUMMARY.md)
+- [MASTER_NUSCENES_PUBLIC_DATASET_VALIDATION_SUMMARY](docs/validation/MASTER_NUSCENES_PUBLIC_DATASET_VALIDATION_SUMMARY.md)
 
 ---
 
@@ -378,14 +378,14 @@ Completed:
 - [x] MCAP topic profiling
 - [x] MCAP windowed timing analysis
 - [x] MCAP evidence-window extraction
-- [x] External nuScenes validation
+- [x] nuScenes Public Dataset Validation
 
 Roadmap:
 
 - [ ] rosbag2 database adapter `.db3`
 - [ ] custom message introspection
 - [ ] larger-scale benchmark datasets
-- [ ] additional external robotics datasets
+- [ ] additional public robotics datasets
 - [ ] fleet-scale validation
 
 
@@ -459,7 +459,7 @@ Validated:
 - event-chain retrieval after indexing
 - append-only incremental indexing
 - invalid append rejection and rollback safety
-- external nuScenes MCAP timing analysis
+- MCAP timing analysis on the public nuScenes dataset
 - controlled dropout recovery fixture
 
 Not yet validated:

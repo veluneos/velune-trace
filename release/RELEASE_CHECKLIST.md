@@ -1,4 +1,4 @@
-# Velune Trace v0.5.0 — Release Checklist
+# Velune Trace v0.5.1 — Release Checklist
 
 - [ ] Release branch starts from the intended source commit
 - [ ] Original worktree is clean before release preparation

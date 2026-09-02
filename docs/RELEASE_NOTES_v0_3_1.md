@@ -2,7 +2,7 @@
 
 ## Release Focus
 
-v0.3.1 focuses on making Velune Trace easier for external robotics engineers to run, evaluate, and use as a local evidence-window extraction engine.
+v0.3.1 focuses on making Velune Trace easier for robotics engineers outside the Velune team to run, evaluate, and use as a local evidence-window extraction engine.
 
 This release highlights the large-log evidence extraction proof and adds anonymous report generation.
 
@@ -10,7 +10,7 @@ This release highlights the large-log evidence extraction proof and adds anonymo
 
 ### 1. Validation Report Workflow
 
-Added the validation-report command as the primary external evaluation path.
+Added the validation-report command as the primary evaluation workflow.
 
 Users can run Velune locally on an MCAP file and generate:
 

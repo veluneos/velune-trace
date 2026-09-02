@@ -2,6 +2,26 @@
 
 All notable changes to Velune Trace are recorded here.
 
+## [0.5.1] - 2026-09-02
+
+### Changed
+
+- Renamed the nuScenes validation terminology from `External Validation`
+  to `Public Dataset Validation` to distinguish Velune-run validation on
+  publicly available datasets from independent third-party evaluation.
+- Replaced the illustrative `400GB MCAP` workflow label with the
+  size-neutral `Large Robotics Log` because no public 400GB validation
+  evidence is currently published.
+- Renamed the nuScenes validation summary and updated release-package
+  references and historical evaluation wording for consistent claim
+  hygiene.
+
+### Boundaries
+
+This patch changes documentation and public claim terminology only.
+It does not change engine behavior, benchmark results, or validation
+measurements.
+
 ## [0.5.0] - 2026-09-02
 
 ### Fixed

@@ -2,7 +2,7 @@
 
 ## Release Focus
 
-Velune Trace v0.3 is the first release line ready for external evaluation.
+Velune Trace v0.3 is the first release line ready for evaluation by robotics engineers outside the Velune team.
 
 It focuses on one primary workflow:
 
