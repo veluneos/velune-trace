@@ -101,6 +101,14 @@
       word-break: keep-all;
     }
 
+    /* Targeted fix: the Korean hero's second line is longer than the
+       English original, so the shared h1 clamp wraps it onto two lines
+       (three lines total) at normal desktop widths. Scoped to this one
+       heading only — no other heading is affected. */
+    h1.hero-title-ko {
+      font-size: clamp(40px, 6vw, 56px);
+    }
+
     h2 {
       margin: 0 0 20px;
       font-size: clamp(30px, 4vw, 48px);
@@ -661,7 +669,7 @@
     <header class="hero">
       <p class="eyebrow">VeluneOS Compare · External Beta</p>
 
-      <h1>
+      <h1 class="hero-title-ko">
         두 실행을 비교하세요.<br>
         무엇이 달라졌는지 확인하세요.
       </h1>
@@ -715,17 +723,17 @@
         <div class="result-values">
           <div class="result-value">
             <span class="result-value-label">Reference</span>
-            <strong>1.00 s</strong>
+            <strong>1000.0 ms</strong>
           </div>
 
           <span class="result-arrow">&rarr;</span>
 
           <div class="result-value">
             <span class="result-value-label">Target</span>
-            <strong>1.50 s</strong>
+            <strong>1500.0 ms</strong>
           </div>
 
-          <div class="result-delta">+50%</div>
+          <div class="result-delta">+500.0 ms (+50.0%)</div>
         </div>
       </div>
 
