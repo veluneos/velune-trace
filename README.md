@@ -29,6 +29,17 @@ In short:
     Velune tells you where to start.
     Foxglove shows you what happened there.
 
+## VeluneOS Compare
+
+Velune Trace narrows the investigation area within one log.
+
+VeluneOS Compare is a separate, related product: it compares two runs —
+a Reference Run and a Target Run — and shows what changed structurally
+between them.
+
+VeluneOS Compare is not part of this repository. See a sample
+comparison and current access at **[veluneos.ai](https://veluneos.ai)**.
+
 ## Performance Model
 
 Velune separates first-pass scanning/indexing from post-index evidence retrieval.
