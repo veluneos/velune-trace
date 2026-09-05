@@ -206,6 +206,22 @@
       color: #aab5c3;
     }
 
+    /* Targeted fix: the Step 02 card's download CTA needs tighter
+       spacing than the page-level .button/.form-note defaults (which
+       assume a full section, not a compact grid card). Scoped to
+       .card only -- no other .button/.form-note usage is affected. */
+    .card .button {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 9px 15px;
+      font-size: 14px;
+    }
+
+    .card .form-note {
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+
     .step-number {
       display: inline-block;
       margin-bottom: 18px;
@@ -803,6 +819,11 @@
             Velune Adapter turns both runs into one
             comparison.velune file, on your machine. Raw MCAP never
             leaves it.
+          </p>
+          <a class="button" href="downloads/velune-adapter-beta-kit.zip">Download Velune Adapter</a>
+          <p class="form-note">
+            Beta Kit (.zip) — includes the Quickstart and both required
+            packages. <a href="downloads/velune-adapter-beta-kit.zip.sha256">SHA256</a> included.
           </p>
         </article>
 

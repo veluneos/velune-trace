@@ -40,6 +40,13 @@ between them.
 VeluneOS Compare is not part of this repository. See a sample
 comparison and current access at **[veluneos.ai](https://veluneos.ai)**.
 
+Velune Adapter, the customer-local tool that prepares a Reference/Target
+pair into one `comparison.velune` file for VeluneOS Compare, is
+available as a Beta Kit download:
+[`velune-adapter-beta-kit.zip`](site/downloads/velune-adapter-beta-kit.zip)
+([SHA256](site/downloads/velune-adapter-beta-kit.zip.sha256)). The kit
+includes its own Quickstart.
+
 ## Performance Model
 
 Velune separates first-pass scanning/indexing from post-index evidence retrieval.
