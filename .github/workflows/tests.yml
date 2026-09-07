@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-lock.txt
+          pip install pytest
+
+      - name: Run test suite
+        run: python -m pytest tests/ -q
+
+      - name: CLI smoke (generate sample, inspect, validation-report)
+        shell: bash
+        run: |
+          python tools/create_sample_mcap.py smoke.mcap
+          python -m velune_trace.cli.main inspect smoke.mcap
+          python -m velune_trace.cli.main validation-report smoke.mcap \
+            --export-dir smoke_report --window-sec 1 --top 5
