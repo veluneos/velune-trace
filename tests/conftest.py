@@ -1,22 +1,17 @@
 """Shared pytest bootstrap for the Velune Trace test suite.
 
-Some tests reference the repository's documented sample MCAP
-(examples/sample.mcap) by its fixed path rather than generating a
-private copy in a temp directory. examples/*.mcap is intentionally
-gitignored (binary artifacts are not tracked), so a fresh clone will
-not have it yet. Generate it deterministically here, once, before the
-test session runs, so `pytest` is self-contained on a fresh clone
-without requiring a manual bootstrap step first.
+Historically this generated a shared sample MCAP at a fixed repository
+path (examples/sample.mcap) once per session, because one test module
+referenced that fixed path directly. That module now generates its own
+deterministic sample inside a temporary directory (see
+test_cli_dispatch.py's setUpModule/tearDownModule) alongside every other
+test that needs a sample MCAP, so no test in this suite writes into the
+source tree anymore, and a read-only source checkout can run the full
+suite without any pre-test bootstrap step.
+
+This file is kept (rather than removed) only because its presence in
+tests/ is part of how pytest resolves this repository's rootdir/sys.path
+for the `from velune_trace...` / `from tools...` imports used throughout
+the suite, absent a pyproject.toml/pytest.ini in this project. It
+performs no filesystem writes.
 """
-
-from pathlib import Path
-
-from tools.create_sample_mcap import create_sample_mcap
-
-REPO_ROOT = Path(__file__).resolve().parent.parent
-SAMPLE_MCAP_PATH = REPO_ROOT / "examples" / "sample.mcap"
-
-
-def pytest_configure(config):
-    if not SAMPLE_MCAP_PATH.exists():
-        create_sample_mcap(SAMPLE_MCAP_PATH)
