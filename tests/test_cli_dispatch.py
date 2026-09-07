@@ -97,17 +97,6 @@ class SampleMcapFixtureLifecycleTests(unittest.TestCase):
     setUpModule(), never into the source tree, and every other test class
     below can rely on SAMPLE_MCAP already being a valid, readable file."""
 
-    def test_sample_was_not_written_into_the_repository(self):
-        repo_examples_dir = (
-            Path(__file__).resolve().parent.parent / "examples"
-        )
-        repo_sample_path = repo_examples_dir / "sample.mcap"
-        self.assertFalse(
-            repo_sample_path.exists(),
-            "the sample MCAP must never be written into the tracked "
-            "source tree",
-        )
-
     def test_sample_lives_outside_the_repository_tree(self):
         repo_root = Path(__file__).resolve().parent.parent
         self.assertNotIn(repo_root, SAMPLE_MCAP_PATH.parents)
@@ -135,6 +124,71 @@ class SampleMcapFixtureLifecycleTests(unittest.TestCase):
             create_sample_mcap(candidate_path)
 
             self.assertTrue(candidate_path.is_file())
+
+
+class RepositorySampleNonInterferenceTests(unittest.TestCase):
+    """The fixture-isolation invariant is NON-INTERFERENCE, not absence: a
+
+    developer may legitimately keep a local, gitignored
+    examples/sample.mcap. This suite proves running the test suite neither
+    requires nor depends on that file and, whether or not it happens to
+    already exist, never creates, deletes, or modifies it. It intentionally
+    does not assert the file must be absent (a real, pre-existing local
+    sample is not a test failure) nor that it must be present (a fresh
+    clone has none)."""
+
+    def _repo_sample_path(self):
+        return Path(__file__).resolve().parent.parent / "examples" / "sample.mcap"
+
+    def test_clean_checkout_stays_clean_after_isolated_tests_run(self):
+        repo_sample_path = self._repo_sample_path()
+        if repo_sample_path.exists():
+            self.skipTest(
+                "a repository examples/sample.mcap already exists locally; "
+                "non-interference with a pre-existing sample is covered by "
+                "test_preexisting_repository_sample_is_left_untouched"
+            )
+
+        exit_code, _output = run_dispatch(["inspect", SAMPLE_MCAP])
+        self.assertEqual(exit_code, 0)
+
+        self.assertFalse(
+            repo_sample_path.exists(),
+            "running the test suite must never create a repository sample "
+            "where none existed before",
+        )
+
+    def test_preexisting_repository_sample_is_left_untouched(self):
+        import hashlib
+
+        repo_sample_path = self._repo_sample_path()
+        already_present = repo_sample_path.exists()
+
+        if not already_present:
+            # Manufacture the "developer already has a local sample" case
+            # reproducibly in a disposable clone. A real pre-existing file
+            # belonging to the user is never deleted -- only a placeholder
+            # this test itself created is cleaned up afterward.
+            repo_sample_path.parent.mkdir(parents=True, exist_ok=True)
+            repo_sample_path.write_bytes(
+                b"synthetic placeholder for non-interference test\n"
+            )
+            self.addCleanup(repo_sample_path.unlink)
+
+        before_bytes = repo_sample_path.read_bytes()
+        before_hash = hashlib.sha256(before_bytes).hexdigest()
+        before_mtime_ns = repo_sample_path.stat().st_mtime_ns
+
+        exit_code, _output = run_dispatch(["inspect", SAMPLE_MCAP])
+        self.assertEqual(exit_code, 0)
+
+        after_bytes = repo_sample_path.read_bytes()
+        after_hash = hashlib.sha256(after_bytes).hexdigest()
+        after_mtime_ns = repo_sample_path.stat().st_mtime_ns
+
+        self.assertEqual(before_bytes, after_bytes)
+        self.assertEqual(before_hash, after_hash)
+        self.assertEqual(before_mtime_ns, after_mtime_ns)
 
 
 class WindowedVerifyDispatchTests(unittest.TestCase):
