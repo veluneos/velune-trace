@@ -393,6 +393,20 @@ class DirectoryFsyncPortabilityTests(unittest.TestCase):
 
             self.assertEqual(fsync_spy.call_count, 1)
 
+    def test_posix_platform_opens_the_directory_exactly_once(self):
+        # Regression guard: a second os.open() in the normal POSIX path
+        # would leak the first file descriptor. Exactly one open (paired
+        # with the finally-block close already covered below) is required.
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            with mock.patch(
+                "velune_trace.reporting.writer.os.name", "posix"
+            ), mock.patch(
+                "velune_trace.reporting.writer.os.open", wraps=os.open
+            ) as open_spy:
+                _fsync_directory(Path(temporary_directory))
+
+            self.assertEqual(open_spy.call_count, 1)
+
     def test_unsupported_directory_fsync_errno_is_tolerated(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             with mock.patch(
