@@ -2,6 +2,42 @@
 
 All notable changes to Velune Trace are recorded here.
 
+## [Unreleased]
+
+Release-hardening candidate. Not yet tagged or published.
+
+### Fixed
+
+- Report-manifest writing failed on Windows during its directory-durability
+  step. Windows does not support opening a directory for fsync at all; this
+  step is now skipped there (and on the narrow set of POSIX filesystems
+  that also lack support), while remaining fully in effect everywhere it
+  already worked. Unrelated I/O errors are unaffected and still surface.
+- A test module depended on a fixed-path sample file that is only present
+  after a separate bootstrap step under some invocation methods. Every
+  test now generates its own deterministic sample MCAP into a private
+  temporary directory; nothing is written into the source tree by running
+  the test suite.
+
+### Changed
+
+- `windowed-verify`'s human-readable summary now distinguishes "total
+  observed windows", "full windows ranked", and "top windows displayed"
+  instead of one ambiguous "Total Windows" line. The JSON export is
+  unchanged.
+
+### Added
+
+- A minimal Linux + Windows continuous-integration workflow (install,
+  test suite, CLI smoke check).
+
+### Boundaries
+
+This patch changes test infrastructure, filesystem-durability portability,
+and human-readable CLI wording only. No ranking, scoring, evidence-level
+determination, or exported JSON field changed. It does not change engine
+behavior, benchmark results, or validation measurements.
+
 ## [0.5.1] - 2026-09-02
 
 ### Changed
