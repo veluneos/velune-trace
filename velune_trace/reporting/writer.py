@@ -223,17 +223,20 @@ def _fsync_directory(directory: Path) -> None:
     This is a POSIX-specific durability technique. Windows does not
     support opening a directory this way at all -- ``os.open`` on a
     directory raises ``PermissionError`` there unconditionally, by
-    platform design, not as a transient failure -- and NTFS's own
-    directory-entry update semantics do not rely on it the way POSIX
-    filesystems do, so skipping it on Windows is a platform difference,
-    not a durability regression: the file's own content is already
-    fsynced (see the os.fsync call above this one in
-    write_private_report_manifest) before this is ever called. Some
-    POSIX filesystems (certain network/overlay mounts) also do not
-    support it; that narrow, recognized failure is handled the same way.
-    Any other OSError -- including a genuine PermissionError from real
-    access-control, or EIO from real disk failure -- is not swallowed and
-    still propagates to the caller.
+    platform design, not as a transient failure -- so this function is a
+    no-op on Windows. Directory fsync is unavailable through this
+    POSIX-style implementation on Windows; this implementation does not
+    claim, measure, or rely on Windows/NTFS providing an equivalent
+    crash-durability guarantee through some other mechanism. What does
+    remain in effect on every platform, including Windows, is the file's
+    own content fsync (see the os.fsync call above this one in
+    write_private_report_manifest) and the atomic rename/hardlink
+    installation step, both of which happen before and independently of
+    this call. Some POSIX filesystems (certain network/overlay mounts)
+    also do not support directory fsync; that narrow, recognized failure
+    is handled the same way. Any other OSError -- including a genuine
+    PermissionError from real access-control, or EIO from real disk
+    failure -- is not swallowed and still propagates to the caller.
     """
 
     if os.name == "nt":
