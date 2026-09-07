@@ -314,12 +314,20 @@ def main(argv=None):
         print()
         print("=== VELUNE WINDOWED VERIFY ===")
         print()
-        print("Semantics        : observed_window_ranking_only")
-        print(f"File             : {filename}")
-        print(f"Topic            : {topic}")
-        print(f"Window sec       : {window_sec}")
-        print(f"Total Windows    : {len(rows)}")
-        print(f"Top              : {top}")
+        print("Semantics              : observed_window_ranking_only")
+        print(f"File                   : {filename}")
+        print(f"Topic                  : {topic}")
+        print(f"Window sec             : {window_sec}")
+        # Three distinct counts, disambiguated per external feedback:
+        # "total observed windows" includes any final partial/edge window;
+        # "full windows ranked" is the (possibly smaller) subset actually
+        # eligible for ranking; "top windows displayed" is how many rows
+        # the table below actually prints. This is wording clarity only --
+        # `rows`, `ranked`, and `top` are computed exactly as before, and
+        # the JSON export below is unchanged.
+        print(f"Total observed windows : {len(rows)}")
+        print(f"Full windows ranked    : {len(ranked)}")
+        print(f"Top windows displayed  : {len(ranked[:top])}")
         print()
         print("Baseline")
         print(f"  median_count   : {baseline['median_count']}")
