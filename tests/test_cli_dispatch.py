@@ -301,9 +301,9 @@ class WindowedVerifyDispatchTests(unittest.TestCase):
             self.assertNotIn("top_ranked_windows", report)
 
             # "ranked_windows" remains every ranked full window, NOT
-            # sliced to --top -- unchanged v0.5.1 behavior, confirmed
-            # against OmniLink's own real archive (top=5, 7 full windows,
-            # len(ranked_windows) == 7).
+            # sliced to --top -- unchanged v0.5.1 behavior (top=5, 7 full
+            # windows, len(ranked_windows) == 7 against this module's
+            # sample data).
             self.assertEqual(
                 len(report["ranked_windows"]),
                 report["ranked_full_windows"],
@@ -499,9 +499,9 @@ class InputPathPortabilityTests(unittest.TestCase):
     """Failure-class hardening: paths containing spaces or non-ASCII
 
     characters are a real, externally-reachable class of filesystem-path
-    bug (adjacent to, though distinct from, OmniLink's two findings).
-    Covers both a plain read command (inspect) and the command whose
-    export path was the subject of the CLI contract audit
+    bug, adjacent to but distinct from this release's two reported
+    defects. Covers both a plain read command (inspect) and the command
+    whose export path was the subject of the CLI contract audit
     (windowed-verify)."""
 
     def _copy_sample_into(self, directory_name):
