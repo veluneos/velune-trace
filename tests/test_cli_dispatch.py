@@ -159,21 +159,24 @@ class RepositorySampleNonInterferenceTests(unittest.TestCase):
         )
 
     def test_preexisting_repository_sample_is_left_untouched(self):
+        # Read-only observation only. If a developer already has a local,
+        # gitignored examples/sample.mcap, this proves the test suite
+        # never touches it. It is never manufactured here: writing a
+        # placeholder into the repository tree to test non-interference
+        # would itself be the interference this test exists to rule out
+        # (and would misbehave against a read-only checkout, could leave
+        # residue behind on an aborted run, and could create examples/
+        # where nothing warranted it). If no such file exists, there is
+        # nothing to observe and the test skips.
         import hashlib
 
         repo_sample_path = self._repo_sample_path()
-        already_present = repo_sample_path.exists()
 
-        if not already_present:
-            # Manufacture the "developer already has a local sample" case
-            # reproducibly in a disposable clone. A real pre-existing file
-            # belonging to the user is never deleted -- only a placeholder
-            # this test itself created is cleaned up afterward.
-            repo_sample_path.parent.mkdir(parents=True, exist_ok=True)
-            repo_sample_path.write_bytes(
-                b"synthetic placeholder for non-interference test\n"
+        if not repo_sample_path.exists():
+            self.skipTest(
+                "no pre-existing repository examples/sample.mcap to "
+                "observe; nothing is created to force this case"
             )
-            self.addCleanup(repo_sample_path.unlink)
 
         before_bytes = repo_sample_path.read_bytes()
         before_hash = hashlib.sha256(before_bytes).hexdigest()
