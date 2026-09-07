@@ -1,6 +1,7 @@
 """Atomic private Evidence Report Bundle manifest writer."""
 
 from collections.abc import Mapping
+import errno
 import json
 import math
 import os
@@ -203,16 +204,59 @@ def _resolve_bundle_directory(
     return resolved_bundle_dir
 
 
+_DIRECTORY_FSYNC_UNSUPPORTED_ERRNOS = frozenset(
+    errno_code
+    for errno_code in (
+        errno.EINVAL,
+        errno.ENOTSUP,
+        getattr(errno, "EOPNOTSUPP", None),
+    )
+    if errno_code is not None
+)
+
+
 def _fsync_directory(directory: Path) -> None:
+    """Best-effort fsync of a directory's own metadata, for crash-durable
+
+    rename/hardlink installation on filesystems that support it.
+
+    This is a POSIX-specific durability technique. Windows does not
+    support opening a directory this way at all -- ``os.open`` on a
+    directory raises ``PermissionError`` there unconditionally, by
+    platform design, not as a transient failure -- and NTFS's own
+    directory-entry update semantics do not rely on it the way POSIX
+    filesystems do, so skipping it on Windows is a platform difference,
+    not a durability regression: the file's own content is already
+    fsynced (see the os.fsync call above this one in
+    write_private_report_manifest) before this is ever called. Some
+    POSIX filesystems (certain network/overlay mounts) also do not
+    support it; that narrow, recognized failure is handled the same way.
+    Any other OSError -- including a genuine PermissionError from real
+    access-control, or EIO from real disk failure -- is not swallowed and
+    still propagates to the caller.
+    """
+
+    if os.name == "nt":
+        return
+
     flags = os.O_RDONLY
 
     if hasattr(os, "O_DIRECTORY"):
         flags |= os.O_DIRECTORY
 
-    directory_fd = os.open(directory, flags)
+    try:
+        directory_fd = os.open(directory, flags)
+    except OSError as exc:
+        if exc.errno in _DIRECTORY_FSYNC_UNSUPPORTED_ERRNOS:
+            return
+        raise
 
     try:
         os.fsync(directory_fd)
+    except OSError as exc:
+        if exc.errno in _DIRECTORY_FSYNC_UNSUPPORTED_ERRNOS:
+            return
+        raise
     finally:
         os.close(directory_fd)
 
