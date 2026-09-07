@@ -9,22 +9,26 @@ Release-hardening candidate. Not yet tagged or published.
 ### Fixed
 
 - Report-manifest writing failed on Windows during its directory-durability
-  step. Windows does not support opening a directory for fsync at all; this
-  step is now skipped there (and on the narrow set of POSIX filesystems
-  that also lack support), while remaining fully in effect everywhere it
-  already worked. Unrelated I/O errors are unaffected and still surface.
+  step. Windows does not support opening a directory for fsync at all, so
+  this step is now skipped there (and on the narrow set of POSIX
+  filesystems that also lack support). Directory fsync is unavailable
+  through this implementation on Windows; file-content fsync and atomic
+  rename/hardlink installation remain in effect on every platform.
+  Unrelated I/O errors are unaffected and still surface.
 - A test module depended on a fixed-path sample file that is only present
   after a separate bootstrap step under some invocation methods. Every
   test now generates its own deterministic sample MCAP into a private
-  temporary directory; nothing is written into the source tree by running
-  the test suite.
+  temporary directory. Running the test suite does not require, create,
+  or modify a repository sample file; a developer's own local sample, if
+  one already exists, is left untouched.
 
 ### Changed
 
 - `windowed-verify`'s human-readable summary now distinguishes "total
   observed windows", "full windows ranked", and "top windows displayed"
-  instead of one ambiguous "Total Windows" line. The JSON export is
-  unchanged.
+  instead of one ambiguous "Total Windows" line. This is a change to
+  human-readable stdout text only; the `--export-json` field set and
+  values are unchanged from v0.5.1.
 
 ### Added
 
@@ -34,7 +38,8 @@ Release-hardening candidate. Not yet tagged or published.
 ### Boundaries
 
 This patch changes test infrastructure, filesystem-durability portability,
-and human-readable CLI wording only. No ranking, scoring, evidence-level
+and human-readable CLI text only. The machine-readable `--export-json`
+contract is unchanged from v0.5.1. No ranking, scoring, evidence-level
 determination, or exported JSON field changed. It does not change engine
 behavior, benchmark results, or validation measurements.
 
