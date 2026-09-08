@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from dataclasses import FrozenInstanceError
@@ -80,9 +81,23 @@ class PrivateReportBundleFinalizerTests(unittest.TestCase):
                 result,
                 FinalizedPrivateReportBundle,
             )
+            # result.manifest_path comes from write_private_report_manifest(),
+            # which resolves bundle_dir to a canonical path (needed for its
+            # symlink-safety checks). A CI-provided tempdir path can be a
+            # short/long alias of itself (e.g. Windows 8.3 names) that is
+            # lexically different from its own resolved form while naming
+            # the same file, so identity is checked by filesystem identity
+            # rather than raw Path equality.
+            self.assertTrue(result.manifest_path.is_absolute())
             self.assertEqual(
-                result.manifest_path,
-                bundle_dir / "report_manifest.json",
+                result.manifest_path.name,
+                "report_manifest.json",
+            )
+            self.assertTrue(
+                os.path.samefile(
+                    result.manifest_path,
+                    bundle_dir / "report_manifest.json",
+                )
             )
             self.assertTrue(
                 result.report_bundle_id.startswith(
