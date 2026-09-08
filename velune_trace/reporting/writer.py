@@ -279,8 +279,12 @@ def write_private_report_manifest(
     With ``overwrite=False``, installation uses an atomic hard-link operation
     so an existing manifest cannot be replaced by a check/write race.
 
-    The manifest is created with owner-only permissions because private source
-    provenance may be present.
+    The manifest is created with owner-only permissions (mode 0o600) on
+    POSIX platforms, because private source provenance may be present.
+    ``os.chmod`` on Windows does not implement POSIX permission bits --
+    it can only toggle the read-only attribute -- so this does not
+    provide the same owner-only guarantee there. This function does not
+    claim or implement Windows ACL-based access control.
     """
 
     if not isinstance(overwrite, bool):
