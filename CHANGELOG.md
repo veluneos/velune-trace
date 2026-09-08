@@ -2,9 +2,7 @@
 
 All notable changes to Velune Trace are recorded here.
 
-## [Unreleased]
-
-Release-hardening candidate. Not yet tagged or published.
+## [0.5.2] - 2026-09-08
 
 ### Fixed
 
