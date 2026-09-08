@@ -31,9 +31,25 @@ class PrivateReportManifestWriterTests(unittest.TestCase):
                 },
             )
 
+            # write_private_report_manifest() resolves bundle_dir
+            # (needed for the symlink-safety checks in
+            # _resolve_bundle_directory()) before deriving the manifest
+            # path, so the returned path is the canonical/resolved form.
+            # On Windows, a tempdir path handed in by the OS/CI runner
+            # can be a short 8.3 alias of a path component that is lexically
+            # different from its own resolved long-path form while still
+            # naming the same file -- so identity here must be checked
+            # by filesystem identity, not raw string/Path equality.
+            self.assertTrue(manifest_path.is_absolute())
             self.assertEqual(
-                manifest_path,
-                bundle_dir / MANIFEST_FILENAME,
+                manifest_path.name,
+                MANIFEST_FILENAME,
+            )
+            self.assertTrue(
+                os.path.samefile(
+                    manifest_path,
+                    bundle_dir / MANIFEST_FILENAME,
+                )
             )
             self.assertTrue(
                 manifest_path.read_bytes().endswith(b"\n")
@@ -54,10 +70,15 @@ class PrivateReportManifestWriterTests(unittest.TestCase):
                 1.0,
             )
 
-            mode = stat.S_IMODE(
-                manifest_path.stat().st_mode
-            )
-            self.assertEqual(mode, 0o600)
+            # os.chmod's owner-only (0o600) guarantee is a POSIX-specific
+            # contract -- Windows os.chmod cannot represent Unix
+            # permission bits, so it is only meaningful to assert the
+            # exact mode there.
+            if os.name == "posix":
+                mode = stat.S_IMODE(
+                    manifest_path.stat().st_mode
+                )
+                self.assertEqual(mode, 0o600)
 
     def test_rejects_existing_manifest_by_default(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -108,10 +129,11 @@ class PrivateReportManifestWriterTests(unittest.TestCase):
                 ),
                 {"version": 2},
             )
-            self.assertEqual(
-                stat.S_IMODE(second_path.stat().st_mode),
-                0o600,
-            )
+            if os.name == "posix":
+                self.assertEqual(
+                    stat.S_IMODE(second_path.stat().st_mode),
+                    0o600,
+                )
 
     def test_rejects_non_boolean_overwrite(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -362,12 +384,30 @@ class PrivateReportManifestWriterTests(unittest.TestCase):
 
 
 class DirectoryFsyncPortabilityTests(unittest.TestCase):
-    """Unit coverage for _fsync_directory's platform branch. This proves
+    """Unit coverage for _fsync_directory's platform branch.
 
-    the code path is correct by construction (Windows never attempts the
-    unsupported syscall; POSIX behavior and error propagation are
-    unchanged); it is not a substitute for running the suite on an actual
-    Windows machine -- see the release report for that distinction."""
+    Two distinct kinds of test live here, and they must not be confused:
+
+    1. Cross-platform LOGIC tests (below), which patch os.name to select
+       which branch of _fsync_directory runs, but never let a real
+       os.open/os.fsync/os.close syscall execute -- those are also fully
+       mocked with a synthetic file descriptor. This proves the branch
+       logic (call counts, error propagation, fd cleanup) is correct by
+       construction on every CI platform, Windows included. Patching
+       os.name does NOT change what the real OS actually supports, so a
+       test that patches os.name to "posix" while still delegating to the
+       real os.open would, on an actual Windows runner, hit a genuine
+       Windows PermissionError from trying to open a directory that way --
+       an artifact of invalid test simulation, not the thing under test.
+
+    2. A real POSIX integration test (test_real_posix_directory_fsync_succeeds),
+       which does not patch os.name or any syscall at all and only runs on
+       an actual POSIX system, proving the supported path genuinely works
+       against a real directory.
+
+    Neither of these is a substitute for running the full suite on an
+    actual Windows machine -- see the release report for that distinction.
+    """
 
     def test_windows_skips_directory_fsync_without_error(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -382,30 +422,55 @@ class DirectoryFsyncPortabilityTests(unittest.TestCase):
             ):
                 _fsync_directory(Path(temporary_directory))  # must not raise
 
-    def test_posix_platform_still_fsyncs_the_directory(self):
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            with mock.patch(
-                "velune_trace.reporting.writer.os.name", "posix"
-            ), mock.patch(
-                "velune_trace.reporting.writer.os.fsync", wraps=os.fsync
-            ) as fsync_spy:
-                _fsync_directory(Path(temporary_directory))
-
-            self.assertEqual(fsync_spy.call_count, 1)
-
-    def test_posix_platform_opens_the_directory_exactly_once(self):
+    def test_logical_posix_branch_opens_directory_exactly_once(self):
         # Regression guard: a second os.open() in the normal POSIX path
-        # would leak the first file descriptor. Exactly one open (paired
-        # with the finally-block close already covered below) is required.
+        # would leak the first file descriptor. os.open is replaced with a
+        # synthetic descriptor rather than delegated to the real syscall,
+        # so this exercises the branch's logic on every platform without
+        # depending on what the real OS actually supports for
+        # directory-open (see the class docstring).
         with tempfile.TemporaryDirectory() as temporary_directory:
             with mock.patch(
                 "velune_trace.reporting.writer.os.name", "posix"
             ), mock.patch(
-                "velune_trace.reporting.writer.os.open", wraps=os.open
-            ) as open_spy:
+                "velune_trace.reporting.writer.os.open",
+                return_value=999,
+            ) as open_spy, mock.patch(
+                "velune_trace.reporting.writer.os.fsync"
+            ), mock.patch(
+                "velune_trace.reporting.writer.os.close"
+            ):
                 _fsync_directory(Path(temporary_directory))
 
             self.assertEqual(open_spy.call_count, 1)
+
+    def test_logical_posix_branch_fsyncs_the_opened_descriptor(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            with mock.patch(
+                "velune_trace.reporting.writer.os.name", "posix"
+            ), mock.patch(
+                "velune_trace.reporting.writer.os.open",
+                return_value=999,
+            ), mock.patch(
+                "velune_trace.reporting.writer.os.fsync"
+            ) as fsync_spy, mock.patch(
+                "velune_trace.reporting.writer.os.close"
+            ):
+                _fsync_directory(Path(temporary_directory))
+
+            fsync_spy.assert_called_once_with(999)
+
+    @unittest.skipUnless(
+        os.name == "posix",
+        "exercises the real POSIX directory-fsync syscall path",
+    )
+    def test_real_posix_directory_fsync_succeeds(self):
+        # Integration coverage, deliberately unmocked: on an actual POSIX
+        # system, the supported directory-fsync path must genuinely
+        # succeed against a real directory. Guarded so it only ever runs
+        # where the real OS is actually POSIX.
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            _fsync_directory(Path(temporary_directory))  # must not raise
 
     def test_unsupported_directory_fsync_errno_is_tolerated(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -441,13 +506,20 @@ class DirectoryFsyncPortabilityTests(unittest.TestCase):
     def test_unrelated_io_error_still_propagates(self):
         # A distinct case from EACCES above: an arbitrary I/O failure
         # (disk error, not a permission/support question) must never be
-        # treated as "unsupported directory fsync".
+        # treated as "unsupported directory fsync". os.open is mocked to a
+        # synthetic descriptor (see the class docstring) so that only the
+        # fsync failure under test is exercised, on every platform.
         with tempfile.TemporaryDirectory() as temporary_directory:
             with mock.patch(
                 "velune_trace.reporting.writer.os.name", "posix"
             ), mock.patch(
+                "velune_trace.reporting.writer.os.open",
+                return_value=999,
+            ), mock.patch(
                 "velune_trace.reporting.writer.os.fsync",
                 side_effect=OSError(errno.EIO, "simulated disk failure"),
+            ), mock.patch(
+                "velune_trace.reporting.writer.os.close"
             ):
                 with self.assertRaises(OSError) as context:
                     _fsync_directory(Path(temporary_directory))
@@ -459,15 +531,18 @@ class DirectoryFsyncPortabilityTests(unittest.TestCase):
             with mock.patch(
                 "velune_trace.reporting.writer.os.name", "posix"
             ), mock.patch(
+                "velune_trace.reporting.writer.os.open",
+                return_value=999,
+            ), mock.patch(
                 "velune_trace.reporting.writer.os.fsync",
                 side_effect=OSError(errno.EIO, "simulated disk failure"),
             ), mock.patch(
-                "velune_trace.reporting.writer.os.close", wraps=os.close
+                "velune_trace.reporting.writer.os.close"
             ) as close_spy:
                 with self.assertRaises(OSError):
                     _fsync_directory(Path(temporary_directory))
 
-            close_spy.assert_called_once()
+            close_spy.assert_called_once_with(999)
 
     def test_full_write_still_succeeds_when_platform_reports_windows(self):
         # End-to-end confirmation: the manifest write itself, not just the
