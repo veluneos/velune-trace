@@ -8,9 +8,9 @@
   >
   <meta
     name="description"
-    content="VeluneOS Compare shows what changed structurally between a Reference Run and a Target Run. Raw MCAP logs stay on your machine during preparation."
+    content="Velune Compare shows what changed structurally between a Reference Run and a Target Run. Raw MCAP logs stay on your machine during preparation."
   >
-  <title>Cloud Comparison Beta | VeluneOS</title>
+  <title>Compare Beta | VeluneOS</title>
   <link rel="alternate" hreflang="ko" href="comparison-beta.html">
   <link rel="alternate" hreflang="en" href="comparison-beta-en.html">
 
@@ -675,7 +675,7 @@
     </nav>
 
     <header class="hero">
-      <p class="eyebrow">VeluneOS Compare · External Beta</p>
+      <p class="eyebrow">Velune Compare · Beta</p>
 
       <h1>
         Compare two runs.<br>
@@ -699,12 +699,12 @@
       </div>
 
       <p class="hero-note">
-        VeluneOS Compare is currently External Beta — you may be asked
+        Velune Compare is currently in Beta — you may be asked
         for Beta access when you open it.
         <a href="#apply">Apply for access</a>.
       </p>
 
-      <div class="trust-row" aria-label="Cloud Comparison data boundary">
+      <div class="trust-row" aria-label="Compare data boundary">
         <span>Raw log stays local</span>
         <span>Upload preview before transfer</span>
         <span>Derived Bundle only</span>
@@ -831,7 +831,7 @@
           <span class="step-number">STEP 03</span>
           <h3>Upload comparison.velune</h3>
           <p>
-            Upload the single prepared file to VeluneOS Compare.
+            Upload the single prepared file to Velune Compare.
           </p>
         </article>
 
@@ -859,9 +859,8 @@
           <h3>Derived structures that may be transferred after approval</h3>
 
           <ul>
-            <li>Canonical Topic Role</li>
-            <li>Relative-time events and Evidence Windows</li>
-            <li>Gap, jitter, and count profiles</li>
+            <li>Canonical Stream and Schema Identity (stream_key, schema_key — never the original topic name)</li>
+            <li>Per-second bucketed message-count and timing-interval profiles</li>
             <li>Structural features required for Reference–Target comparison</li>
             <li>Context explicitly approved by the customer</li>
           </ul>
@@ -869,7 +868,7 @@
 
         <article class="boundary-panel">
           <span class="boundary-label">STAYS LOCAL</span>
-          <h3>Raw data not accepted by standard Cloud Comparison</h3>
+          <h3>Raw data not accepted by standard Compare</h3>
 
           <ul>
             <li>Raw MCAP and rosbag2</li>
@@ -890,12 +889,12 @@
 
 
     <section id="plans">
-      <p class="eyebrow">Cloud Comparison</p>
+      <p class="eyebrow">Compare</p>
 
-      <h2>Cloud Comparison. Free or paid.</h2>
+      <h2>Compare. Free or paid.</h2>
 
       <p class="section-intro">
-        The same Cloud Comparison.
+        The same Compare.
         Choose how your data is used.
       </p>
 
@@ -909,7 +908,7 @@
             <span class="plan-price">₩0</span>
           </div>
 
-          <h3>How Cloud Comparison Works</h3>
+          <h3>How Compare Works</h3>
 
           <div class="plan-flow">
             <div class="plan-slot">
@@ -956,7 +955,7 @@
             <span class="plan-price">CUSTOM</span>
           </div>
 
-          <h3>How Cloud Comparison Works</h3>
+          <h3>How Compare Works</h3>
 
           <div class="plan-flow">
             <div class="plan-slot">
@@ -1240,10 +1239,10 @@
       }
 
       const subject =
-        "VeluneOS Cloud Comparison Beta Application";
+        "Velune Compare Beta Application";
 
       const body = [
-        "VeluneOS Cloud Comparison Beta Application",
+        "Velune Compare Beta Application",
         "",
         "[Plan]",
         selectedPlan,

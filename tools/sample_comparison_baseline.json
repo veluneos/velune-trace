@@ -1,0 +1,17 @@
+{
+  "adapter": {
+    "package_name": "velune-adapter",
+    "package_version": "0.2.0",
+    "git_commit": "a3f8f465f9781947efb36aefd492e87dc3cc253d",
+    "wheel_filename": "velune_adapter-0.2.0-py3-none-any.whl",
+    "wheel_sha256": "67bcbe68fd2300bbf5bba65b292a55afe7827915d0b0fcd94d5ef720e18b9c42"
+  },
+  "transferable_bundle_contract": {
+    "name": "velune.comparison_input_bundle",
+    "version": "0.1.0"
+  },
+  "compare_report_schema": {
+    "name": "velune.structural_comparison_report",
+    "version": "0.2.0"
+  }
+}

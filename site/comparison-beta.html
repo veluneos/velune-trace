@@ -8,9 +8,9 @@
   >
   <meta
     name="description"
-    content="VeluneOS Compare는 Reference Run과 Target Run 사이의 구조적 차이를 보여줍니다. 준비 과정에서 원본 MCAP 로그는 로컬 환경을 벗어나지 않습니다."
+    content="Velune Compare는 Reference Run과 Target Run 사이의 구조적 차이를 보여줍니다. 준비 과정에서 원본 MCAP 로그는 로컬 환경을 벗어나지 않습니다."
   >
-  <title>Cloud Comparison Beta | VeluneOS</title>
+  <title>Compare Beta | VeluneOS</title>
   <link rel="alternate" hreflang="ko" href="comparison-beta.html">
   <link rel="alternate" hreflang="en" href="comparison-beta-en.html">
 
@@ -683,7 +683,7 @@
     </nav>
 
     <header class="hero">
-      <p class="eyebrow">VeluneOS Compare · External Beta</p>
+      <p class="eyebrow">Velune Compare · Beta</p>
 
       <h1 class="hero-title-ko">
         두 실행을 비교하세요.<br>
@@ -707,12 +707,12 @@
       </div>
 
       <p class="hero-note">
-        VeluneOS Compare는 현재 External Beta 단계입니다 — 접속 시
+        Velune Compare는 현재 Beta 단계입니다 — 접속 시
         Beta 접근 권한을 요청받을 수 있습니다.
         <a href="#apply">접근 권한 신청</a>
       </p>
 
-      <div class="trust-row" aria-label="Cloud Comparison data boundary">
+      <div class="trust-row" aria-label="Compare data boundary">
         <span>원본 로그는 로컬에 유지</span>
         <span>전송 전 업로드 미리보기 제공</span>
         <span>파생 Bundle만 전송</span>
@@ -837,7 +837,7 @@
           <span class="step-number">STEP 03</span>
           <h3>comparison.velune 업로드</h3>
           <p>
-            준비된 파일 하나를 VeluneOS Compare에 업로드합니다.
+            준비된 파일 하나를 Velune Compare에 업로드합니다.
           </p>
         </article>
 
@@ -865,9 +865,8 @@
           <h3>승인 후 전송될 수 있는 파생 구조</h3>
 
           <ul>
-            <li>Canonical Topic Role</li>
-            <li>상대 시간 이벤트 및 Evidence Windows</li>
-            <li>Gap, jitter, count 프로파일</li>
+            <li>Canonical Stream·Schema Identity (stream_key, schema_key — 원본 topic 이름은 포함되지 않음)</li>
+            <li>초 단위로 버킷화된 message-count·timing-interval 프로파일</li>
             <li>Reference–Target 비교에 필요한 구조적 특징</li>
             <li>고객이 명시적으로 승인한 컨텍스트</li>
           </ul>
@@ -875,7 +874,7 @@
 
         <article class="boundary-panel">
           <span class="boundary-label">STAYS LOCAL</span>
-          <h3>표준 Cloud Comparison이 받지 않는 원본 데이터</h3>
+          <h3>표준 Compare가 받지 않는 원본 데이터</h3>
 
           <ul>
             <li>원본 MCAP 및 rosbag2</li>
@@ -896,12 +895,12 @@
 
 
     <section id="plans">
-      <p class="eyebrow">Cloud Comparison</p>
+      <p class="eyebrow">Compare</p>
 
-      <h2>Cloud Comparison. Free 또는 Paid.</h2>
+      <h2>Compare. Free 또는 Paid.</h2>
 
       <p class="section-intro">
-        동일한 Cloud Comparison입니다.
+        동일한 Compare입니다.
         데이터 사용 방식을 선택하세요.
       </p>
 
@@ -915,7 +914,7 @@
             <span class="plan-price">₩0</span>
           </div>
 
-          <h3>Cloud Comparison 동작 방식</h3>
+          <h3>Compare 동작 방식</h3>
 
           <div class="plan-flow">
             <div class="plan-slot">
@@ -962,7 +961,7 @@
             <span class="plan-price">CUSTOM</span>
           </div>
 
-          <h3>Cloud Comparison 동작 방식</h3>
+          <h3>Compare 동작 방식</h3>
 
           <div class="plan-flow">
             <div class="plan-slot">
@@ -1245,10 +1244,10 @@
       }
 
       const subject =
-        "VeluneOS Cloud Comparison Beta 신청";
+        "Velune Compare Beta 신청";
 
       const body = [
-        "VeluneOS Cloud Comparison Beta 신청",
+        "Velune Compare Beta 신청",
         "",
         "[Plan]",
         selectedPlan,
