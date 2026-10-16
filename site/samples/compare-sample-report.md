@@ -140,7 +140,7 @@ _Display order only; the report JSON keeps the contract order. Count-only differ
 - **Bundle ID:** vcib\_sha256\_5173b991aecffc7d48af2b9fb83cc9a5ef1402fb963ad27c16652adf5fd034df
 - **Bundle contract:** velune.comparison\_input\_bundle 0.1.0
 - **Mapping profile:** generic.mcap.structural 0.1.0
-- **Generated at:** 2026-10-16T02:27:17.191588+00:00
+- **Generated at:** 2026-10-16T02:54:15.179751+00:00
 - **Comparison rule:** complete common one-second buckets on each run's own time axis
 - **Candidate review order:** candidate:STREAM\_PRESENCE\_CHANGE:stream.unmapped.004:0-29, candidate:STREAM\_PRESENCE\_CHANGE:stream.unmapped.005:0-29, candidate:CADENCE\_DIVERGENCE:INTERVAL\_INCREASE:stream.unmapped.003:10-19, candidate:ACTIVITY\_LOSS:stream.unmapped.001:12-16
 

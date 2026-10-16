@@ -138,8 +138,9 @@
           Findings follow a fixed, documented review order — not a severity score. VeluneOS
           Compare does not decide root cause, fault, safety, regression or release readiness.
           <strong>Known limits:</strong> timing is read from recorded log time, so latency between
-          clocks is not assessed; streams whose names differ but whose message type matches may be
-          paired by type, which the category table flags.
+          clocks is not assessed. A stream is compared across runs only when it keeps its topic
+          name or you confirm the pairing; a removed and an added sensor of the same type cannot be
+          prepared for comparison yet.
           <a class="text-link" href="sample-comparison.html">See a full sample report</a>.
         </p>
       </div>
@@ -165,6 +166,10 @@
           <li>
             <h3>Name your streams</h3>
             <p>In <code>mapping.json</code>, set <code>canonical_subsystem_id</code> and <code>canonical_category_id</code> (for example <code>PERCEPTION</code> / <code>PERCEPTION_LIDAR</code>) for the streams you want to recognise in the report — at least one. Every stream is compared either way; unassigned streams appear by neutral key.</p>
+          </li>
+          <li>
+            <h3>Confirm stream pairings <span class="where">your machine</span></h3>
+            <p>Streams are paired across runs by identical topic name. If a topic exists in only one run, the Adapter may pair it with a same-type topic in the other run — right for a renamed topic, wrong for a different sensor. Every such pairing is listed under <code>correspondence_review</code>; <code>prepare</code> will not continue until you confirm each one. Usually the list is empty.</p>
           </li>
           <li>
             <h3>Prepare and review <span class="where">your machine</span></h3>
@@ -198,6 +203,7 @@
               <li>Per-second message counts and interval statistics, in time relative to the start of each run</li>
               <li>Run-level metadata such as file size and duration</li>
               <li>The categories you assigned</li>
+              <li>How each stream was paired across runs (stream key and basis only)</li>
               <li>A manifest with SHA-256 hashes of every file</li>
             </ul>
           </div>

@@ -48,7 +48,7 @@
     "reference_unmatched_coverage_ns": 0,
     "target_unmatched_coverage_ns": 0
   },
-  "generated_at": "2026-10-16T02:27:17.191588+00:00",
+  "generated_at": "2026-10-16T02:54:15.179751+00:00",
   "input": {
     "bundle_contract": {
       "name": "velune.comparison_input_bundle",

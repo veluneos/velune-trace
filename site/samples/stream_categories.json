@@ -1,34 +1,40 @@
 {
   "category_mismatch_stream_keys": [],
+  "customer_confirmed_stream_keys": [],
   "note": "A stream key with different Reference and Target categories pairs two streams that matched by message type, not by name. Findings on it compare two differently classified streams; review them as a possible stream removal plus addition.",
   "source": "customer-approved category mapping in comparison.velune",
   "streams": [
     {
       "category_mismatch": false,
+      "correspondence": "same_topic_name",
       "reference_category": "PERCEPTION_CAMERA",
       "stream_key": "stream.unmapped.001",
       "target_category": "PERCEPTION_CAMERA"
     },
     {
       "category_mismatch": false,
+      "correspondence": "same_topic_name",
       "reference_category": "LOCALIZATION_IMU",
       "stream_key": "stream.unmapped.002",
       "target_category": "LOCALIZATION_IMU"
     },
     {
       "category_mismatch": false,
+      "correspondence": "same_topic_name",
       "reference_category": "PERCEPTION_LIDAR",
       "stream_key": "stream.unmapped.003",
       "target_category": "PERCEPTION_LIDAR"
     },
     {
       "category_mismatch": false,
+      "correspondence": "reference_only",
       "reference_category": "PLANNING_LOCAL",
       "stream_key": "stream.unmapped.004",
       "target_category": null
     },
     {
       "category_mismatch": false,
+      "correspondence": "target_only",
       "reference_category": null,
       "stream_key": "stream.unmapped.005",
       "target_category": "SYSTEM_DIAGNOSTICS"
