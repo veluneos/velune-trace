@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://veluneos.ai/</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/en</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/trace</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/trace"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/trace-en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/trace-en</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/trace"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/trace-en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/comparison-beta</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/comparison-beta"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/comparison-beta-en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/comparison-beta-en</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://veluneos.ai/comparison-beta"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veluneos.ai/comparison-beta-en"/>
+  </url>
+  <url>
+    <loc>https://veluneos.ai/sample-comparison</loc>
+  </url>
+</urlset>

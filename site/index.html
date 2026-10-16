@@ -1,1294 +1,337 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-  <meta name="description" content="Velune Trace는 MCAP 및 ROS2 로그를 로컬에서 읽고 timing evidence window를 우선순위로 정리해 엔지니어의 조사 시작점을 줄입니다." />
-  <title>Velune Trace | 로봇 로그 조사 시작점을 줄이는 Local Triage</title>
-  <link rel="alternate" hreflang="ko" href="index.html">
-  <link rel="alternate" hreflang="en" href="en.html">
-
-  <style>
-    :root {
-      color-scheme: dark;
-      font-family:
-        Inter, ui-sans-serif, system-ui,
-        -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #080b10;
-      color: #f4f7fb;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at top, #152133 0, #080b10 42%);
-      line-height: 1.6;
-    }
-
-    main {
-      width: min(1080px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 0;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .language-switch {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #8491a1;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .language-switch strong {
-      color: #f4f7fb;
-    }
-
-    nav a,
-    .button {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .hero {
-      padding: 110px 0 120px;
-      max-width: 900px;
-    }
-
-    .eyebrow {
-      color: #8fbaff;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 18px 0 24px;
-      font-size: clamp(48px, 8vw, 92px);
-      line-height: 0.98;
-      letter-spacing: -0.055em;
-    }
-
-    .hero p {
-      max-width: 720px;
-      color: #b8c2cf;
-      font-size: clamp(18px, 2vw, 23px);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 36px;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 13px 19px;
-      border: 1px solid #33445c;
-      border-radius: 9px;
-      font-weight: 650;
-    }
-
-    .button.primary {
-      background: #f4f7fb;
-      border-color: #f4f7fb;
-      color: #080b10;
-    }
-
-    section {
-      padding: 80px 0;
-      border-top: 1px solid #202a38;
-    }
-
-    h2 {
-      margin: 0 0 20px;
-      font-size: clamp(30px, 4vw, 48px);
-      letter-spacing: -0.035em;
-    }
-
-    .section-copy {
-      max-width: 760px;
-      color: #b8c2cf;
-      font-size: 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-      margin-top: 36px;
-    }
-
-    .card {
-      min-height: 180px;
-      padding: 24px;
-      background: rgba(18, 25, 35, 0.8);
-      border: 1px solid #273447;
-      border-radius: 14px;
-    }
-
-    .card strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
-
-    .card p {
-      margin: 0;
-      color: #aab5c3;
-    }
-
-    .metric {
-      font-size: 32px;
-      font-weight: 750;
-    }
-
-    footer {
-      padding: 50px 0 70px;
-      color: #8491a1;
-      border-top: 1px solid #202a38;
-    }
-
-    footer a {
-      color: #cbd5e1;
-    }
-
-    .release-panel {
-      margin-top: 34px;
-      padding: 32px;
-      border: 1px solid #2a3749;
-      border-radius: 16px;
-      background: #0c1118;
-    }
-
-    .release-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 28px;
-      color: #8491a1;
-      font-size: 14px;
-    }
-
-    .release-meta strong {
-      color: #f4f7fb;
-    }
-
-    .release-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 26px;
-    }
-
-    .release-card {
-      padding: 25px;
-      border: 1px solid #202a38;
-      border-radius: 12px;
-      background: #090d13;
-    }
-
-    .release-card h3 {
-      margin: 12px 0;
-      font-size: 22px;
-      letter-spacing: -0.02em;
-    }
-
-    .release-card p {
-      margin: 0;
-      color: #9ca8b7;
-    }
-
-    .release-card .actions {
-      margin-top: 22px;
-    }
-
-    .release-step {
-      color: #8fbaff;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-    }
-
-    .release-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 13px 24px;
-      margin-top: 24px;
-    }
-
-    .release-links a {
-      color: #8fbaff;
-      font-weight: 650;
-      text-decoration: none;
-    }
-
-    .release-links a:hover {
-      text-decoration: underline;
-    }
-
-    .release-boundary {
-      margin: 25px 0 0;
-      padding-top: 22px;
-      border-top: 1px solid #202a38;
-      color: #8491a1;
-      font-size: 14px;
-    }
-
-    @media (max-width: 720px) {
-      .release-panel {
-        padding: 22px;
-      }
-
-      .release-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-
-
-    /* VELUNE_PRODUCT_FLOW_V1 */
-
-    .hero-proof {
-      max-width: 820px;
-      margin-top: 24px;
-      padding: 18px 20px;
-      border-left: 3px solid #68a8ff;
-      border-radius: 0 10px 10px 0;
-      background: rgba(74, 132, 214, 0.1);
-    }
-
-    .hero-proof strong {
-      color: #ffffff;
-    }
-
-    .trust-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .trust-row span {
-      padding: 8px 11px;
-      border: 1px solid #273449;
-      border-radius: 999px;
-      background: rgba(8, 14, 23, 0.72);
-      color: #aeb9c7;
-      font-size: 12px;
-      line-height: 1.2;
-    }
-
-    .section-intro {
-      max-width: 820px;
-      margin-bottom: 30px;
-    }
-
-    .loss-line {
-      margin-top: 22px;
-      padding: 18px 20px;
-      border: 1px solid #3a2e2e;
-      border-radius: 10px;
-      background: rgba(106, 55, 55, 0.1);
-      color: #d8dde6;
-    }
-
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 30px;
-    }
-
-    .comparison-card {
-      padding: 24px;
-      border: 1px solid #273449;
-      border-radius: 12px;
-      background: rgba(7, 12, 20, 0.72);
-    }
-
-    .comparison-card h3 {
-      margin-top: 0;
-    }
-
-    .comparison-label {
-      display: inline-block;
-      margin-bottom: 14px;
-      padding: 6px 9px;
-      border: 1px solid #31425a;
-      border-radius: 999px;
-      color: #9ebce3;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .flow-list {
-      display: grid;
-      gap: 10px;
-      margin: 18px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .flow-list li {
-      position: relative;
-      padding: 13px 14px 13px 38px;
-      border: 1px solid #202c3d;
-      border-radius: 8px;
-      background: #080d15;
-    }
-
-    .flow-list li::before {
-      position: absolute;
-      left: 14px;
-      content: "↓";
-      color: #68a8ff;
-      font-weight: 700;
-    }
-
-    .flow-list li:first-child::before {
-      content: "●";
-      font-size: 9px;
-      top: 17px;
-    }
-
-    .rank-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 24px 0;
-    }
-
-    .rank-chip {
-      min-width: 82px;
-      padding: 14px 16px;
-      border: 1px solid #31547e;
-      border-radius: 10px;
-      background: rgba(45, 91, 148, 0.14);
-      text-align: center;
-    }
-
-    .rank-chip strong {
-      display: block;
-      color: #ffffff;
-      font-size: 20px;
-    }
-
-    .rank-chip span {
-      color: #9fabb9;
-      font-size: 12px;
-    }
-
-    .technical-note {
-      margin-top: 22px;
-      padding: 16px 18px;
-      border: 1px solid #29384d;
-      border-radius: 9px;
-      background: rgba(10, 18, 29, 0.8);
-      color: #aeb9c7;
-      font-size: 14px;
-    }
-
-    .signal-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 30px;
-    }
-
-    .signal-card {
-      padding: 21px;
-      border: 1px solid #273449;
-      border-radius: 11px;
-      background: rgba(7, 12, 20, 0.72);
-    }
-
-    .signal-card h3 {
-      margin-top: 0;
-      color: #ffffff;
-      font-size: 16px;
-    }
-
-    .signal-card p {
-      margin-bottom: 0;
-      color: #9fabb9;
-      font-size: 14px;
-    }
-
-    .quickstart-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
-      gap: 22px;
-      margin-top: 30px;
-    }
-
-    .command-panel,
-    .output-panel {
-      min-width: 0;
-      padding: 22px;
-      border: 1px solid #273449;
-      border-radius: 12px;
-      background: rgba(7, 12, 20, 0.78);
-    }
-
-    .command-panel h3,
-    .output-panel h3 {
-      margin-top: 0;
-    }
-
-    .command-panel pre {
-      margin: 16px 0 0;
-      padding: 18px;
-      overflow-x: auto;
-      border: 1px solid #202d3f;
-      border-radius: 9px;
-      background: #04070c;
-      color: #dbe7f5;
-      font-size: 13px;
-      line-height: 1.65;
-      white-space: pre;
-    }
-
-    .command-panel code {
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-    }
-
-    .output-list {
-      display: grid;
-      gap: 9px;
-      margin: 17px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .output-list li {
-      padding: 10px 12px;
-      border: 1px solid #202d3f;
-      border-radius: 7px;
-      background: #070c13;
-      color: #c8d3df;
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .release-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 26px;
-    }
-
-    .workflow-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 30px;
-    }
-
-    .workflow-step {
-      position: relative;
-      padding: 24px;
-      border: 1px solid #273449;
-      border-radius: 11px;
-      background: rgba(7, 12, 20, 0.72);
-    }
-
-    .workflow-step strong {
-      display: block;
-      margin-bottom: 11px;
-      color: #ffffff;
-    }
-
-    .workflow-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      margin-bottom: 16px;
-      border: 1px solid #4777ad;
-      border-radius: 50%;
-      color: #9bc6f7;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 28px;
-    }
-
-    .metric-card {
-      padding: 22px;
-      border: 1px solid #273449;
-      border-radius: 11px;
-      background: rgba(7, 12, 20, 0.72);
-    }
-
-    .metric-card strong {
-      display: block;
-      margin-bottom: 6px;
-      color: #ffffff;
-      font-size: 25px;
-    }
-
-    .metric-card span {
-      color: #9fabb9;
-      font-size: 13px;
-    }
-
-    .boundary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 28px;
-    }
-
-    .boundary-card {
-      padding: 23px;
-      border: 1px solid #273449;
-      border-radius: 11px;
-      background: rgba(7, 12, 20, 0.72);
-    }
-
-    .boundary-card h3 {
-      margin-top: 0;
-    }
-
-    .boundary-card ul {
-      margin-bottom: 0;
-      padding-left: 20px;
-    }
-
-    .boundary-card li + li {
-      margin-top: 9px;
-    }
-
-    @media (max-width: 900px) {
-      .signal-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .quickstart-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .comparison-grid,
-      .workflow-grid,
-      .metric-grid,
-      .boundary-grid,
-      .signal-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .command-panel,
-      .output-panel,
-      .comparison-card,
-      .workflow-step,
-      .metric-card,
-      .boundary-card,
-      .signal-card {
-        padding: 19px;
-      }
-
-      .rank-chip {
-        flex: 1 1 42%;
-      }
-    }
-  </style>
-
-  <link rel="stylesheet" href="design-v3.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeluneOS — 두 로봇 실행 사이에 무엇이 달라졌는지</title>
+  <meta name="description" content="VeluneOS는 Reference 실행과 Target 실행을 비교해 어떤 stream이 나타나거나 사라졌는지, 업데이트 타이밍이 어떻게 달라졌는지를 결정론적으로 보고합니다. LLM 추론 없이, 원본 로그는 로컬에 둔 채로." />
+  <link rel="canonical" href="https://veluneos.ai/" />
+  <link rel="alternate" hreflang="ko" href="https://veluneos.ai/" />
+  <link rel="alternate" hreflang="en" href="https://veluneos.ai/en" />
+  <link rel="alternate" hreflang="x-default" href="https://veluneos.ai/en" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VeluneOS" />
+  <meta property="og:title" content="VeluneOS — 무엇이 달라졌는지 보세요" />
+  <meta property="og:description" content="로보틱스 로그를 위한 결정론적 구조 비교와 evidence window 탐색. 최종 판단은 엔지니어가 합니다." />
+  <meta property="og:url" content="https://veluneos.ai/" />
+  <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230e1013'/%3E%3Crect x='4' y='8' width='16' height='2' rx='1' fill='%23fff'/%3E%3Crect x='4' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='14' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='11.25' y='5' width='1.5' height='14' rx='.75' fill='%23f97316'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/site.css" />
 </head>
-
 <body>
-  <main>
-    <nav>
-      <div class="brand">VeluneOS</div>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
 
-      <div class="nav-actions">
-        <div class="language-switch">
-          <strong>KR</strong>
-          <span>|</span>
-          <a href="en.html">EN</a>
-        </div>
-
-        <a href="comparison-beta.html">
-          Compare
-        </a>
-
-        <a href="mailto:contact@veluneos.ai">
-          contact@veluneos.ai
-        </a>
-      </div>
-    </nav>
-
-    <header class="hero hero-v2">
-  <div class="hero-copy">
-    <p class="eyebrow">
-      Robotics Incident Triage · Local Evidence Engine
-    </p>
-
-    <h1>
-      <span>전체 로그를 재생하기 전에,</span>
-      <span class="hero-accent">
-        먼저 볼 구간을 좁히세요.
-      </span>
-    </h1>
-
-    <p>
-      Velune Trace는 MCAP / ROS2 로그에서 timing evidence
-      window를 우선순위로 정리합니다. 전체 replay 전에
-      먼저 검토할 시간대를 제시해 엔지니어의 조사 시작점을
-      줄입니다.
-    </p>
-
-    <p class="hero-proof">
-      <strong>Find the events.</strong>
-      Engineers find the cause.
-    </p>
-
-    <div class="actions">
-      <a
-        class="button primary"
-        href="https://github.com/veluneos/velune-trace/releases/download/v0.5.1/velune-trace-v0.5.1.zip"
-      >
-        무료 Local Engine 다운로드
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html" aria-label="VeluneOS 홈">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="2" rx="1" fill="currentColor"/><rect x="2" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="14" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="11.25" y="3" width="1.5" height="18" rx=".75" fill="var(--signal)"/></svg>
+        VeluneOS
       </a>
-
-      <a class="button" href="#download">
-        샘플 로그로 테스트
-      </a>
-    </div>
-
-    <div class="trust-row" aria-label="실행 및 개인정보 경계">
-      <span>Local-only</span>
-      <span>No telemetry</span>
-      <span>No automatic raw-log upload</span>
-      <span>Human final judgment</span>
-    </div>
-  </div>
-
-  <aside
-    class="triage-explainer"
-    aria-label="전체 로그에서 먼저 볼 구간을 좁히는 과정"
-  >
-    <div class="triage-example-label">
-      <span>동작 예시</span>
-      <strong>LOCAL ANALYSIS</strong>
-    </div>
-
-    <div class="triage-source">
-      <div class="triage-block-heading">
-        <div>
-          <span class="triage-step-label">INPUT</span>
-          <strong>42분 전체 MCAP 로그</strong>
+      <nav class="primary-nav" aria-label="주 메뉴">
+        <a href="comparison-beta.html">Compare</a>
+        <a href="trace.html">Trace</a>
+        <a href="#how">작동 방식</a>
+        <a href="sample-comparison.html">샘플 리포트</a>
+        <a class="lang" href="en.html" hreflang="en" lang="en">EN</a>
+        <a class="button small primary nav-cta" href="comparison-beta.html#request">변경 리뷰 요청</a>
+      </nav>
+      <details class="menu">
+        <summary>메뉴</summary>
+        <div class="menu-panel">
+          <a href="comparison-beta.html">Compare</a>
+          <a href="trace.html">Trace</a>
+          <a href="#how">작동 방식</a>
+          <a href="sample-comparison.html">샘플 리포트</a>
+          <a href="comparison-beta.html#request">변경 리뷰 요청</a>
+          <a href="en.html" hreflang="en" lang="en">English</a>
         </div>
-
-        <span class="triage-duration">00:00 — 42:00</span>
-      </div>
-
-      <div
-        class="full-log-timeline"
-        aria-label="42분 전체 로그 타임라인"
-      >
-        <span class="review-point point-one"></span>
-        <span class="review-point point-two"></span>
-        <span class="review-point point-three"></span>
-        <span class="review-point point-four"></span>
-        <span class="review-point point-five"></span>
-      </div>
-
-      <div class="timeline-scale">
-        <span>전체 로그</span>
-        <span>5개 후보 구간</span>
-      </div>
+      </details>
     </div>
+  </header>
 
-    <div class="triage-connector">
-      <span class="connector-arrow" aria-hidden="true">↓</span>
-
-      <div>
-        <strong>Velune Trace</strong>
-        <span>
-          관측된 timing evidence를 기준으로
-          먼저 확인할 구간을 정리
-        </span>
-      </div>
-    </div>
-
-    <div class="triage-result">
-      <div class="triage-block-heading">
-        <div>
-          <span class="triage-step-label">OUTPUT</span>
-          <strong>먼저 확인할 Top 5 구간</strong>
-        </div>
-
-        <span class="triage-result-badge">review queue</span>
-      </div>
-
-      <div class="review-window-list">
-        <div class="review-window featured">
-          <span class="review-rank">01</span>
-
-          <div class="review-window-copy">
-            <strong>18:42.100 — 18:43.100</strong>
-            <span>/scan gap · /odom jitter</span>
-          </div>
-
-          <span class="review-action">먼저 확인</span>
-        </div>
-
-        <div class="review-window">
-          <span class="review-rank">02</span>
-
-          <div class="review-window-copy">
-            <strong>23:11.400 — 23:12.400</strong>
-            <span>out-of-order timing</span>
-          </div>
-        </div>
-
-        <div class="review-window">
-          <span class="review-rank">03</span>
-
-          <div class="review-window-copy">
-            <strong>31:07.800 — 31:08.800</strong>
-            <span>count ratio observation</span>
-          </div>
-        </div>
-
-        <div class="more-windows">
-          <span>+ 2개 구간</span>
-          <span>사용자가 지정한 review depth에 따라 확장</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="viewer-handoff">
-      <span class="viewer-handoff-label">NEXT</span>
-
-      <div>
-        <strong>선택한 구간부터 상세 조사</strong>
-        <span>
-          Foxglove 또는 기존 분석 도구에서 해당 시간대 확인
-        </span>
-      </div>
-    </div>
-
-    <p class="triage-disclaimer">
-      우선 검토 순서이며 원인 가능성·위험도 판정이 아닙니다.
-    </p>
-  </aside>
-</header>
-
-
-    <section id="problem">
-  <p class="eyebrow">The Cost Before Investigation</p>
-
-  <h2>
-    전체 로그 탐색은 원인 분석 전에 반복되는 비용입니다.
-  </h2>
-
-  <p class="section-intro">
-    자율주행 로봇 이슈가 발생할 때마다 전체 로그를
-    처음부터 replay하고, topic을 하나씩 찾고, timestamp를
-    반복 대조한다면 엔지니어는 실제 원인을 검토하기 전에
-    상당한 조사 준비 시간을 사용하게 됩니다.
-  </p>
-
-  <div class="comparison-grid">
-    <article class="comparison-card">
-      <span class="comparison-label">Without triage</span>
-      <h3>먼저 볼 구간이 없는 조사</h3>
-
-      <ul class="flow-list">
-        <li>전체 MCAP / ROS2 로그 replay</li>
-        <li>수많은 topic을 수동으로 탐색</li>
-        <li>timestamp와 메시지 흐름을 반복 대조</li>
-        <li>그 이후에야 실제 원인 분석 시작</li>
-      </ul>
-    </article>
-
-    <article class="comparison-card">
-      <span class="comparison-label">With Velune Trace</span>
-      <h3>검토 시작점이 정리된 조사</h3>
-
-      <ul class="flow-list">
-        <li>로그를 로컬에서 읽기</li>
-        <li>관측 가능한 timing evidence 요약</li>
-        <li>Top-K evidence window 확인</li>
-        <li>선택된 구간부터 기존 도구로 상세 조사</li>
-      </ul>
-    </article>
-  </div>
-
-  <p class="loss-line">
-    로그가 커질수록 이 탐색 비용은 이슈가 발생할 때마다
-    반복됩니다. 먼저 볼 시간대를 좁히지 않는 것은
-    엔지니어의 시간을 가장 비싼 방식으로 사용하는 일입니다.
-  </p>
-</section>
-
-<section id="ranking">
-  <p class="eyebrow">Ranked Evidence Windows</p>
-
-  <h2>필요한 깊이만큼 먼저 볼 window를 선택하세요.</h2>
-
-  <p class="section-intro">
-    기본 Quickstart는 상위 5개의 timing evidence window를
-    보여줍니다. 더 넓은 investigation view가 필요하면
-    <code>--top 10</code>, <code>--top 15</code>,
-    <code>--top 30</code>처럼 검토할 결과 개수를
-    조정할 수 있습니다.
-  </p>
-
-  <div class="rank-row" aria-label="Top-K review depth">
-    <div class="rank-chip">
-      <strong>Top 5</strong>
-      <span>빠른 1차 검토</span>
-    </div>
-
-    <div class="rank-chip">
-      <strong>Top 10</strong>
-      <span>확장 검토</span>
-    </div>
-
-    <div class="rank-chip">
-      <strong>Top 15</strong>
-      <span>더 넓은 범위</span>
-    </div>
-
-    <div class="rank-chip">
-      <strong>Top 30</strong>
-      <span>심층 검토</span>
-    </div>
-  </div>
-
-  <p class="technical-note">
-    <code>--top</code>은 window의 시간 길이가 아니라
-    출력할 evidence window의 개수입니다. Ranking은
-    관측된 timing evidence를 기준으로 검토 순서를
-    정리하며, root-cause 확률이나 위험도를 의미하지 않습니다.
-  </p>
-</section>
-
-<section id="signals">
-  <p class="eyebrow">Observable Timing Evidence</p>
-
-  <h2>판정이 아니라 관측 가능한 timing evidence입니다.</h2>
-
-  <p class="section-intro">
-    Velune Trace는 로그에서 확인할 수 있는 시간적 신호를
-    구조화합니다. 이 신호가 결함이나 사고 원인이라는
-    결론은 내리지 않습니다.
-  </p>
-
-  <div class="signal-grid">
-    <article class="signal-card">
-      <h3>Topic gap</h3>
-      <p>
-        메시지 흐름 사이에서 관측된 시간 간격을
-        window 단위로 요약합니다.
-      </p>
-    </article>
-
-    <article class="signal-card">
-      <h3>Jitter</h3>
-      <p>
-        메시지 도착 또는 timestamp 간격의 시간 변동을
-        관측합니다.
-      </p>
-    </article>
-
-    <article class="signal-card">
-      <h3>Count ratio</h3>
-      <p>
-        비교 대상 topic과 window에서 관측된 메시지 수의
-        비율을 정리합니다.
-      </p>
-    </article>
-
-    <article class="signal-card">
-      <h3>Out-of-order timing</h3>
-      <p>
-        기록 순서와 timestamp 흐름 사이의 순서 불일치를
-        관측합니다.
-      </p>
-    </article>
-  </div>
-</section>
-
-<section id="download">
-          <p class="eyebrow">Quick Test to Real Workflow</p>
-
-          <h2>설명만 보지 말고, 샘플 로그로 직접 확인하세요.</h2>
-
-          <p class="section-intro">
-            사내 로그나 원본 MCAP을 제공하지 않아도 샘플 파일로
-            ranked evidence-window workflow를 확인할 수 있습니다.
-            이후 로그 경로만 바꾸면 자신의 MCAP에서도 동일한
-            로컬 분석 흐름을 사용할 수 있습니다.
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid split">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>로보틱스 로그를 위한 결정론적 Evidence Engine</p>
+          <h1>무엇이 달라졌는지<br />보세요.</h1>
+          <p class="lead">
+            VeluneOS Compare는 로봇의 Reference 실행과 Target 실행을 비교해 어떤
+            stream이 나타나거나 사라졌는지, 조용해졌는지, 메시지 타이밍이 어떻게
+            달라졌는지를 검토 순서와 확인할 시간 구간으로 보여줍니다. 그 의미는
+            엔지니어가 판단합니다.
           </p>
-
-          <div class="quickstart-grid">
-            <article class="command-panel">
-              <h3>1. 샘플 로그 Quick Test</h3>
-
-              <pre><code>git clone https://github.com/veluneos/velune-trace.git
-cd velune-trace
-
-python3 -m venv .venv
-source .venv/bin/activate
-
-pip install -r requirements.txt
-python3 tools/create_sample_mcap.py
-
-./bin/velune validation-report examples/sample.mcap \
-  --export-dir velune_report \
-  --window-sec 1 \
-  --top 5 \
-  --allowed-lateness-sec 2</code></pre>
-            </article>
-
-            <article class="output-panel">
-              <h3>로컬에 생성되는 Evidence Report</h3>
-
-              <p>
-                원본 로그를 수정하거나 Velune 서버로 업로드하지
-                않고 다음 결과를 로컬 디렉터리에 생성합니다.
-              </p>
-
-              <ul class="output-list">
-                <li>velune_report/summary.md</li>
-                <li>velune_report/shareable_anonymous_report.json</li>
-                <li>velune_report/topic_profile.json</li>
-                <li>velune_report/evidence_windows.json</li>
-                <li>velune_report/SCHEMA.md</li>
-              </ul>
-            </article>
+          <div class="button-row">
+            <a class="button primary" href="comparison-beta.html#request">변경 리뷰 요청</a>
+            <a class="button" href="trace.html">Velune Trace 시작하기 <span class="arrow" aria-hidden="true">→</span></a>
           </div>
+          <ul class="facts" aria-label="운영 원칙">
+            <li>원본 MCAP은 로컬에 남습니다</li>
+            <li>비교 과정에 LLM 추론 없음</li>
+            <li>같은 입력, 같은 결과</li>
+          </ul>
+        </div>
 
-          <div class="quickstart-grid">
-            <article class="command-panel">
-              <h3>2. 자신의 MCAP으로 로컬 실행</h3>
-
-              <pre><code>./bin/velune validation-report /path/to/your-log.mcap \
-  --export-dir velune_report \
-  --window-sec 1 \
-  --top 10 \
-  --allowed-lateness-sec 2</code></pre>
-            </article>
-
-            <article class="output-panel">
-              <h3>Review depth 조절</h3>
-
-              <p>
-                빠른 1차 검토에는 <code>--top 5</code>, 더 넓은
-                조사에는 <code>--top 10</code>,
-                <code>--top 15</code>, <code>--top 30</code>처럼
-                필요한 결과 개수를 지정합니다.
-              </p>
-
-              <p class="technical-note">
-                분석은 로컬에서 수행되며 원본 로그의 자동 업로드,
-                telemetry 또는 Velune 서버 호출을 수행하지 않습니다.
-              </p>
-            </article>
+        <figure class="panel" aria-labelledby="sample-caption">
+          <div class="panel-head">
+            <span class="run-pair">
+              <span class="run-tag ref">REFERENCE</span>
+              <span aria-hidden="true">vs</span>
+              <span class="run-tag tgt">TARGET</span>
+            </span>
+            <span>REVIEW_REQUIRED · schema 0.5.0</span>
           </div>
-
-          <div class="release-actions">
-            <a class="button primary" href="https://github.com/veluneos/velune-trace/releases/download/v0.5.1/velune-trace-v0.5.1.zip">
-              Velune Trace v0.5.1 ZIP 다운로드
-            </a>
-
-            <a
-              class="button"
-              href="https://github.com/veluneos/velune-trace/blob/v0.5.1/release/INSTALL.md"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              전체 설치 가이드
-            </a>
-
-            <a
-              class="button"
-              href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              릴리스 정보
-            </a>
-
-            <a
-              class="button"
-              href="https://github.com/veluneos/velune-trace"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub 저장소
-            </a>
+          <div class="panel-body">
+            <div class="timeline" role="img" aria-label="5개 stream의 30초 타임라인. Planner stream은 Reference에만 있음, diagnostics stream은 Target에만 있음, LiDAR는 10~20초 동안 Target 메시지 간격이 더 김, 카메라는 12~17초 동안 Target 활동 없음, IMU는 변화 없음.">
+              <span></span>
+              <span class="axis">0</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">5</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">10</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">15</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">20</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">25</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span>
+              <span class="label">CAMERA <span class="key">001</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label">IMU <span class="key">002</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label">LIDAR <span class="key">003</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label hot">PLANNER <span class="key">004</span></span>
+              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
+              <span class="label">DIAG <span class="key">005</span></span>
+              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
+            </div>
+            <div class="legend" aria-hidden="true">
+              <span><i></i>차이 없음</span>
+              <span><i class="miss"></i>Target 활동 없음</span>
+              <span><i class="slow"></i>Target 간격이 더 김</span>
+              <span><i class="only"></i>한 실행에만 있음</span>
+            </div>
+            <div class="finding list">
+              <div class="finding-kicker">검토 순서</div>
+              <ol class="review-order">
+                <li><span class="mono">004</span> <span class="cat">PLANNING_LOCAL</span> — Reference에만 있음</li>
+                <li><span class="mono">005</span> <span class="cat">SYSTEM_DIAGNOSTICS</span> — Target에만 있음</li>
+                <li><span class="mono">003</span> <span class="cat">PERCEPTION_LIDAR</span> — Target의 메시지 간격이 더 김 <span class="mono win">00:10 → 00:20 · 회복</span></li>
+                <li><span class="mono">001</span> <span class="cat">PERCEPTION_CAMERA</span> — Target 활동 없음 <span class="mono win">00:12 → 00:17 · 회복</span></li>
+              </ol>
+            </div>
           </div>
-        </section>
+          <figcaption class="panel-foot" id="sample-caption">
+            <span class="human-gate">엔지니어 검토 필요</span>
+            <span>샘플: 합성 실행, Beta Kit, VeluneOS Compare 서비스 · <a href="sample-comparison.html">전체 리포트</a></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
 
-    <section id="workflow">
-  <p class="eyebrow">Pre-viewer Triage Layer</p>
+    <section class="section" id="products" aria-labelledby="products-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">두 개의 도구, 하나의 evidence 흐름</p>
+          <h2 id="products-title">로그 하나든, 실행 두 개든. 질문에 맞는 도구를 쓰세요.</h2>
+          <p>
+            한 번의 기록 안에서 일어난 일을 조사한다면 Trace에서 시작하세요.
+            소프트웨어, 설정, 하드웨어 변경이 무엇을 바꿨는지 확인한다면 Compare를
+            쓰세요. 각각 단독으로도 동작합니다.
+          </p>
+        </div>
+        <div class="grid-2">
+          <article class="card product-card">
+            <span class="mono-label">Velune Trace · 로그 하나</span>
+            <p class="q">이 로그에서 어디부터 봐야 할까?</p>
+            <p>
+              대용량 MCAP 파일을 로컬에서 읽고, 메시지 타이밍이 가장 불규칙한 시간
+              구간(gap, jitter, 메시지 수 부족, 순서가 뒤바뀐 timestamp)을 순서대로
+              정리합니다. Foxglove나 기존 도구에서 바로 그 구간을 여세요.
+            </p>
+            <div class="card-foot">
+              <span class="status live">오픈소스 · MIT · 지금 사용 가능</span>
+              <a class="text-link" href="trace.html">Trace 자세히</a>
+            </div>
+          </article>
+          <article class="card product-card">
+            <span class="mono-label">VeluneOS Compare · Reference vs Target</span>
+            <p class="q">두 실행 사이에 무엇이 달라졌을까?</p>
+            <p>
+              Velune Adapter가 두 실행을 내 컴퓨터에서 하나의 파생 파일로 준비합니다.
+              VeluneOS Compare는 한 실행에만 있는 stream, 메시지 간격 변화, 활동 손실과
+              회복, timestamp 표현 변화를 각각의 구간과 evidence 품질과 함께 보고합니다.
+            </p>
+            <div class="card-foot">
+              <span class="status beta">Private Beta · 요청 시 제공</span>
+              <a class="text-link" href="comparison-beta.html">Compare 자세히</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-  <h2>Velune Trace는 기존 viewer를 대체하지 않습니다.</h2>
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">작동 방식</p>
+          <h2 id="how-title">지금의 워크플로우 그대로, 앞단에 구조 비교 한 단계.</h2>
+          <p>새로운 기록 방식은 필요 없습니다. 팀이 이미 만들고 있는 MCAP 파일을 읽습니다.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <h3>기록 선택 <span class="where">고객 환경</span></h3>
+            <p>조사할 MCAP 로그 하나, 또는 Reference 실행과 Target 실행(예: 변경 전과 후). Reference는 사용자가 정한 기준일 뿐, 그것이 정상이라는 뜻은 아닙니다.</p>
+          </li>
+          <li>
+            <h3>로컬 실행 <span class="where">내 컴퓨터</span></h3>
+            <p>Trace는 전부 내 컴퓨터에서 실행됩니다. Compare의 경우 Velune Adapter가 두 실행을 로컬에서 읽어 <code>comparison.velune</code> 파일 하나와, 그 안에 무엇이 들어 있는지 보여주는 preview를 만듭니다.</p>
+          </li>
+          <li>
+            <h3>파생 파일 비교 <span class="where">VeluneOS Compare</span></h3>
+            <p>VeluneOS Compare에는 준비된 파일만 업로드됩니다. 원본 MCAP, 메시지 payload, 원래 topic 이름, 절대 timestamp는 포함되지 않으며, 리포트를 돌려준 뒤에는 아무것도 저장되지 않습니다.</p>
+          </li>
+          <li>
+            <h3>관측 결과 확인</h3>
+            <p>하나의 결정, 그리고 검토 순서대로 정리된 차이. 각각에 시간 구간, 양쪽 값, evidence가 얼마나 뒷받침하는지가 표시됩니다.</p>
+          </li>
+          <li>
+            <h3>검증하고 결정 <span class="where">엔지니어</span></h3>
+            <p>해당 구간을 기존 도구에서 열고, 시스템에 대해 알고 있는 것과 대조한 뒤 엔지니어링 결정을 내리세요. VeluneOS는 그 직전에서 멈춥니다.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
 
-  <p class="section-intro">
-    Foxglove, PlotJuggler 또는 기존 분석 도구를 열기 전에
-    먼저 확인할 timestamp와 topic 범위를 좁혀주는
-    pre-viewer triage layer입니다.
-  </p>
+    <section class="section" id="why" aria-labelledby="why-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">AI는 엔지니어링에</p>
+          <h2 id="why-title">구조 비교에는 언어 모델이 필요하지 않습니다.</h2>
+          <p>
+            두 실행 사이에서 어떤 stream이 달라졌는지 찾는 일은 반복 가능하고 규칙으로
+            정의되는 작업입니다. VeluneOS는 고정된 규칙으로 이 일을 처리하므로, 팀의 AI
+            사용량과 집중력은 추론, 코딩, 설계처럼 정말 필요한 질문에 쓸 수 있습니다.
+          </p>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">수동 리플레이</th>
+                <th scope="col">원본 로그에 범용 AI 사용</th>
+                <th scope="col">VeluneOS 구조 비교</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">방식</th>
+                <td>두 실행을 재생하고, timestamp를 맞추고, topic을 하나씩 확인</td>
+                <td>질문할 때마다 로그 데이터를 모델에 전달</td>
+                <td class="velune">파생 구조에 대해 고정·문서화된 비교 규칙 적용</td>
+              </tr>
+              <tr>
+                <th scope="row">재현성</th>
+                <td>누가, 얼마나 오래 보느냐에 따라 다름</td>
+                <td>실행과 프롬프트에 따라 답이 달라질 수 있음</td>
+                <td class="velune">같은 입력, 같은 결과</td>
+              </tr>
+              <tr>
+                <th scope="row">모델 사용</th>
+                <td>없음</td>
+                <td>매번 추론 필요</td>
+                <td class="velune">비교 과정에 LLM 추론 없음</td>
+              </tr>
+              <tr>
+                <th scope="row">원본 데이터</th>
+                <td>그대로 유지</td>
+                <td>도구와 데이터 약관에 따라 다름</td>
+                <td class="velune">원본 MCAP은 로컬에, 비교는 파생 구조로만</td>
+              </tr>
+              <tr>
+                <th scope="row">최종 판단</th>
+                <td>엔지니어</td>
+                <td>답을 검증한 뒤 엔지니어</td>
+                <td class="velune">보고된 구간에서 시작해 엔지니어</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">
+          <strong>이 주장의 범위.</strong> 비교가 LLM 추론 없이 결정론적으로 실행된다는
+          것까지가 저희의 주장입니다. 실제 고객 워크플로우에서의 시간·토큰 절감은 아직
+          측정하지 않았으며, VeluneOS가 AI 기반 조사를 대체하지는 않습니다. 그 안의 반복
+          단계 하나를 덜어줄 뿐입니다.
+        </p>
+      </div>
+    </section>
 
-  <div class="workflow-grid">
-    <article class="workflow-step">
-      <span class="workflow-number">1</span>
-      <strong>Ranked window 확인</strong>
-      <p>
-        Velune Trace에서 우선 검토할 evidence window와
-        관측된 topic 신호를 확인합니다.
-      </p>
-    </article>
+    <section class="section" id="boundary" aria-labelledby="boundary-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">판정이 아닌 evidence</p>
+          <h2 id="boundary-title">Find the events. Engineers find the cause.</h2>
+        </div>
+        <div class="boundary">
+          <div class="card">
+            <h3>VeluneOS가 보고하는 것</h3>
+            <ul class="checklist">
+              <li>한 실행에는 있고 다른 실행에는 없는 stream</li>
+              <li>메시지 간격 변화, 활동 손실과 회복</li>
+              <li>타이밍과 구분해 보고하는 timestamp 표현 변화</li>
+              <li>모든 결과의 evidence 품질과 coverage 한계</li>
+              <li>재현 가능한 HTML, Markdown, JSON 출력</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>VeluneOS가 판단하지 않는 것</h3>
+            <ul class="checklist no">
+              <li>근본 원인</li>
+              <li>결함, 책임, 법적 책임</li>
+              <li>로봇의 안전 여부</li>
+              <li>변경이 회귀(regression)인지 여부</li>
+              <li>릴리스 GO / NO-GO</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <article class="workflow-step">
-      <span class="workflow-number">2</span>
-      <strong>Timestamp 범위 선택</strong>
-      <p>
-        조사 목적에 맞는 window의 시작·종료 시간과
-        관련 topic을 선택합니다.
-      </p>
-    </article>
-
-    <article class="workflow-step">
-      <span class="workflow-number">3</span>
-      <strong>기존 도구에서 상세 조사</strong>
-      <p>
-        선택한 범위를 Foxglove 또는 기존 엔지니어링
-        workflow에서 replay하고 최종 원인을 검토합니다.
-      </p>
-    </article>
-  </div>
-</section>
-
-    <section id="validation">
-  <p class="eyebrow">Measured Separately</p>
-
-  <h2>첫 indexing과 이후 evidence 조회를 분리합니다.</h2>
-
-  <p class="section-intro">
-    내부 대규모 확장 benchmark에서는 10.7GB,
-    9,237,885-event 로그의 첫 scan 및 indexing에
-    약 276초가 걸렸습니다. Index 생성 이후 선택된
-    evidence chain 조회는 약 0.002초가 걸렸습니다.
-  </p>
-
-  <div class="metric-grid">
-    <article class="metric-card">
-      <strong>10.7GB</strong>
-      <span>내부 확장 benchmark 로그</span>
-    </article>
-
-    <article class="metric-card">
-      <strong>약 4.6분</strong>
-      <span>첫 full scan 및 indexing</span>
-    </article>
-
-    <article class="metric-card">
-      <strong>약 0.002초</strong>
-      <span>Post-index evidence retrieval</span>
-    </article>
-  </div>
-
-  <p class="technical-note">
-    Synthetic large-scale expansion benchmark입니다.
-    결과는 하드웨어, 저장장치, 압축 방식, 메시지 구조 및
-    데이터셋 특성에 따라 달라질 수 있습니다. 첫 indexing
-    시간과 이후 조회 시간은 하나의 수치로 합치지 않습니다.
-  </p>
-</section>
-
-    <section id="boundary">
-  <p class="eyebrow">Evidence, Not Judgment</p>
-
-  <h2>Velune은 조사 시작점을 줄이고, 판단은 남겨둡니다.</h2>
-
-  <div class="boundary-grid">
-    <article class="boundary-card">
-      <h3>Velune Trace가 수행하는 것</h3>
-      <ul>
-        <li>MCAP / ROS2 로그의 로컬 처리</li>
-        <li>Timing evidence window 생성</li>
-        <li>관측된 evidence의 우선순위 정리</li>
-        <li>재현 가능한 Markdown 및 JSON 결과 생성</li>
-        <li>기존 viewer로 전달할 timestamp 범위 제공</li>
-      </ul>
-    </article>
-
-    <article class="boundary-card">
-      <h3>Velune Trace가 판단하지 않는 것</h3>
-      <ul>
-        <li>Root cause</li>
-        <li>Fault 또는 liability</li>
-        <li>Safety risk 또는 severity</li>
-        <li>정상·비정상 또는 회귀 여부</li>
-        <li>최종 엔지니어링 결론</li>
-      </ul>
-    </article>
-  </div>
-
-  <p class="technical-note">
-    원본 로그를 자동 업로드하지 않으며 telemetry와
-    Velune 서버 호출을 수행하지 않습니다. 최종 원인 판단은
-    시스템과 운영 맥락을 이해하는 엔지니어가 수행합니다.
-  </p>
-</section>
-
-    <section id="compare">
-  <p class="eyebrow">Velune Compare</p>
-
-  <h2>무엇이 달라졌는지가 아니라, 무엇부터 봐야 하는지 보여줍니다.</h2>
-
-  <p class="section-intro">
-    Velune Trace가 하나의 실행 안에서 조사 범위를 좁혀준다면, Velune
-    Compare는 그 다음 단계입니다. Velune Adapter가 로컬에서 준비한
-    Reference Run과 Target Run의 차이를 구조화해, 검토 우선순위가
-    매겨진 시작점으로 정리합니다. 원본 MCAP은 준비 과정에서 로컬
-    환경을 벗어나지 않습니다.
-  </p>
-
-  <div class="metric-grid">
-    <article class="metric-card">
-      <strong>5개 Stream</strong>
-      <span>9초 구간 비교</span>
-    </article>
-
-    <article class="metric-card">
-      <strong>지속 변화 1건</strong>
-      <span>짧게 나타난 변화 3건보다 상위 순위</span>
-    </article>
-
-    <article class="metric-card">
-      <strong>00:05 &rarr; 00:09</strong>
-      <span>먼저 검토할 구간</span>
-    </article>
-  </div>
-
-  <p class="technical-note">
-    실제 Velune Adapter와 Velune Compare를 합성 Reference Run과
-    Target Run에 그대로 적용해 생성한 실제 비교 리포트입니다 &mdash;
-    <a href="sample-comparison.html">전체 리포트 보기 &rarr;</a>
-    Compare는 관측된 구조적 차이만 보고하며, root cause, fault,
-    safety risk, regression을 판정하지 않습니다. 원인은
-    엔지니어가 판단합니다.
-  </p>
-
-  <div class="comparison-use-cases">
-    <span>Before vs After</span>
-    <span>Version vs Version</span>
-    <span>Robot vs Robot</span>
-    <span>Site vs Site</span>
-    <span>Reference vs Target</span>
-  </div>
-
-  <div class="actions">
-    <a class="button primary" href="comparison-beta.html">
-      샘플 비교 보기
-    </a>
-
-    <a class="button" href="comparison-beta.html">
-      Compare 사용해보기
-    </a>
-  </div>
-</section>
-
-    <section id="contact">
-  <p class="eyebrow">Private Validation</p>
-
-  <h2>실제 운영 이슈에서 조사 시작점이 줄어드는지 검증합니다.</h2>
-
-  <p class="section-intro">
-    검증 질문은 하나입니다. Evidence-window ranking이
-    실제 자율주행 로봇 운영 이슈 분석에서 엔지니어의
-    로그 탐색 시간을 줄이는 데 도움이 되는가?
-  </p>
-
-  <p>
-    원본 MCAP이나 사내 로그의 외부 업로드를 요청하지
-    않습니다. 팀의 로컬 환경에서 실행한 결과와 기존
-    investigation workflow에 대한 피드백으로 검증할 수 있습니다.
-  </p>
-
-  <div class="actions">
-    <a
-      class="button primary"
-      href="mailto:contact@veluneos.ai?subject=VeluneOS%20Private%20Validation"
-    >
-      Private Validation 문의
-    </a>
-
-    <a
-      class="button"
-      href="https://github.com/veluneos/velune-trace"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      GitHub에서 먼저 확인
-    </a>
-  </div>
-</section>
-
-    <footer>
-      © 2026 VeluneOS ·
-      <a href="mailto:contact@veluneos.ai">
-        contact@veluneos.ai
-      </a>
-    </footer>
+    <section class="cta-band" aria-labelledby="cta-title">
+      <div class="wrap cta-inner">
+        <div>
+          <h2 id="cta-title">리뷰할 변경이 있으신가요?</h2>
+          <p>
+            두 실행 사이에 무엇을 바꿨는지, 무엇을 알고 싶은지 알려주세요. Private Beta
+            기간에는 각 팀과 실제 비교를 직접 함께 진행합니다.
+          </p>
+        </div>
+        <div class="button-row">
+          <a class="button primary" href="comparison-beta.html#request">변경 리뷰 요청</a>
+          <a class="button" href="https://github.com/veluneos/velune-trace">GitHub에서 Velune Trace 보기</a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="brand" href="index.html">VeluneOS</a>
+        <p class="tagline">The Flight Recorder for Embodied AI Systems.</p>
+        <p>Find the events. Engineers find the cause.</p>
+        <p>© 2026 VeluneOS · <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a></p>
+      </div>
+      <div>
+        <h2>제품</h2>
+        <ul>
+          <li><a href="comparison-beta.html">VeluneOS Compare</a></li>
+          <li><a href="trace.html">Velune Trace</a></li>
+          <li><a href="sample-comparison.html">샘플 리포트</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>리소스</h2>
+        <ul>
+          <li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li>
+          <li><a href="comparison-beta.html#request">변경 리뷰 요청</a></li>
+          <li><a href="en.html" hreflang="en" lang="en">English</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

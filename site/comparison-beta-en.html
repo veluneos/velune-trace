@@ -1,1289 +1,368 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-  <meta
-    name="description"
-    content="Velune Compare shows what changed structurally between a Reference Run and a Target Run. Raw MCAP logs stay on your machine during preparation."
-  >
-  <title>Compare Beta | VeluneOS</title>
-  <link rel="alternate" hreflang="ko" href="comparison-beta.html">
-  <link rel="alternate" hreflang="en" href="comparison-beta-en.html">
-
-  <style>
-    :root {
-      color-scheme: dark;
-      font-family:
-        Inter, ui-sans-serif, system-ui,
-        -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #080b10;
-      color: #f4f7fb;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at top, #152133 0, #080b10 42%);
-      line-height: 1.65;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    main {
-      width: min(1080px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      padding: 28px 0;
-    }
-
-    .brand {
-      color: #f4f7fb;
-      font-size: 20px;
-      font-weight: 750;
-      letter-spacing: 0.02em;
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 18px;
-      color: #aab5c3;
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-    }
-
-    .hero {
-      max-width: 900px;
-      padding: 100px 0 110px;
-    }
-
-    .eyebrow {
-      margin: 0;
-      color: #68a9ff;
-      font-size: 14px;
-      font-weight: 750;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 20px 0 26px;
-      font-size: clamp(48px, 7.5vw, 84px);
-      line-height: 1;
-      letter-spacing: -0.055em;
-      word-break: keep-all;
-    }
-
-    h2 {
-      margin: 0 0 20px;
-      font-size: clamp(30px, 4vw, 48px);
-      line-height: 1.15;
-      letter-spacing: -0.035em;
-      word-break: keep-all;
-    }
-
-    h3 {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: -0.02em;
-      word-break: keep-all;
-    }
-
-    .hero-copy,
-    .section-copy {
-      max-width: 780px;
-      color: #b8c2cf;
-      font-size: 18px;
-    }
-
-    .hero-copy {
-      font-size: clamp(18px, 2vw, 22px);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 34px;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 13px 19px;
-      border: 1px solid #33445c;
-      border-radius: 9px;
-      color: #f4f7fb;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    button.button {
-      font: inherit;
-    }
-
-    .button.primary {
-      background: #4295ff;
-      border-color: #4295ff;
-      color: #06101d;
-    }
-
-    .hero-note {
-      margin: 16px 0 0;
-      color: #8491a1;
-      font-size: 14px;
-    }
-
-    .hero-note a {
-      color: #cbd5e1;
-      text-decoration: underline;
-    }
-
-    .trust-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 30px;
-    }
-
-    .trust-row span {
-      padding: 5px 10px;
-      border: 1px solid #26364a;
-      border-radius: 999px;
-      color: #8fa6c2;
-      font-size: 13px;
-    }
-
-    section {
-      padding: 78px 0;
-      border-top: 1px solid #202a38;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-      margin-top: 34px;
-    }
-
-    .card {
-      padding: 24px;
-      border: 1px solid #273447;
-      border-radius: 14px;
-      background: rgba(18, 25, 35, 0.82);
-    }
-
-    .card p {
-      margin: 12px 0 0;
-      color: #aab5c3;
-    }
-
-    /* Targeted fix: the Step 02 card's download CTA needs tighter
-       spacing than the page-level .button/.form-note defaults (which
-       assume a full section, not a compact grid card). Scoped to
-       .card only -- no other .button/.form-note usage is affected. */
-    .card .button {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 9px 15px;
-      font-size: 14px;
-    }
-
-    .card .form-note {
-      margin: 8px 0 0;
-      font-size: 13px;
-    }
-
-    .step-number {
-      display: inline-block;
-      margin-bottom: 18px;
-      color: #68a9ff;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-    }
-
-    .access-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-      margin-top: 36px;
-    }
-
-    .access-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      padding: 30px;
-      border: 1px solid #273447;
-      border-radius: 18px;
-      background: #101720;
-    }
-
-    .access-card::before {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 210px;
-      height: 210px;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.2;
-      content: "";
-      pointer-events: none;
-    }
-
-    .access-card.free {
-      border-color: #378fff;
-      background:
-        linear-gradient(
-          155deg,
-          rgba(55, 143, 255, 0.14),
-          #101720 42%
-        );
-    }
-
-    .access-card.free::before {
-      background: #378fff;
-    }
-
-    .access-card.paid {
-      border-color: #7969ff;
-      background:
-        linear-gradient(
-          155deg,
-          rgba(121, 105, 255, 0.15),
-          #101720 42%
-        );
-    }
-
-    .access-card.paid::before {
-      background: #7969ff;
-    }
-
-    .access-heading {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .access-heading strong {
-      display: block;
-      margin-top: 7px;
-      font-size: 32px;
-      letter-spacing: -0.05em;
-    }
-
-    .access-label {
-      color: #73afff;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-    }
-
-    .paid .access-label {
-      color: #9b90ff;
-    }
-
-    .plan-price {
-      padding: 7px 10px;
-      border: 1px solid rgba(146, 171, 204, 0.28);
-      border-radius: 999px;
-      color: #cbd8e8;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-
-    .access-card h3 {
-      position: relative;
-      margin: 0 0 22px;
-      font-size: 21px;
-      letter-spacing: -0.025em;
-    }
-
-    .plan-flow {
-      position: relative;
-      display: grid;
-      gap: 10px;
-    }
-
-    .plan-slot {
-      display: grid;
-      grid-template-columns: 38px minmax(0, 1fr);
-      align-items: center;
-      gap: 12px;
-      min-height: 54px;
-      padding: 10px 14px;
-      border: 1px solid #27364a;
-      border-radius: 12px;
-      background: rgba(6, 12, 20, 0.68);
-    }
-
-    .plan-slot span {
-      color: #6eaaff;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-
-    .paid .plan-slot span {
-      color: #9b90ff;
-    }
-
-    .plan-slot strong {
-      color: #dce5f0;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .plan-policy {
-      position: relative;
-      margin: 18px 0 24px;
-      padding: 16px 17px;
-      border-left: 3px solid #4295ff;
-      border-radius: 0 10px 10px 0;
-      background: rgba(66, 149, 255, 0.09);
-      color: #c9d7e8;
-      font-weight: 700;
-      line-height: 1.6;
-    }
-
-    .paid .plan-policy {
-      border-left-color: #7969ff;
-      background: rgba(121, 105, 255, 0.1);
-    }
-
-    .access-card .button {
-      position: relative;
-      align-self: flex-start;
-      margin-top: auto;
-    }
-
-    .paid-button {
-      border-color: #7969ff;
-      background: #7969ff;
-      color: #ffffff;
-    }
-
-    .boundary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 34px;
-    }
-
-    .boundary-panel {
-      padding: 28px;
-      border: 1px solid #273447;
-      border-radius: 14px;
-      background: #0c1118;
-    }
-
-    .boundary-panel.allowed {
-      border-color: #315e93;
-    }
-
-    .boundary-label {
-      display: block;
-      margin-bottom: 15px;
-      color: #68a9ff;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-    }
-
-    .boundary-panel ul {
-      margin: 0;
-      padding-left: 20px;
-      color: #b8c2cf;
-    }
-
-    .boundary-panel li + li {
-      margin-top: 8px;
-    }
-
-    .result-card {
-      max-width: 520px;
-      margin-top: 30px;
-      padding: 26px 28px;
-      border: 1px solid #273447;
-      border-radius: 16px;
-      background: rgba(18, 25, 35, 0.82);
-    }
-
-    .result-card-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .result-chip {
-      padding: 5px 10px;
-      border: 1px solid #26364a;
-      border-radius: 999px;
-      color: #8fa6c2;
-      font-size: 13px;
-    }
-
-    .result-metric {
-      color: #f4f7fb;
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .result-values {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .result-value {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .result-value-label {
-      color: #8491a1;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .result-value strong {
-      font-size: 28px;
-      letter-spacing: -0.02em;
-      color: #f4f7fb;
-    }
-
-    .result-arrow {
-      color: #68a9ff;
-      font-size: 22px;
-    }
-
-    .result-delta {
-      margin-left: auto;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(66, 149, 255, 0.16);
-      color: #68a9ff;
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .operation {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 24px;
-      margin-top: 34px;
-    }
-
-    .operation-box {
-      padding: 28px;
-      border: 1px solid #273447;
-      border-radius: 14px;
-      background: rgba(18, 25, 35, 0.82);
-    }
-
-    .operation-box strong {
-      display: block;
-      margin-bottom: 12px;
-      font-size: 20px;
-    }
-
-    .operation-box p {
-      margin: 0;
-      color: #aab5c3;
-    }
-
-    .operation-list {
-      margin: 18px 0 0;
-      padding-left: 20px;
-      color: #b8c2cf;
-    }
-
-    .operation-list li + li {
-      margin-top: 8px;
-    }
-
-    .form-shell {
-      margin-top: 36px;
-      padding: 32px;
-      border: 1px solid #2a3a50;
-      border-radius: 16px;
-      background: #0c1118;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #dce6f2;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid #33445c;
-      border-radius: 9px;
-      background: #090d13;
-      color: #f4f7fb;
-      font: inherit;
-    }
-
-    textarea {
-      min-height: 140px;
-      resize: vertical;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid #4295ff;
-      outline-offset: 2px;
-    }
-
-    .form-note {
-      margin: 18px 0 0;
-      color: #8491a1;
-      font-size: 14px;
-    }
-
-    .form-status {
-      min-height: 24px;
-      margin-top: 14px;
-      color: #8fbaff;
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .boundary-note {
-      margin-top: 30px;
-      padding: 20px;
-      border: 1px solid #273447;
-      border-radius: 12px;
-      color: #9eacbd;
-      background: #0a0f16;
-    }
-
-    footer {
-      padding: 50px 0 70px;
-      color: #8491a1;
-      border-top: 1px solid #202a38;
-    }
-
-    footer a {
-      color: #cbd5e1;
-    }
-
-    @media (max-width: 760px) {
-      nav {
-        align-items: flex-start;
-      }
-
-      .nav-links {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
-      }
-
-      .hero {
-        padding: 72px 0 84px;
-      }
-
-      .access-grid,
-      .boundary-grid,
-      .operation,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .form-shell {
-        padding: 22px;
-      }
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeluneOS Compare — Compare two robot runs. See what changed.</title>
+  <meta name="description" content="VeluneOS Compare reports structural differences between a Reference run and a Target run: streams that appear or disappear and changes in update timing, with the windows to review. Raw MCAP stays local. Private Beta." />
+  <link rel="canonical" href="https://veluneos.ai/comparison-beta-en" />
+  <link rel="alternate" hreflang="ko" href="https://veluneos.ai/comparison-beta" />
+  <link rel="alternate" hreflang="en" href="https://veluneos.ai/comparison-beta-en" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VeluneOS" />
+  <meta property="og:title" content="VeluneOS Compare — Compare two robot runs. See what changed." />
+  <meta property="og:description" content="Deterministic Reference vs Target comparison for robotics logs. Private Beta." />
+  <meta property="og:url" content="https://veluneos.ai/comparison-beta-en" />
+  <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230e1013'/%3E%3Crect x='4' y='8' width='16' height='2' rx='1' fill='%23fff'/%3E%3Crect x='4' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='14' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='11.25' y='5' width='1.5' height='14' rx='.75' fill='%23f97316'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/site.css" />
 </head>
-
 <body>
-  <main>
-    <nav>
-      <a class="brand" href="index.html">VeluneOS</a>
-
-      <div class="nav-links">
-        <a href="en.html">Velune Trace</a>
-        <a href="comparison-beta.html">KR</a>
-        <a href="mailto:contact@veluneos.ai">
-          contact@veluneos.ai
-        </a>
-      </div>
-    </nav>
-
-    <header class="hero">
-      <p class="eyebrow">Velune Compare · Beta</p>
-
-      <h1>
-        Compare two runs.<br>
-        See what changed.
-      </h1>
-
-      <p class="hero-copy">
-        Compare a known-good Reference Run with a Target Run and
-        surface structural differences across your system — so you
-        know where to look first.
-      </p>
-
-      <div class="actions">
-        <a class="button primary" href="sample-comparison.html">
-          See a Sample Comparison
-        </a>
-
-        <a class="button" href="https://compare.veluneos.ai/compare">
-          Try Compare
-        </a>
-      </div>
-
-      <p class="hero-note">
-        Velune Compare is currently in Beta — you may be asked
-        for Beta access when you open it.
-        <a href="#apply">Apply for access</a>.
-      </p>
-
-      <div class="trust-row" aria-label="Compare data boundary">
-        <span>Raw log stays local</span>
-        <span>Upload preview before transfer</span>
-        <span>Derived Bundle only</span>
-        <span>Human final judgment</span>
-      </div>
-    </header>
-
-    <section id="result-preview" class="result-preview" aria-label="Sample structural difference">
-      <p class="eyebrow">See The Product</p>
-
-      <h2>One structural difference, made visible.</h2>
-
-      <p class="section-copy">
-        Compare runs like you compare code — Reference in, Target in,
-        the difference comes back structured and ready to inspect.
-      </p>
-
-      <div class="result-card">
-        <div class="result-card-head">
-          <span class="result-chip">PERCEPTION &middot; LIDAR</span>
-          <span class="result-metric">Longest Update Gap</span>
-        </div>
-
-        <div class="result-values">
-          <div class="result-value">
-            <span class="result-value-label">Reference</span>
-            <strong>1000.0 ms</strong>
-          </div>
-
-          <span class="result-arrow">&rarr;</span>
-
-          <div class="result-value">
-            <span class="result-value-label">Target</span>
-            <strong>1500.0 ms</strong>
-          </div>
-
-          <div class="result-delta">+500.0 ms (+50.0%)</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <a class="button" href="sample-comparison.html">
-          See the full sample report →
-        </a>
-      </div>
-    </section>
-
-    <section>
-      <p class="eyebrow">Who It Is For</p>
-
-      <h2>We are validating with these teams first.</h2>
-
-      <p class="section-copy">
-        We're starting with a small number of teams that have a clear
-        Reference–Target comparison need, before opening this up more
-        broadly.
-      </p>
-
-      <div class="grid">
-        <article class="card">
-          <h3>Teams comparing before and after</h3>
-          <p>
-            Teams that need to identify which observations and
-            investigation windows changed after software, configuration,
-            or sensor updates
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Teams manually reviewing repeated runs</h3>
-          <p>
-            Teams spending time replaying Reference and Target
-            logs side by side to locate changes manually
-          </p>
-        </article>
-
-        <article class="card">
-          <h3>Teams that cannot transfer raw logs</h3>
-          <p>
-            Teams that must keep raw logs internal while allowing
-            only limited derived structures to be processed externally
-          </p>
-        </article>
-      </div>
-    </section>
-
-
-    <section id="process">
-      <p class="eyebrow">How It Works</p>
-
-      <h2>Prepare locally. Compare in VeluneOS.</h2>
-
-      <p class="section-intro">
-        Raw MCAP stays on your machine during preparation. Only one
-        derived file — comparison.velune — is uploaded.
-      </p>
-
-      <div class="grid">
-        <article class="card">
-          <span class="step-number">STEP 01</span>
-          <h3>Reference Run + Target Run</h3>
-          <p>
-            Pick the run you're comparing from (Reference) and the run
-            you're comparing against it (Target).
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="step-number">STEP 02</span>
-          <h3>Prepare locally</h3>
-          <p>
-            Velune Adapter turns both runs into one
-            comparison.velune file, on your machine. Raw MCAP never
-            leaves it.
-          </p>
-          <a class="button" href="downloads/velune-adapter-beta-kit.zip">Download Velune Adapter</a>
-          <p class="form-note">
-            Beta Kit (.zip) — includes the Quickstart and both required
-            packages. <a href="downloads/velune-adapter-beta-kit.zip.sha256">SHA256</a> included.
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="step-number">STEP 03</span>
-          <h3>Upload comparison.velune</h3>
-          <p>
-            Upload the single prepared file to Velune Compare.
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="step-number">STEP 04</span>
-          <h3>Inspect structural differences</h3>
-          <p>
-            See what changed between Reference and Target, and where
-            to look first.
-          </p>
-        </article>
-      </div>
-    </section>
-
-
-
-    <section>
-      <p class="eyebrow">Data Boundary</p>
-
-      <h2>See what may be transferred and what stays local.</h2>
-
-      <div class="boundary-grid">
-        <article class="boundary-panel allowed">
-          <span class="boundary-label">COMPARISON BUNDLE</span>
-          <h3>Derived structures that may be transferred after approval</h3>
-
-          <ul>
-            <li>Canonical Stream and Schema Identity (stream_key, schema_key — never the original topic name)</li>
-            <li>Per-second bucketed message-count and timing-interval profiles</li>
-            <li>Structural features required for Reference–Target comparison</li>
-            <li>Context explicitly approved by the customer</li>
-          </ul>
-        </article>
-
-        <article class="boundary-panel">
-          <span class="boundary-label">STAYS LOCAL</span>
-          <h3>Raw data not accepted by standard Compare</h3>
-
-          <ul>
-            <li>Raw MCAP and rosbag2</li>
-            <li>Raw images, video, and audio</li>
-            <li>Raw point clouds and actual GPS</li>
-            <li>Actual topic and node names and absolute timestamps</li>
-            <li>Direct company, site, and robot identifiers</li>
-          </ul>
-        </article>
-      </div>
-
-      <p class="boundary-note">
-        Exporter output is not automatically described as fully
-        anonymous. During the initial Beta, Bundle structure and transfer
-        boundaries are reviewed together with the customer.
-      </p>
-    </section>
-
-
-    <section id="plans">
-      <p class="eyebrow">Compare</p>
-
-      <h2>Compare. Free or paid.</h2>
-
-      <p class="section-intro">
-        The same Compare.
-        Choose how your data is used.
-      </p>
-
-      <div class="access-grid">
-        <article class="access-card free">
-          <div class="access-heading">
-            <div>
-              <span class="access-label">FREE</span>
-              <strong>Free</strong>
-            </div>
-            <span class="plan-price">₩0</span>
-          </div>
-
-          <h3>How Compare Works</h3>
-
-          <div class="plan-flow">
-            <div class="plan-slot">
-              <span>01</span>
-              <strong>Prepare Reference + Target locally</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>02</span>
-              <strong>Upload comparison.velune</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>03</span>
-              <strong>Inspect structural differences</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>04</span>
-              <strong>Download the report</strong>
-            </div>
-          </div>
-
-          <p class="plan-policy">
-            Uploaded derived data is used only for report
-            generation and VeluneOS improvement.
-          </p>
-
-          <a
-            class="button primary plan-choice"
-            href="#apply"
-            data-plan="Free"
-          >
-            Start Free
-          </a>
-        </article>
-
-        <article class="access-card paid">
-          <div class="access-heading">
-            <div>
-              <span class="access-label">PAID</span>
-              <strong>Paid</strong>
-            </div>
-            <span class="plan-price">CUSTOM</span>
-          </div>
-
-          <h3>How Compare Works</h3>
-
-          <div class="plan-flow">
-            <div class="plan-slot">
-              <span>01</span>
-              <strong>Prepare Reference + Target locally</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>02</span>
-              <strong>Upload comparison.velune</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>03</span>
-              <strong>Inspect structural differences</strong>
-            </div>
-
-            <div class="plan-slot">
-              <span>04</span>
-              <strong>Download the report</strong>
-            </div>
-          </div>
-
-          <p class="plan-policy">
-            Uploaded derived data is used only for
-            report generation.
-          </p>
-
-          <a
-            class="button paid-button plan-choice"
-            href="#apply"
-            data-plan="Paid"
-          >
-            Choose Paid
-          </a>
-        </article>
-      </div>
-    </section>
-
-    <section>
-      <p class="eyebrow">Beta Operation</p>
-
-      <h2>We validate the operating model first, then automate it.</h2>
-
-      <div class="operation">
-        <article class="operation-box">
-          <strong>Initial Private Beta</strong>
-          <p>
-            The Comparison Engine generates the report while a
-            VeluneOS operator reviews input errors and execution status
-            in a service-led operating model.
-          </p>
-
-          <ul class="operation-list">
-            <li>Pre-check Bundle schema and support eligibility</li>
-            <li>Handle Comparison Job failures</li>
-            <li>Review the quality of engine-generated reports</li>
-            <li>Collect engineer feedback</li>
-          </ul>
-        </article>
-
-        <article class="operation-box">
-          <strong>Automated operating model</strong>
-          <p>
-            The service evolves so customers upload Bundles
-            directly and the server automates validation, comparison,
-            reporting, feedback, and deletion.
-          </p>
-
-          <ul class="operation-list">
-            <li>Automated Reference–Target comparison</li>
-            <li>Report URL, JSON, and Markdown delivery</li>
-            <li>Organization access and retention controls</li>
-            <li>Operators handle exception jobs only</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section id="apply">
-      <p class="eyebrow">Beta Access</p>
-
-      <h2>Apply for Beta Access</h2>
-
-      <p class="section-copy">
-        This information is used to assess Beta eligibility and
-        supported log structures. Do not enter raw logs, access keys,
-        personal data, or sensitive incident details in this application.
-      </p>
-
-      <div class="form-shell">
-        <div class="form-grid">
-          <div class="field full">
-            <label for="access-plan">Plan</label>
-            <select id="access-plan" name="access-plan">
-              <option value="">Select</option>
-              <option value="Free">Free</option>
-              <option value="Paid">Paid</option>
-            </select>
-            <p class="form-note">
-              Both plans get the same comparison analysis. Free
-              (Contribution Access): approved derived data may be used to
-              develop, evaluate, and improve VeluneOS products and
-              services, including aggregate or comparative analysis using
-              approved data from multiple customers. Paid (Private
-              Access): customer data is used only to provide and operate
-              the requested VeluneOS service and is not reused to improve
-              VeluneOS products or services.
-            </p>
-          </div>
-
-          <div class="field">
-            <label for="organization">Organization or team</label>
-            <input
-              id="organization"
-              name="organization"
-              type="text"
-              autocomplete="organization"
-              placeholder="Example: Robot Platform Team"
-            >
-          </div>
-
-          <div class="field">
-            <label for="name">Contact name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              autocomplete="name"
-              placeholder="Contact name"
-            >
-          </div>
-
-          <div class="field">
-            <label for="email">Work email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              placeholder="name@company.com"
-            >
-          </div>
-
-          <div class="field">
-            <label for="robot-type">Robot type</label>
-            <select id="robot-type" name="robot-type">
-              <option value="">Select</option>
-              <option>AMR / logistics robot</option>
-              <option>Autonomous vehicle / shuttle</option>
-              <option>Service robot</option>
-              <option>Industrial / collaborative robot</option>
-              <option>Drone</option>
-              <option>Research / development platform</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="format">Current log format</label>
-            <select id="format" name="format">
-              <option value="">Select</option>
-              <option>MCAP</option>
-              <option>rosbag2</option>
-              <option>ROS2 runtime log</option>
-              <option>Internal custom format</option>
-              <option>Multiple formats</option>
-              <option>Not sure</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="pair-count">Expected comparison pairs</label>
-            <select id="pair-count" name="pair-count">
-              <option value="">Select</option>
-              <option>1 Pair</option>
-              <option>2–5 Pairs</option>
-              <option>6–20 Pairs</option>
-              <option>More than 20 pairs</option>
-            </select>
-          </div>
-
-          <div class="field full">
-            <label for="comparison-purpose">
-              Reference–Target relationship
-            </label>
-            <input
-              id="comparison-purpose"
-              name="comparison-purpose"
-              type="text"
-              placeholder="Example: Run before a software update and issue Run after the update"
-            >
-          </div>
-
-          <div class="field full">
-            <label for="notes">
-              Current workflow and what you want to compare
-            </label>
-            <textarea
-              id="notes"
-              name="notes"
-              placeholder="Without sensitive information, describe the current manual workflow, recurring friction, and expected comparison result."
-            ></textarea>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button
-            id="create-email"
-            class="button primary"
-            type="button"
-          >
-            Create application email
-          </button>
-
-          <a class="button" href="index.html">
-            Back to main page
-          </a>
-        </div>
-
-        <p class="form-note">
-          The button opens an application email in your default
-          email client. This page does not store or transmit the entered
-          information to a server.
-        </p>
-
-        <p
-          id="form-status"
-          class="form-status"
-          aria-live="polite"
-        ></p>
-      </div>
-    </section>
-
-    <footer>
-      © 2026 VeluneOS ·
-      <a href="mailto:contact@veluneos.ai">
-        contact@veluneos.ai
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="en.html" aria-label="VeluneOS home">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="2" rx="1" fill="currentColor"/><rect x="2" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="14" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="11.25" y="3" width="1.5" height="18" rx=".75" fill="var(--signal)"/></svg>
+        VeluneOS
       </a>
-      · Find the events. Engineers find the cause.
-    </footer>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="comparison-beta-en.html" aria-current="page">Compare</a>
+        <a href="trace-en.html">Trace</a>
+        <a href="en.html#how">How it works</a>
+        <a href="sample-comparison.html">Sample report</a>
+        <a class="lang" href="comparison-beta.html" hreflang="ko" lang="ko">한국어</a>
+        <a class="button small primary nav-cta" href="#request">Request a Change Review</a>
+      </nav>
+      <details class="menu">
+        <summary>Menu</summary>
+        <div class="menu-panel">
+          <a href="comparison-beta-en.html" aria-current="page">Compare</a>
+          <a href="trace-en.html">Trace</a>
+          <a href="en.html#how">How it works</a>
+          <a href="sample-comparison.html">Sample report</a>
+          <a href="#request">Request a Change Review</a>
+          <a href="comparison-beta.html" hreflang="ko" lang="ko">한국어</a>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid split">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>VeluneOS Compare · Private Beta</p>
+          <h1>Compare two runs. See what changed.</h1>
+          <p class="lead">
+            Pick a Reference run and a Target run — before and after a change, two
+            software versions, two robots. Velune Adapter prepares both on your
+            machine; Compare reports the structural differences and where to look.
+          </p>
+          <div class="button-row">
+            <a class="button primary" href="#request">Request a Change Review</a>
+            <a class="button" href="sample-comparison.html">See the sample report</a>
+          </div>
+          <p class="small muted hero-aside">
+            Already in the Beta? <a class="text-link" href="https://compare.veluneos.ai/compare">Open Compare</a> with the credentials sent with your kit.
+          </p>
+        </div>
+
+        <figure class="panel" aria-labelledby="sample-caption">
+          <div class="panel-head">
+            <span class="run-pair">
+              <span class="run-tag ref">REFERENCE</span>
+              <span aria-hidden="true">vs</span>
+              <span class="run-tag tgt">TARGET</span>
+            </span>
+            <span>REVIEW_REQUIRED · schema 0.5.0</span>
+          </div>
+          <div class="panel-body">
+            <div class="timeline" role="img" aria-label="Timeline of 5 streams over 30 seconds. Planner stream present in Reference only; diagnostics stream present in Target only; LiDAR message interval longer in Target from 10 to 20 seconds; camera activity missing in Target from 12 to 17 seconds; IMU unchanged.">
+              <span></span>
+              <span class="axis">0</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">5</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">10</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">15</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">20</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">25</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span>
+              <span class="label">CAMERA <span class="key">001</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label">IMU <span class="key">002</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label">LIDAR <span class="key">003</span></span>
+              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
+              <span class="label hot">PLANNER <span class="key">004</span></span>
+              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
+              <span class="label">DIAG <span class="key">005</span></span>
+              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
+            </div>
+            <div class="legend" aria-hidden="true">
+              <span><i></i>no difference</span>
+              <span><i class="miss"></i>activity missing in Target</span>
+              <span><i class="slow"></i>longer interval in Target</span>
+              <span><i class="only"></i>present in one run only</span>
+            </div>
+            <div class="finding list">
+              <div class="finding-kicker">Review order</div>
+              <ol class="review-order">
+                <li><span class="mono">004</span> <span class="cat">PLANNING_LOCAL</span> — present in Reference only</li>
+                <li><span class="mono">005</span> <span class="cat">SYSTEM_DIAGNOSTICS</span> — present in Target only</li>
+                <li><span class="mono">003</span> <span class="cat">PERCEPTION_LIDAR</span> — message interval longer in Target <span class="mono win">00:10 → 00:20 · recovered</span></li>
+                <li><span class="mono">001</span> <span class="cat">PERCEPTION_CAMERA</span> — activity missing in Target <span class="mono win">00:12 → 00:17 · recovered</span></li>
+              </ol>
+            </div>
+          </div>
+          <figcaption class="panel-foot" id="sample-caption">
+            <span class="human-gate">Engineer review required</span>
+            <span>Sample: synthetic runs, Beta Kit, VeluneOS Compare service · <a href="sample-comparison.html">Full report</a></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="reports" aria-labelledby="reports-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">What you get</p>
+          <h2 id="reports-title">One decision. A review order. Evidence for every finding.</h2>
+          <p>Every comparison returns a stated decision — never a blank — and the differences to review, each with its time window and how well the recorded evidence supports it.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card"><span class="mono-label">Decision</span><h3>Stated outcome</h3><p><code>REVIEW_REQUIRED</code>, <code>NO_MATERIAL_STRUCTURAL_CHANGE</code>, <code>INCONCLUSIVE_DIFFERENCE</code> or <code>INSUFFICIENT_COVERAGE</code>.</p></div>
+          <div class="card"><span class="mono-label">Presence</span><h3>Streams in one run only</h3><p>Streams that exist in the Reference run or the Target run but not both.</p></div>
+          <div class="card"><span class="mono-label">Timing</span><h3>Message interval changes</h3><p>Recorded intervals longer or shorter in Target, temporary or persistent, with values from both runs.</p></div>
+          <div class="card"><span class="mono-label">Activity</span><h3>Activity loss and recovery</h3><p>Where a stream goes quiet in one run, and whether and when it comes back.</p></div>
+          <div class="card"><span class="mono-label">Timestamps</span><h3>Representation changes</h3><p>A change in timestamp precision is reported on its own and not counted as a slowdown.</p></div>
+          <div class="card"><span class="mono-label">Quality</span><h3>Evidence quality and coverage</h3><p>Each finding is comparable, limited or inconclusive; coverage limits are listed, not hidden.</p></div>
+          <div class="card"><span class="mono-label">Your streams</span><h3>Your categories beside each key</h3><p>The categories you assigned, shown next to the neutral stream keys — with a notice if a key pairs differently classified streams.</p></div>
+          <div class="card"><span class="mono-label">Output</span><h3>Report you can keep</h3><p>HTML and Markdown report, <code>comparison_report.json</code> (schema 0.5.0), summary and category table.</p></div>
+        </div>
+        <p class="note">
+          Findings follow a fixed, documented review order — not a severity score. VeluneOS
+          Compare does not decide root cause, fault, safety, regression or release readiness.
+          <strong>Known limits:</strong> timing is read from recorded log time, so latency between
+          clocks is not assessed; streams whose names differ but whose message type matches may be
+          paired by type, which the category table flags.
+          <a class="text-link" href="sample-comparison.html">See a full sample report</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="run" aria-labelledby="run-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">How a comparison runs</p>
+          <h2 id="run-title">Prepare locally. Upload one derived file.</h2>
+          <p>Input: two MCAP recordings, a Reference run and a Target run. Reference is the baseline you choose — not a claim that it is correct. Beta participants receive the Velune Adapter Beta Kit (Python 3.12 or 3.13).</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <h3>Install the Beta Kit <span class="where">your machine</span></h3>
+            <p>Velune Adapter 0.2.0 and the <code>velune</code> command. <a class="text-link" href="downloads/velune-adapter-beta-kit.zip">Download kit</a> · <a class="text-link" href="downloads/velune-adapter-beta-kit.zip.sha256">SHA256</a></p>
+          </li>
+          <li>
+            <h3>Discover streams <span class="where">your machine</span></h3>
+            <p>Reads both MCAP files locally and lists every stream and where it appears.</p>
+<pre class="code">velune mapping init reference.mcap target.mcap --output mapping.json</pre>
+          </li>
+          <li>
+            <h3>Name your streams</h3>
+            <p>In <code>mapping.json</code>, set <code>canonical_subsystem_id</code> and <code>canonical_category_id</code> (for example <code>PERCEPTION</code> / <code>PERCEPTION_LIDAR</code>) for the streams you want to recognise in the report — at least one. Every stream is compared either way; unassigned streams appear by neutral key.</p>
+          </li>
+          <li>
+            <h3>Prepare and review <span class="where">your machine</span></h3>
+            <p>Writes <code>comparison.velune</code> and <code>comparison.preview.json</code>, which lists every entry in the file. Read the preview before uploading.</p>
+<pre class="code">velune prepare reference.mcap target.mcap \
+  --mapping-profile mapping.json --output comparison.velune</pre>
+          </li>
+          <li>
+            <h3>Upload <span class="where">VeluneOS Compare</span></h3>
+            <p>Sign in with your Beta credentials at <a class="text-link" href="https://compare.veluneos.ai/compare">compare.veluneos.ai</a> and upload <code>comparison.velune</code>. The report comes back in seconds and can be downloaded.</p>
+          </li>
+          <li>
+            <h3>Verify and decide <span class="where">your engineers</span></h3>
+            <p>Start with the review order, check the category table, then open the reported windows in your own tools. The engineering decision is yours.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="boundary" aria-labelledby="boundary-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Data boundary</p>
+          <h2 id="boundary-title">What is uploaded, and what stays with you.</h2>
+        </div>
+        <div class="boundary">
+          <div class="card">
+            <h3>Inside <code>comparison.velune</code></h3>
+            <ul class="checklist">
+              <li>Neutral stream and schema keys — never the original topic or schema names</li>
+              <li>Per-second message counts and interval statistics, in time relative to the start of each run</li>
+              <li>Run-level metadata such as file size and duration</li>
+              <li>The categories you assigned</li>
+              <li>A manifest with SHA-256 hashes of every file</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Never included</h3>
+            <ul class="checklist no">
+              <li>Raw MCAP or rosbag2 files</li>
+              <li>Message payloads: images, point clouds, GPS positions</li>
+              <li>Original file, topic and schema names; absolute timestamps</li>
+              <li>Credentials</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">
+          The service processes each upload in a temporary directory that is deleted when the
+          report is returned; reports are not stored on the server. Access logs record request
+          time and status, not file contents. We do not describe the prepared file as fully
+          anonymous; during the Beta, transfer boundaries are reviewed with each team.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="access" aria-labelledby="access-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Access</p>
+          <h2 id="access-title">Same Compare. You choose how your data may be used.</h2>
+          <p>Both options use the same engine and produce the same report. Raw MCAP is never uploaded under either.</p>
+        </div>
+        <div class="grid-2">
+          <article class="card product-card">
+            <span class="mono-label">Contribution Access · no fee</span>
+            <p>Approved derived data may be used to develop, evaluate and improve VeluneOS products and services, including aggregate or comparative analysis across customers' approved data.</p>
+          </article>
+          <article class="card product-card">
+            <span class="mono-label">Private Access · quoted per team</span>
+            <p>Your data is used only to provide and operate the service you requested. It is not reused to improve VeluneOS products or services.</p>
+          </article>
+        </div>
+        <p class="note">
+          <strong>Choosing an option in a request is not consent.</strong> Data-use terms are
+          confirmed in writing before your first upload. The Beta is service-led: a VeluneOS
+          operator checks inputs and job status and reviews report quality with you. There is
+          no self-service signup or online checkout.
+        </p>
+      </div>
+    </section>
+
+
+
+    <section class="section" id="request" aria-labelledby="request-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Request a Change Review</p>
+          <h2 id="request-title">Start from a real question.</h2>
+          <p>
+            Tell us what changed between two runs and what you need to know. We reply by
+            email to discuss whether the comparison fits and how to run it.
+          </p>
+        </div>
+        <form class="form" id="review-form" novalidate
+          data-mail-user="contact" data-mail-domain="veluneos.ai"
+          data-subject="Change Review Request — VeluneOS Compare"
+          data-footer="Note: no raw logs or sensitive information are attached."
+          data-missing="Please fill in:"
+          data-opening="Opening a draft in your email client. Nothing has been sent yet."
+          data-empty="Not provided">
+          <div class="form-row">
+            <div class="field">
+              <label for="f-org">Organization or team *</label>
+              <input id="f-org" name="organization" autocomplete="organization" data-label="Organization / Team" data-required />
+            </div>
+            <div class="field">
+              <label for="f-name">Your name *</label>
+              <input id="f-name" name="name" autocomplete="name" data-label="Contact" data-required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="f-email">Work email *</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" data-label="Reply email" data-required />
+            </div>
+            <div class="field">
+              <label for="f-format">Log format</label>
+              <select id="f-format" name="format" data-label="Log format">
+                <option value="">Select</option>
+                <option>MCAP</option>
+                <option>rosbag2 (MCAP storage)</option>
+                <option>rosbag2 (SQLite storage)</option>
+                <option>Internal custom format</option>
+                <option>Not sure</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-change">What changed between the two runs? *</label>
+            <span class="hint" id="f-change-hint">For example: LiDAR driver update, firmware 2.3 → 2.4, same route.</span>
+            <textarea id="f-change" name="change" aria-describedby="f-change-hint" data-label="What changed between the runs" data-required></textarea>
+          </div>
+          <div class="field">
+            <label for="f-question">What do you want to know?</label>
+            <textarea id="f-question" name="question" data-label="Question"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="f-robot">Robot type</label>
+              <select id="f-robot" name="robot" data-label="Robot type">
+                <option value="">Select</option>
+                <option>AMR / logistics robot</option>
+                <option>Autonomous vehicle / shuttle</option>
+                <option>Industrial / collaborative arm</option>
+                <option>Service robot</option>
+                <option>Drone</option>
+                <option>Research platform</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <fieldset class="field" data-label="Access preference">
+              <legend>Access preference</legend>
+              <div class="choice-row">
+                <label class="choice"><input type="radio" name="access" data-value="Contribution Access" /> <span><strong>Contribution</strong>no fee</span></label>
+                <label class="choice"><input type="radio" name="access" data-value="Private Access" /> <span><strong>Private</strong>quoted</span></label>
+              </div>
+            </fieldset>
+          </div>
+          <p class="small muted">
+            Do not include raw logs, credentials, personal data or sensitive incident details.
+            The button opens a draft email in your email client; this page stores and sends nothing.
+          </p>
+          <div class="button-row">
+            <button class="button primary" type="submit">Create request email</button>
+            <a class="button" href="mailto:contact@veluneos.ai">Or email contact@veluneos.ai</a>
+          </div>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
   </main>
 
-  <script>
-    const createEmailButton =
-      document.getElementById("create-email");
-    const formStatus =
-      document.getElementById("form-status");
-    const accessPlan =
-      document.getElementById("access-plan");
-    const planChoices =
-      document.querySelectorAll(".plan-choice");
-
-    planChoices.forEach((choice) => {
-      choice.addEventListener("click", () => {
-        accessPlan.value = choice.dataset.plan;
-      });
-    });
-
-    function valueOf(id) {
-      return document.getElementById(id).value.trim();
-    }
-
-    createEmailButton.addEventListener("click", () => {
-      const selectedPlan =
-        valueOf("access-plan");
-      const organization = valueOf("organization");
-      const name = valueOf("name");
-      const email = valueOf("email");
-      const robotType = valueOf("robot-type");
-      const format = valueOf("format");
-      const pairCount = valueOf("pair-count");
-      const comparisonPurpose =
-        valueOf("comparison-purpose");
-      const notes = valueOf("notes");
-
-      if (!selectedPlan || !organization || !name || !email) {
-        formStatus.textContent =
-          "Select a plan and enter the organization, contact name, and work email.";
-        return;
-      }
-
-      const subject =
-        "Velune Compare Beta Application";
-
-      const body = [
-        "Velune Compare Beta Application",
-        "",
-        "[Plan]",
-        selectedPlan,
-        "",
-        "[Organization / Team]",
-        organization,
-        "",
-        "[Contact]",
-        name,
-        "",
-        "[Reply Email]",
-        email,
-        "",
-        "[Robot Type]",
-        robotType || "Not selected",
-        "",
-        "[Log Format]",
-        format || "Not selected",
-        "",
-        "[Expected Comparison Pairs]",
-        pairCount || "Not selected",
-        "",
-        "[Reference–Target Relationship]",
-        comparisonPurpose || "Not provided",
-        "",
-        "[Current Workflow / Comparison Goal]",
-        notes || "Not provided",
-        "",
-        "Note: No raw logs or sensitive information are attached."
-      ].join("\n");
-
-      const mailto =
-        "mailto:contact@veluneos.ai" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
-
-      formStatus.textContent =
-        "Opening the application in your default email client.";
-
-      window.location.href = mailto;
-    });
-  </script>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="brand" href="en.html">VeluneOS</a>
+        <p class="tagline">The Flight Recorder for Embodied AI Systems.</p>
+        <p>Find the events. Engineers find the cause.</p>
+        <p>© 2026 VeluneOS · <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a></p>
+      </div>
+      <div>
+        <h2>Products</h2>
+        <ul>
+          <li><a href="comparison-beta-en.html">VeluneOS Compare</a></li>
+          <li><a href="trace-en.html">Velune Trace</a></li>
+          <li><a href="sample-comparison.html">Sample report</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Resources</h2>
+        <ul>
+          <li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li>
+          <li><a href="#request">Request a Change Review</a></li>
+          <li><a href="comparison-beta.html" hreflang="ko" lang="ko">한국어</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/site.js" defer></script>
 </body>
 </html>

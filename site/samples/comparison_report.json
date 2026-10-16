@@ -1,0 +1,1079 @@
+{
+  "bucket_contract": {
+    "comparison_rule": "complete_common_one_second_buckets_only",
+    "duration_ns": 1000000000,
+    "representation": "sparse_nonempty_buckets_zero_implicit"
+  },
+  "cadence_windows": [
+    {
+      "baseline_median_mean_interval_ns": 100000000,
+      "baseline_p95_max_interval_ns": 100000000,
+      "baseline_side": "reference",
+      "bucket_count": 10,
+      "end_bucket_index": 19,
+      "end_offset_ns": 20000000000,
+      "evidence_id": "cadence:INTERVAL_INCREASE:stream.unmapped.003:10-19",
+      "interval_direction": "INTERVAL_INCREASE",
+      "recovered_at_bucket_index": 20,
+      "reference_median_mean_interval_ns": 100000000,
+      "reference_p95_max_interval_ns": 100000000,
+      "start_bucket_index": 10,
+      "start_offset_ns": 10000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_max_interval_ns": 200000000,
+      "target_median_mean_interval_ns": 200000000,
+      "triggers": [
+        "mean_interval"
+      ],
+      "window_reference": {
+        "max_interval_ns": 100000000,
+        "median_mean_interval_ns": 100000000,
+        "median_message_count_per_bucket": 10.0,
+        "message_count": 100
+      },
+      "window_target": {
+        "max_interval_ns": 200000000,
+        "median_mean_interval_ns": 200000000,
+        "median_message_count_per_bucket": 5.0,
+        "message_count": 50
+      }
+    }
+  ],
+  "comparison_range": {
+    "common_observation_duration_ns": 29990000000,
+    "comparable_bucket_count": 29,
+    "comparable_range_end_offset_ns": 29000000000,
+    "comparable_range_start_offset_ns": 0,
+    "excluded_common_partial_tail_ns": 990000000,
+    "reference_unmatched_coverage_ns": 0,
+    "target_unmatched_coverage_ns": 0
+  },
+  "generated_at": "2026-10-16T02:27:17.191588+00:00",
+  "input": {
+    "bundle_contract": {
+      "name": "velune.comparison_input_bundle",
+      "version": "0.1.0"
+    },
+    "bundle_id": "vcib_sha256_5173b991aecffc7d48af2b9fb83cc9a5ef1402fb963ad27c16652adf5fd034df",
+    "mapping_profile": {
+      "content_sha256": "d8766ad9e87786a61b983b890ff964d93b0783103960f63476da37da5bc8219c",
+      "profile_id": "generic.mcap.structural",
+      "profile_version": "0.1.0"
+    }
+  },
+  "interpretation_constraints": [],
+  "judgment_boundary": {
+    "cause_inference": false,
+    "fault_assignment": false,
+    "improvement_judgment": false,
+    "liability_calculation": false,
+    "regression_judgment": false,
+    "root_cause_conclusion": false,
+    "safety_judgment": false
+  },
+  "presence_evidence": [
+    {
+      "evidence_id": "presence:TARGET_ONLY:stream.unmapped.005",
+      "first_active_bucket_index": 0,
+      "first_message_offset_ns": 0,
+      "last_active_bucket_index": 29,
+      "last_message_offset_ns": 29000000000,
+      "observed_active_bucket_count": 30,
+      "observed_message_count": 30,
+      "observed_side": "target",
+      "presence_direction": "TARGET_ONLY",
+      "stream_key": "stream.unmapped.005"
+    },
+    {
+      "evidence_id": "presence:REFERENCE_ONLY:stream.unmapped.004",
+      "first_active_bucket_index": 0,
+      "first_message_offset_ns": 0,
+      "last_active_bucket_index": 29,
+      "last_message_offset_ns": 29800000000,
+      "observed_active_bucket_count": 30,
+      "observed_message_count": 150,
+      "observed_side": "reference",
+      "presence_direction": "REFERENCE_ONLY",
+      "stream_key": "stream.unmapped.004"
+    }
+  ],
+  "review_candidates": [
+    {
+      "candidate_id": "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29",
+      "candidate_type": "STREAM_PRESENCE_CHANGE",
+      "end_bucket_index": 29,
+      "end_offset_ns": 29800000000,
+      "event_ids": [
+        "event:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": "REFERENCE_ONLY",
+      "primary_stream_key": "stream.unmapped.004",
+      "quality_reasons": [],
+      "ranking_basis": {
+        "order_keys": [
+          "start_offset_ns",
+          "primary_stream_key",
+          "candidate_type"
+        ],
+        "review_position": 1
+      },
+      "resolution": {
+        "recovered_at_bucket_index": null,
+        "recovered_at_offset_ns": null
+      },
+      "review_basis": {
+        "event_type": "STREAM_PRESENCE_CHANGE",
+        "supporting_evidence_count": 1,
+        "triggers": []
+      },
+      "start_bucket_index": 0,
+      "start_offset_ns": 0,
+      "temporal_pattern": "NOT_APPLICABLE"
+    },
+    {
+      "candidate_id": "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29",
+      "candidate_type": "STREAM_PRESENCE_CHANGE",
+      "end_bucket_index": 29,
+      "end_offset_ns": 29000000000,
+      "event_ids": [
+        "event:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": "TARGET_ONLY",
+      "primary_stream_key": "stream.unmapped.005",
+      "quality_reasons": [],
+      "ranking_basis": {
+        "order_keys": [
+          "start_offset_ns",
+          "primary_stream_key",
+          "candidate_type"
+        ],
+        "review_position": 2
+      },
+      "resolution": {
+        "recovered_at_bucket_index": null,
+        "recovered_at_offset_ns": null
+      },
+      "review_basis": {
+        "event_type": "STREAM_PRESENCE_CHANGE",
+        "supporting_evidence_count": 1,
+        "triggers": []
+      },
+      "start_bucket_index": 0,
+      "start_offset_ns": 0,
+      "temporal_pattern": "NOT_APPLICABLE"
+    },
+    {
+      "candidate_id": "candidate:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19",
+      "candidate_type": "CADENCE_DIVERGENCE",
+      "end_bucket_index": 19,
+      "end_offset_ns": 20000000000,
+      "event_ids": [
+        "event:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": "INTERVAL_INCREASE",
+      "presence_direction": null,
+      "primary_stream_key": "stream.unmapped.003",
+      "quality_reasons": [],
+      "ranking_basis": {
+        "order_keys": [
+          "start_offset_ns",
+          "primary_stream_key",
+          "candidate_type"
+        ],
+        "review_position": 3
+      },
+      "resolution": {
+        "recovered_at_bucket_index": 20,
+        "recovered_at_offset_ns": 20000000000
+      },
+      "review_basis": {
+        "event_type": "CADENCE_DIVERGENCE",
+        "supporting_evidence_count": 1,
+        "triggers": [
+          "mean_interval"
+        ]
+      },
+      "start_bucket_index": 10,
+      "start_offset_ns": 10000000000,
+      "temporal_pattern": "RECOVERED"
+    },
+    {
+      "candidate_id": "candidate:ACTIVITY_LOSS:stream.unmapped.001:12-16",
+      "candidate_type": "ACTIVITY_LOSS",
+      "end_bucket_index": 16,
+      "end_offset_ns": 17000000000,
+      "event_ids": [
+        "event:ACTIVITY_LOSS:stream.unmapped.001:12-16"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": null,
+      "primary_stream_key": "stream.unmapped.001",
+      "quality_reasons": [],
+      "ranking_basis": {
+        "order_keys": [
+          "start_offset_ns",
+          "primary_stream_key",
+          "candidate_type"
+        ],
+        "review_position": 4
+      },
+      "resolution": {
+        "recovered_at_bucket_index": 17,
+        "recovered_at_offset_ns": 17000000000
+      },
+      "review_basis": {
+        "event_type": "ACTIVITY_LOSS",
+        "supporting_evidence_count": 5,
+        "triggers": []
+      },
+      "start_bucket_index": 12,
+      "start_offset_ns": 12000000000,
+      "temporal_pattern": "RECOVERED"
+    }
+  ],
+  "review_intervals": [
+    {
+      "absolute_message_count_delta": 20,
+      "bucket_index": 12,
+      "difference_type": "reference_nonempty_target_empty",
+      "end_offset_ns": 13000000000,
+      "evidence_id": "review:stream.unmapped.001:12",
+      "message_count_delta": -20,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 20,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 12000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_message_count": 0,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 20,
+      "bucket_index": 13,
+      "difference_type": "reference_nonempty_target_empty",
+      "end_offset_ns": 14000000000,
+      "evidence_id": "review:stream.unmapped.001:13",
+      "message_count_delta": -20,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 20,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 13000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_message_count": 0,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 20,
+      "bucket_index": 14,
+      "difference_type": "reference_nonempty_target_empty",
+      "end_offset_ns": 15000000000,
+      "evidence_id": "review:stream.unmapped.001:14",
+      "message_count_delta": -20,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 20,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 14000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_message_count": 0,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 20,
+      "bucket_index": 15,
+      "difference_type": "reference_nonempty_target_empty",
+      "end_offset_ns": 16000000000,
+      "evidence_id": "review:stream.unmapped.001:15",
+      "message_count_delta": -20,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 20,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 15000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_message_count": 0,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 20,
+      "bucket_index": 16,
+      "difference_type": "reference_nonempty_target_empty",
+      "end_offset_ns": 17000000000,
+      "evidence_id": "review:stream.unmapped.001:16",
+      "message_count_delta": -20,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 20,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 16000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_message_count": 0,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 10,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 11000000000,
+      "evidence_id": "review:stream.unmapped.003:10",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 10000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 11,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 12000000000,
+      "evidence_id": "review:stream.unmapped.003:11",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 11000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 12,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 13000000000,
+      "evidence_id": "review:stream.unmapped.003:12",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 12000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 13,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 14000000000,
+      "evidence_id": "review:stream.unmapped.003:13",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 13000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 14,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 15000000000,
+      "evidence_id": "review:stream.unmapped.003:14",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 14000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 15,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 16000000000,
+      "evidence_id": "review:stream.unmapped.003:15",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 15000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 16,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 17000000000,
+      "evidence_id": "review:stream.unmapped.003:16",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 16000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 17,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 18000000000,
+      "evidence_id": "review:stream.unmapped.003:17",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 17000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 18,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 19000000000,
+      "evidence_id": "review:stream.unmapped.003:18",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 18000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    },
+    {
+      "absolute_message_count_delta": 5,
+      "bucket_index": 19,
+      "difference_type": "message_count_difference",
+      "end_offset_ns": 20000000000,
+      "evidence_id": "review:stream.unmapped.003:19",
+      "message_count_delta": -5,
+      "out_of_order_count_delta": 0,
+      "reference_message_count": 10,
+      "reference_out_of_order_count": 0,
+      "start_offset_ns": 19000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_message_count": 5,
+      "target_out_of_order_count": 0
+    }
+  ],
+  "run_comparison": {
+    "difference": {
+      "included_stream_count": 0,
+      "out_of_order_count": 0,
+      "run_duration_ns": 0,
+      "total_bucket_count": 0,
+      "total_message_count": -270
+    },
+    "reference": {
+      "included_stream_count": 4,
+      "out_of_order_count": 0,
+      "run_duration_ns": 29990000000,
+      "total_bucket_count": 30,
+      "total_message_count": 4050
+    },
+    "target": {
+      "included_stream_count": 4,
+      "out_of_order_count": 0,
+      "run_duration_ns": 29990000000,
+      "total_bucket_count": 30,
+      "total_message_count": 3780
+    }
+  },
+  "schema_name": "velune.structural_comparison_report",
+  "schema_version": "0.5.0",
+  "semantics": "deterministic_observed_structural_differences_only",
+  "stream_comparisons": [
+    {
+      "difference": {
+        "duration_ns": 0,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 0,
+        "message_count": -100,
+        "out_of_order_count": 0
+      },
+      "reference": {
+        "duration_ns": 29950000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29950000000,
+        "message_count": 600,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.005"
+      },
+      "schema_key_equal": true,
+      "stream_key": "stream.unmapped.001",
+      "target": {
+        "duration_ns": 29950000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29950000000,
+        "message_count": 500,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.005"
+      }
+    },
+    {
+      "difference": {
+        "duration_ns": 0,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 0,
+        "message_count": 0,
+        "out_of_order_count": 0
+      },
+      "reference": {
+        "duration_ns": 29990000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29990000000,
+        "message_count": 3000,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.001"
+      },
+      "schema_key_equal": true,
+      "stream_key": "stream.unmapped.002",
+      "target": {
+        "duration_ns": 29990000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29990000000,
+        "message_count": 3000,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.001"
+      }
+    },
+    {
+      "difference": {
+        "duration_ns": 0,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 0,
+        "message_count": -50,
+        "out_of_order_count": 0
+      },
+      "reference": {
+        "duration_ns": 29900000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29900000000,
+        "message_count": 300,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.002"
+      },
+      "schema_key_equal": true,
+      "stream_key": "stream.unmapped.003",
+      "target": {
+        "duration_ns": 29900000000,
+        "first_message_offset_ns": 0,
+        "last_message_offset_ns": 29900000000,
+        "message_count": 250,
+        "out_of_order_count": 0,
+        "schema_key": "schema.unmapped.002"
+      }
+    }
+  ],
+  "stream_review": [
+    {
+      "cadence_assessable": true,
+      "candidate_ids": [
+        "candidate:ACTIVITY_LOSS:stream.unmapped.001:12-16"
+      ],
+      "compared_bucket_range": [
+        0,
+        28
+      ],
+      "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+      "lower_level_review_interval_count": 5,
+      "max_absolute_message_count_delta": 20,
+      "publish_cadence_comparability": "COMPARABLE",
+      "status": "MATERIAL_DIFFERENCE",
+      "stream_key": "stream.unmapped.001"
+    },
+    {
+      "cadence_assessable": true,
+      "candidate_ids": [],
+      "compared_bucket_range": [
+        0,
+        28
+      ],
+      "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+      "lower_level_review_interval_count": 0,
+      "max_absolute_message_count_delta": 0,
+      "publish_cadence_comparability": "COMPARABLE",
+      "status": "NO_MATERIAL_OBSERVED_DIFFERENCE",
+      "stream_key": "stream.unmapped.002"
+    },
+    {
+      "cadence_assessable": true,
+      "candidate_ids": [
+        "candidate:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19"
+      ],
+      "compared_bucket_range": [
+        0,
+        28
+      ],
+      "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+      "lower_level_review_interval_count": 10,
+      "max_absolute_message_count_delta": 5,
+      "publish_cadence_comparability": "COMPARABLE",
+      "status": "MATERIAL_DIFFERENCE",
+      "stream_key": "stream.unmapped.003"
+    },
+    {
+      "cadence_assessable": false,
+      "candidate_ids": [
+        "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29"
+      ],
+      "compared_bucket_range": [
+        0,
+        28
+      ],
+      "excluded_tail_comparison": null,
+      "lower_level_review_interval_count": 0,
+      "max_absolute_message_count_delta": 0,
+      "publish_cadence_comparability": null,
+      "status": "PRESENT_IN_REFERENCE_ONLY",
+      "stream_key": "stream.unmapped.004"
+    },
+    {
+      "cadence_assessable": false,
+      "candidate_ids": [
+        "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29"
+      ],
+      "compared_bucket_range": [
+        0,
+        28
+      ],
+      "excluded_tail_comparison": null,
+      "lower_level_review_interval_count": 0,
+      "max_absolute_message_count_delta": 0,
+      "publish_cadence_comparability": null,
+      "status": "PRESENT_IN_TARGET_ONLY",
+      "stream_key": "stream.unmapped.005"
+    }
+  ],
+  "stream_set": {
+    "common_streams": [
+      "stream.unmapped.001",
+      "stream.unmapped.002",
+      "stream.unmapped.003"
+    ],
+    "reference_only_streams": [
+      "stream.unmapped.004"
+    ],
+    "target_only_streams": [
+      "stream.unmapped.005"
+    ]
+  },
+  "structural_events": [
+    {
+      "count_corroborated": null,
+      "end_bucket_index": 29,
+      "end_offset_ns": 29800000000,
+      "event_id": "event:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29",
+      "event_type": "STREAM_PRESENCE_CHANGE",
+      "evidence_ids": [
+        "presence:REFERENCE_ONLY:stream.unmapped.004"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": "REFERENCE_ONLY",
+      "prior_reference_activity_bucket_index": null,
+      "prior_target_activity_bucket_index": null,
+      "publish_cadence_comparison": null,
+      "quality_reasons": [],
+      "reference_observation": {
+        "median_mean_interval_ns": null,
+        "message_count": 150,
+        "p95_max_interval_ns": null
+      },
+      "resolution": {
+        "recovered_at_bucket_index": null,
+        "recovered_at_offset_ns": null
+      },
+      "shared_timestamp_side": null,
+      "start_bucket_index": 0,
+      "start_offset_ns": 0,
+      "stream_key": "stream.unmapped.004",
+      "target_observation": {
+        "max_interval_ns": null,
+        "median_mean_interval_ns": null,
+        "message_count": 0
+      },
+      "temporal_pattern": "NOT_APPLICABLE",
+      "triggers": []
+    },
+    {
+      "count_corroborated": null,
+      "end_bucket_index": 29,
+      "end_offset_ns": 29000000000,
+      "event_id": "event:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29",
+      "event_type": "STREAM_PRESENCE_CHANGE",
+      "evidence_ids": [
+        "presence:TARGET_ONLY:stream.unmapped.005"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": "TARGET_ONLY",
+      "prior_reference_activity_bucket_index": null,
+      "prior_target_activity_bucket_index": null,
+      "publish_cadence_comparison": null,
+      "quality_reasons": [],
+      "reference_observation": {
+        "median_mean_interval_ns": null,
+        "message_count": 0,
+        "p95_max_interval_ns": null
+      },
+      "resolution": {
+        "recovered_at_bucket_index": null,
+        "recovered_at_offset_ns": null
+      },
+      "shared_timestamp_side": null,
+      "start_bucket_index": 0,
+      "start_offset_ns": 0,
+      "stream_key": "stream.unmapped.005",
+      "target_observation": {
+        "max_interval_ns": null,
+        "median_mean_interval_ns": null,
+        "message_count": 30
+      },
+      "temporal_pattern": "NOT_APPLICABLE",
+      "triggers": []
+    },
+    {
+      "count_corroborated": true,
+      "end_bucket_index": 19,
+      "end_offset_ns": 20000000000,
+      "event_id": "event:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19",
+      "event_type": "CADENCE_DIVERGENCE",
+      "evidence_ids": [
+        "cadence:INTERVAL_INCREASE:stream.unmapped.003:10-19"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": "INTERVAL_INCREASE",
+      "presence_direction": null,
+      "prior_reference_activity_bucket_index": null,
+      "prior_target_activity_bucket_index": null,
+      "publish_cadence_comparison": null,
+      "quality_reasons": [],
+      "reference_observation": {
+        "max_interval_ns": 100000000,
+        "median_mean_interval_ns": 100000000,
+        "message_count": 100,
+        "p95_max_interval_ns": null
+      },
+      "resolution": {
+        "recovered_at_bucket_index": 20,
+        "recovered_at_offset_ns": 20000000000
+      },
+      "shared_timestamp_side": null,
+      "start_bucket_index": 10,
+      "start_offset_ns": 10000000000,
+      "stream_key": "stream.unmapped.003",
+      "target_observation": {
+        "max_interval_ns": 200000000,
+        "median_mean_interval_ns": 200000000,
+        "message_count": 50
+      },
+      "temporal_pattern": "RECOVERED",
+      "triggers": [
+        "mean_interval"
+      ]
+    },
+    {
+      "count_corroborated": null,
+      "end_bucket_index": 16,
+      "end_offset_ns": 17000000000,
+      "event_id": "event:ACTIVITY_LOSS:stream.unmapped.001:12-16",
+      "event_type": "ACTIVITY_LOSS",
+      "evidence_ids": [
+        "review:stream.unmapped.001:12",
+        "review:stream.unmapped.001:13",
+        "review:stream.unmapped.001:14",
+        "review:stream.unmapped.001:15",
+        "review:stream.unmapped.001:16"
+      ],
+      "evidence_quality": "COMPARABLE",
+      "interval_direction": null,
+      "presence_direction": null,
+      "prior_reference_activity_bucket_index": null,
+      "prior_target_activity_bucket_index": 11,
+      "publish_cadence_comparison": null,
+      "quality_reasons": [],
+      "reference_observation": {
+        "median_mean_interval_ns": null,
+        "message_count": 100,
+        "p95_max_interval_ns": null
+      },
+      "resolution": {
+        "recovered_at_bucket_index": 17,
+        "recovered_at_offset_ns": 17000000000
+      },
+      "shared_timestamp_side": null,
+      "start_bucket_index": 12,
+      "start_offset_ns": 12000000000,
+      "stream_key": "stream.unmapped.001",
+      "target_observation": {
+        "max_interval_ns": null,
+        "median_mean_interval_ns": null,
+        "message_count": 0
+      },
+      "temporal_pattern": "RECOVERED",
+      "triggers": []
+    }
+  ],
+  "summary": {
+    "alternating_empty_nonempty_pattern_count": 0,
+    "changed_common_stream_count": 2,
+    "common_stream_count": 3,
+    "message_count_difference_count": 10,
+    "out_of_order_difference_count": 0,
+    "reference_empty_target_nonempty_count": 0,
+    "reference_nonempty_target_empty_count": 5,
+    "reference_only_stream_count": 1,
+    "review_interval_count": 15,
+    "target_only_stream_count": 1
+  },
+  "system_summary": {
+    "affected_stream_keys": [
+      "stream.unmapped.001",
+      "stream.unmapped.003",
+      "stream.unmapped.004",
+      "stream.unmapped.005"
+    ],
+    "candidate_ids_in_review_order": [
+      "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29",
+      "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29",
+      "candidate:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19",
+      "candidate:ACTIVITY_LOSS:stream.unmapped.001:12-16"
+    ],
+    "comparison_decision": "REVIEW_REQUIRED",
+    "first_meaningful_divergence": {
+      "candidate_id": "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29",
+      "candidate_type": "STREAM_PRESENCE_CHANGE",
+      "start_bucket_index": 0,
+      "start_offset_ns": 0,
+      "stream_key": "stream.unmapped.004"
+    },
+    "inconclusive_candidate_ids": [],
+    "inconclusive_stream_keys": [],
+    "judgment_boundary": "A review candidate marks where the observed structural difference should be inspected first. It is not a cause, fault, severity, or safety judgment. NO_MATERIAL_STRUCTURAL_CHANGE means only that no material structural divergence was found within the current comparison contract; it does not mean the system is healthy, correct, or safe. Stream keys are neutral aliases.",
+    "limited_candidate_ids": [],
+    "no_material_structural_divergence_stream_keys": [
+      "stream.unmapped.002"
+    ],
+    "primary_review_window": {
+      "end_bucket_index": 29,
+      "end_offset_ns": 29800000000,
+      "start_bucket_index": 0,
+      "start_offset_ns": 0
+    },
+    "review_candidate_count": 4,
+    "supported_candidate_ids": [
+      "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.004:0-29",
+      "candidate:STREAM_PRESENCE_CHANGE:stream.unmapped.005:0-29",
+      "candidate:CADENCE_DIVERGENCE:INTERVAL_INCREASE:stream.unmapped.003:10-19",
+      "candidate:ACTIVITY_LOSS:stream.unmapped.001:12-16"
+    ]
+  },
+  "temporal_coverage": {
+    "comparable_bucket_count": 29,
+    "comparable_range_end_offset_ns": 29000000000,
+    "coverage_state": "COMPARABLE_RANGE_PRESENT",
+    "reference_run_duration_ns": 29990000000,
+    "run_duration_difference_ns": 0,
+    "streams": [
+      {
+        "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+        "reference": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29950000000,
+          "message_count": 600,
+          "messages_after_comparable_range": 20,
+          "messages_in_comparable_range": 580,
+          "quiet_before_run_end_ns": 40000000
+        },
+        "stream_key": "stream.unmapped.001",
+        "target": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29950000000,
+          "message_count": 500,
+          "messages_after_comparable_range": 20,
+          "messages_in_comparable_range": 480,
+          "quiet_before_run_end_ns": 40000000
+        }
+      },
+      {
+        "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+        "reference": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29990000000,
+          "message_count": 3000,
+          "messages_after_comparable_range": 100,
+          "messages_in_comparable_range": 2900,
+          "quiet_before_run_end_ns": 0
+        },
+        "stream_key": "stream.unmapped.002",
+        "target": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29990000000,
+          "message_count": 3000,
+          "messages_after_comparable_range": 100,
+          "messages_in_comparable_range": 2900,
+          "quiet_before_run_end_ns": 0
+        }
+      },
+      {
+        "excluded_tail_comparison": "INSUFFICIENT_COVERAGE",
+        "reference": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29900000000,
+          "message_count": 300,
+          "messages_after_comparable_range": 10,
+          "messages_in_comparable_range": 290,
+          "quiet_before_run_end_ns": 90000000
+        },
+        "stream_key": "stream.unmapped.003",
+        "target": {
+          "first_message_offset_ns": 0,
+          "last_message_offset_ns": 29900000000,
+          "message_count": 250,
+          "messages_after_comparable_range": 10,
+          "messages_in_comparable_range": 240,
+          "quiet_before_run_end_ns": 90000000
+        }
+      }
+    ],
+    "target_run_duration_ns": 29990000000,
+    "time_axes": "each_run_relative_to_its_own_first_message"
+  },
+  "timestamp_comparability": [
+    {
+      "publish_cadence_comparability": "COMPARABLE",
+      "reasons": [],
+      "reference": {
+        "grid_sample_count": 144,
+        "interval_bucket_count": 29,
+        "median_mean_interval_ns": 50000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      },
+      "representation_differs": false,
+      "stream_key": "stream.unmapped.001",
+      "target": {
+        "grid_sample_count": 119,
+        "interval_bucket_count": 24,
+        "median_mean_interval_ns": 50000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      }
+    },
+    {
+      "publish_cadence_comparability": "COMPARABLE",
+      "reasons": [],
+      "reference": {
+        "grid_sample_count": 144,
+        "interval_bucket_count": 29,
+        "median_mean_interval_ns": 10000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      },
+      "representation_differs": false,
+      "stream_key": "stream.unmapped.002",
+      "target": {
+        "grid_sample_count": 144,
+        "interval_bucket_count": 29,
+        "median_mean_interval_ns": 10000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      }
+    },
+    {
+      "publish_cadence_comparability": "COMPARABLE",
+      "reasons": [],
+      "reference": {
+        "grid_sample_count": 144,
+        "interval_bucket_count": 29,
+        "median_mean_interval_ns": 100000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      },
+      "representation_differs": false,
+      "stream_key": "stream.unmapped.003",
+      "target": {
+        "grid_sample_count": 144,
+        "interval_bucket_count": 29,
+        "median_mean_interval_ns": 100000000,
+        "observed_interval_grid_ns": 1000000,
+        "shared_timestamp_bucket_count": 0,
+        "shared_timestamp_bucket_indexes": []
+      }
+    }
+  ],
+  "timestamp_observations": {
+    "recorded_clock_discontinuities": {
+      "reference": {
+        "declared": false,
+        "discontinuities": [],
+        "invalid_record_count": 0,
+        "valid_record_count": 0
+      },
+      "target": {
+        "declared": false,
+        "discontinuities": [],
+        "invalid_record_count": 0,
+        "valid_record_count": 0
+      }
+    },
+    "streams": [
+      {
+        "reference": {
+          "interval_bucket_count": 29,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        },
+        "stream_key": "stream.unmapped.001",
+        "target": {
+          "interval_bucket_count": 24,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        }
+      },
+      {
+        "reference": {
+          "interval_bucket_count": 29,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        },
+        "stream_key": "stream.unmapped.002",
+        "target": {
+          "interval_bucket_count": 29,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        }
+      },
+      {
+        "reference": {
+          "interval_bucket_count": 29,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        },
+        "stream_key": "stream.unmapped.003",
+        "target": {
+          "interval_bucket_count": 29,
+          "zero_interval_bucket_count": 0,
+          "zero_interval_bucket_indexes": []
+        }
+      }
+    ],
+    "timestamp_basis": "run_relative_mcap_log_time"
+  },
+  "unpromoted_evidence": [],
+  "visibility": "private_cloud_only"
+}
