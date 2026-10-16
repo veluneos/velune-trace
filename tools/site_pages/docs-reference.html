@@ -1,0 +1,61 @@
+<div class="wrap docs">
+{docs_nav}
+<article class="doc">
+  <p class="crumbs">Docs / Reference</p>
+  <h1>Formats, limitations and troubleshooting</h1>
+
+  <h2 id="formats">Supported formats</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Input</th><th>Trace</th><th>Adapter / Compare</th></tr></thead>
+    <tbody>
+      <tr><td>MCAP file (<code>.mcap</code>)</td><td>Yes</td><td>Yes — one file per run</td></tr>
+      <tr><td>rosbag2 with MCAP storage</td><td>Yes — pass the <code>.mcap</code> file</td><td>Yes — pass the <code>.mcap</code> file inside the bag directory</td></tr>
+      <tr><td>rosbag2 with SQLite storage (<code>.db3</code>)</td><td>No</td><td>No</td></tr>
+      <tr><td>ROS 1 bag, other formats</td><td>No</td><td>No</td></tr>
+    </tbody>
+  </table></div>
+  <p>Timing is read from each message's recorded log time.</p>
+
+  <h2 id="limits">Current limitations</h2>
+  <ul>
+    <li><b>Latency between clocks is not assessed.</b> Timing comes from recorded log time, so delays between different clocks or machines are out of scope.</li>
+    <li><b>Same-type sensor swaps cannot be prepared yet.</b> If one sensor was removed and a different sensor of the same message type was added, mark the pair <code>"same_stream": false</code>; the kit stops without producing a file.</li>
+    <li><b>Stream identity relies on topic names.</b> A stream is compared across runs when it keeps its topic name or you confirm the pairing. A topic whose name stayed the same but whose meaning changed cannot be detected.</li>
+    <li><b>Only complete common one-second buckets are compared.</b> Messages after the last complete common bucket are listed under “What was not compared”.</li>
+    <li><b>Compare is a Private Beta.</b> Access is set up with each team; there is no self-service sign-up or online checkout.</li>
+    <li><b>Validated environments.</b> Trace: Ubuntu 24.04, Python 3.12. Adapter Kit: Python 3.12 or 3.13.</li>
+  </ul>
+
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <h3><code>Error: Mapping profile could not be registered: … must contain at least one CanonicalMappingRule</code></h3>
+  <p>No stream has labels. Set <code>canonical_subsystem_id</code> and <code>canonical_category_id</code> for at least one stream in <code>mapping.json</code>.</p>
+  <h3><code>Error: Mapping profile rule #N is invalid: canonical_subsystem_id must be a non-empty string …</code></h3>
+  <p>Set both labels for that rule, or leave both <code>null</code>. Remove leading or trailing spaces.</p>
+  <h3><code>Error: These Reference/Target streams were paired without an identical, unique topic name …</code></h3>
+  <p>A pairing in <code>correspondence_review</code> is unanswered, or your <code>mapping.json</code> predates the section. Set <code>"same_stream": true</code> only for pairs that really are the same stream, or re-run <code>velune mapping init</code>. <a class="text-link" href="adapter.html#correspondence">Confirm stream pairings</a></p>
+  <h3><code>Error: You marked these pairs as different streams …</code></h3>
+  <p>This kit cannot compare the two runs (see limitations). No file was produced. Contact <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>.</p>
+  <h3><code>Error: Reference MCAP not found: …</code></h3>
+  <p>Check the path. Pass the Reference file first and the Target file second, the same way for <code>mapping init</code> and <code>prepare</code>.</p>
+  <h3><code>velune: command not found</code></h3>
+  <p>Activate the virtual environment where you installed the kit (<code>source .venv/bin/activate</code>).</p>
+  <h3>“Velune Adapter — preparation incomplete”</h3>
+  <p>The file was written but its preview was not. Do not upload it until you can review the preview; run <code>prepare</code> again.</p>
+  <h3>The Compare page rejects the upload</h3>
+  <p>See the <a class="text-link" href="compare.html#errors">upload error codes</a>.</p>
+  <h3>Your browser keeps asking for a password</h3>
+  <p>Compare uses the Beta username and password sent to you. If you do not have them, <a class="text-link" href="../comparison-beta.html#request">request access</a>.</p>
+
+  <h2 id="versions">Versions</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Component</th><th>Version</th></tr></thead>
+    <tbody>
+      <tr><td>VeluneOS Compare service</td><td>1.0.1 · report schema 0.5.0</td></tr>
+      <tr><td>Adapter Beta Kit</td><td>0.1.1b5 (Velune Adapter 0.2.0) · <a class="text-link" href="../downloads/velune-adapter-beta-kit.zip.sha256">SHA-256</a></td></tr>
+      <tr><td>Velune Trace</td><td>Release v0.5.1 · main branch v0.5.2</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="doc-pager"><a href="data-boundaries.html">← Data boundaries</a><a href="index.html">Getting started →</a></div>
+</article>
+</div>

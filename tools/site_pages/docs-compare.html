@@ -1,0 +1,75 @@
+<div class="wrap docs">
+{docs_nav}
+<article class="doc">
+  <p class="crumbs">Docs / Compare workflow</p>
+  <h1>Upload and read the report</h1>
+  <p class="lead">VeluneOS Compare is a hosted service in Private Beta. You upload the <code>comparison.velune</code> file you prepared and reviewed; the report comes back in the browser.</p>
+
+  <h2 id="upload">1. Sign in and upload</h2>
+  <ol>
+    <li>Open <a class="text-link" href="https://compare.veluneos.ai/compare">compare.veluneos.ai/compare</a>. Your browser asks for the Beta username and password sent to you. There is no self-service sign-up; <a class="text-link" href="../comparison-beta.html#request">request access</a> first.</li>
+    <li>Choose <code>comparison.velune</code> (the page shows the maximum file size) and press <b>Compare</b>.</li>
+    <li>When it finishes the page shows “Done. Nothing was stored on the server.”, the <b>comparison decision</b>, and the report.</li>
+    <li>Download what you need: <b>Report (HTML)</b>, <b>Report (Markdown)</b>, <code>comparison_report.json</code>, <code>comparison_summary.md</code>, <code>stream_categories.json</code>. Reports are not kept on the server, so download them before you leave the page.</li>
+  </ol>
+  <p>The upload is processed in a temporary directory that is deleted when the report is returned.</p>
+
+  <h2 id="errors">If the upload is rejected</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Code</th><th>Meaning</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td><code>TRANSFER_CONTRACT_UNSUPPORTED</code></td><td>The file was prepared with an older Beta Kit.</td><td>Install Beta Kit 0.1.1b5, re-run <code>velune mapping init</code> and <code>velune prepare</code>.</td></tr>
+      <tr><td><code>TRANSFER_PACKAGE_REQUIRED</code></td><td>The upload is not a <code>comparison.velune</code> from the Beta Kit (for example output of <code>velune-adapter build</code>).</td><td>Prepare the file with <code>velune prepare</code>.</td></tr>
+      <tr><td><code>AMBIGUOUS_STREAM_CORRESPONDENCE</code></td><td>A stream pairing is not established by identical topic name or by your confirmation.</td><td>Review <code>correspondence_review</code> in <code>mapping.json</code> and prepare again.</td></tr>
+      <tr><td><code>TRANSFER_PACKAGE_INVALID</code></td><td>The files inside the archive do not match their manifest (for example the file was edited).</td><td>Prepare the file again; do not modify it after <code>prepare</code>.</td></tr>
+      <tr><td><code>PAYLOAD_TOO_LARGE</code></td><td>The file is larger than the service accepts.</td><td>Contact us with the file size (not the file).</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="decision">2. The decision</h2>
+  <p>Every comparison returns one stated decision:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Decision</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>REVIEW_REQUIRED</code></td><td>Structural differences observed for review.</td></tr>
+      <tr><td><code>NO_MATERIAL_STRUCTURAL_CHANGE</code></td><td>No material structural difference observed in the compared streams and range. It does not mean the system is healthy, correct or safe.</td></tr>
+      <tr><td><code>INCONCLUSIVE_DIFFERENCE</code></td><td>Differences observed, but the recorded evidence does not support asserting them.</td></tr>
+      <tr><td><code>INSUFFICIENT_COVERAGE</code></td><td>Not compared: the recordings share no complete one-second bucket.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="report">3. Reading the report</h2>
+  <p>Times are relative to the start of each run (<code>T+12s</code>) and the comparison works in complete one-second buckets common to both runs. Streams are named by neutral key (<code>Stream 003</code>, <code>stream.unmapped.003</code>); your labels appear in the category table.</p>
+  <h3>Sections</h3>
+  <ul>
+    <li><b>Result</b> — the decision, how many supported and inconclusive differences, the first supported difference, and the compared range.</li>
+    <li><b>Structural differences observed</b> — one card per finding, in review order.</li>
+    <li><b>Streams</b> — every stream's observed status, with the note that “no material difference” is bounded to the listed streams and compared buckets.</li>
+    <li><b>What was not compared</b> — run durations and any messages after the last complete common bucket.</li>
+    <li><b>Evidence trace</b> — the events and evidence IDs behind each finding, for reproducibility.</li>
+  </ul>
+  <h3>Finding types</h3>
+  <ul>
+    <li><b>Stream present in Reference only / Target only</b> — a stream exists in one run but not the other.</li>
+    <li><b>Recorded message interval longer / shorter in Target</b> — the interval between messages changed, with values from both runs and whether it returned to the Reference pattern.</li>
+    <li><b>Target (or Reference) recorded no messages while the other did</b> — activity loss, and when it recovered.</li>
+    <li><b>Timestamp representation change</b> — a change in recorded timestamp precision, reported on its own rather than as a slowdown.</li>
+  </ul>
+  <h3>Each finding shows</h3>
+  <p><b>What</b>, <b>Stream</b>, <b>When</b> (the window to investigate), <b>Magnitude</b> (values from both runs), <b>After the window</b> (whether it returned), <b>Evidence</b> and an <b>ID</b>.</p>
+  <h3>Evidence quality</h3>
+  <ul>
+    <li><b>Comparable</b> — the recorded evidence on both sides supports this observation.</li>
+    <li><b>Limited</b> — supported, but the recorded time axis limits how precisely it can be read.</li>
+    <li><b>Inconclusive</b> — the recorded evidence does not support asserting this difference.</li>
+  </ul>
+  <h3>Your stream categories</h3>
+  <p>Below the decision, the Compare page shows the labels from your mapping beside each stream key and how each stream was paired: <code>same_topic_name</code>, <code>customer_confirmed_same_stream</code>, <code>reference_only</code> or <code>target_only</code>. If a key pairs streams you labelled differently, a notice asks you to review it as a possible removal plus addition.</p>
+
+  <h2 id="decide">4. Verify and decide</h2>
+  <p>Start with the first finding in review order and open its window in your own tools. Review order is not a severity score. VeluneOS reports structural observations; it does not determine root cause, fault, safety, regression or release readiness. Your engineers decide.</p>
+  <p>See a complete example: <a class="text-link" href="../sample-comparison.html">sample report</a>.</p>
+
+  <div class="doc-pager"><a href="adapter.html">← Prepare two runs</a><a href="data-boundaries.html">Data boundaries →</a></div>
+</article>
+</div>

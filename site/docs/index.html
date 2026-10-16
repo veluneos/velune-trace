@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Docs — VeluneOS</title>
+  <meta name="description" content="Get started with Velune Trace, Velune Adapter and VeluneOS Compare." />
+  <link rel="canonical" href="https://veluneos.ai/docs/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VeluneOS" />
+  <meta property="og:title" content="Docs — VeluneOS" />
+  <meta property="og:description" content="Get started with Velune Trace, Velune Adapter and VeluneOS Compare." />
+  <meta property="og:url" content="https://veluneos.ai/docs/" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li></ul>
+    <div class="nav-right">
+      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
+      <a class="btn btn-dark btn-sm" href="../comparison-beta.html#request">Request access</a>
+      <details class="menu">
+        <summary>Menu</summary>
+        <nav class="menu-panel" aria-label="Menu">
+          <a href="../comparison-beta.html">Compare</a>
+          <a href="../trace.html">Trace</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../sample-comparison.html">Sample report</a>
+          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="../comparison-beta.html#request">Request access</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+<main id="main">
+<div class="wrap docs">
+<nav class="docs-nav" aria-label="Docs"><p>Start</p><a href="index.html" aria-current="page">Getting started</a><p>Velune Trace</p><a href="trace.html">Install and run Trace</a><p>Compare workflow</p><a href="adapter.html">Prepare two runs</a><a href="compare.html">Upload and read the report</a><p>Reference</p><a href="data-boundaries.html">Data boundaries</a><a href="reference.html">Formats, limits, troubleshooting</a></nav>
+<article class="doc">
+  <p class="crumbs">Docs</p>
+  <h1>Getting started</h1>
+  <p class="lead">VeluneOS has two tools. Pick the one that matches your question — they work independently.</p>
+
+  <div class="doc-cards">
+    <a class="doc-card" href="trace.html"><b>One log → Velune Trace</b><span>“Where in this log should I look first?” Open source, runs locally, no account.</span></a>
+    <a class="doc-card" href="adapter.html"><b>Two runs → VeluneOS Compare</b><span>“What changed between these two runs?” Prepare locally with the Adapter Kit, compare in the hosted Private Beta.</span></a>
+  </div>
+
+  <h2 id="compare-path">The Compare workflow</h2>
+  <ol>
+    <li><b>Get access.</b> Compare is a Private Beta. <a class="text-link" href="../comparison-beta.html#request">Request access</a>; we confirm data-use terms in writing and send Compare credentials.</li>
+    <li><b>Install the Adapter Kit</b> on the machine that holds your recordings. <a class="text-link" href="adapter.html#install">Install</a></li>
+    <li><b>Prepare two runs locally</b>: discover streams, name the ones you care about, confirm any uncertain pairing, and generate <code>comparison.velune</code>. <a class="text-link" href="adapter.html">Prepare two runs</a></li>
+    <li><b>Review the preview</b> (<code>comparison.preview.json</code>) to see exactly what the file contains. <a class="text-link" href="adapter.html#preview">Review the preview</a></li>
+    <li><b>Sign in and upload</b> at <a class="text-link" href="https://compare.veluneos.ai/compare">compare.veluneos.ai/compare</a>. <a class="text-link" href="compare.html">Upload and read the report</a></li>
+    <li><b>Read the report</b> and verify the reported windows in your own tools. The engineering decision is yours.</li>
+  </ol>
+  <div class="callout ok"><b>Raw MCAP stays on your machine.</b> The Adapter never uploads anything; you upload one derived file yourself. See <a class="text-link" href="data-boundaries.html">Data boundaries</a>.</div>
+
+  <h2 id="requirements">Requirements at a glance</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Tool</th><th>Runs</th><th>Needs</th><th>Input</th></tr></thead>
+    <tbody>
+      <tr><td>Velune Trace</td><td>Your machine</td><td>Python 3.12 (validated on Ubuntu 24.04)</td><td>One MCAP file</td></tr>
+      <tr><td>Velune Adapter (Beta Kit 0.1.1b5)</td><td>Your machine</td><td>Python 3.12 or 3.13</td><td>One Reference MCAP + one Target MCAP</td></tr>
+      <tr><td>VeluneOS Compare</td><td>Hosted</td><td>Beta credentials, a web browser</td><td><code>comparison.velune</code> from the Adapter Kit</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="help">Help</h2>
+  <p>Questions during the Beta: <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>. Please never attach raw logs, credentials or personal data.</p>
+
+  <div class="doc-pager"><span></span><a href="trace.html">Velune Trace →</a></div>
+</article>
+</div>
+
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <span>Find the events. Engineers find the cause.</span>
+    <nav aria-label="Footer">
+      <a href="../comparison-beta.html">Compare</a>
+      <a href="../trace.html">Trace</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../sample-comparison.html">Sample report</a>
+      <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+      <a href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

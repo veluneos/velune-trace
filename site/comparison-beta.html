@@ -1,374 +1,188 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VeluneOS Compare — 두 로봇 실행을 비교하고, 달라진 것을 보세요</title>
-  <meta name="description" content="VeluneOS Compare는 Reference 실행과 Target 실행 사이의 구조적 차이를 보고합니다. 나타나거나 사라진 stream, 업데이트 타이밍 변화, 그리고 확인할 구간. 원본 MCAP은 로컬에 남습니다. Private Beta." />
+  <title>VeluneOS Compare — Compare two robot runs</title>
+  <meta name="description" content="Prepare two MCAP recordings locally with Velune Adapter, upload one derived file, and get an evidence report of the structural differences." />
   <link rel="canonical" href="https://veluneos.ai/comparison-beta" />
-  <link rel="alternate" hreflang="ko" href="https://veluneos.ai/comparison-beta" />
-  <link rel="alternate" hreflang="en" href="https://veluneos.ai/comparison-beta-en" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="VeluneOS" />
-  <meta property="og:title" content="VeluneOS Compare — 두 로봇 실행을 비교하고, 달라진 것을 보세요" />
-  <meta property="og:description" content="로보틱스 로그를 위한 결정론적 Reference vs Target 비교. Private Beta." />
+  <meta property="og:title" content="VeluneOS Compare — Compare two robot runs" />
+  <meta property="og:description" content="Prepare two MCAP recordings locally with Velune Adapter, upload one derived file, and get an evidence report of the structural differences." />
   <meta property="og:url" content="https://veluneos.ai/comparison-beta" />
-  <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230e1013'/%3E%3Crect x='4' y='8' width='16' height='2' rx='1' fill='%23fff'/%3E%3Crect x='4' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='14' y='14' width='6' height='2' rx='1' fill='%23fff'/%3E%3Crect x='11.25' y='5' width='1.5' height='14' rx='.75' fill='%23f97316'/%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/site.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
-
-  <header class="site-header">
-    <div class="wrap header-row">
-      <a class="brand" href="index.html" aria-label="VeluneOS 홈">
-        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="2" rx="1" fill="currentColor"/><rect x="2" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="14" y="15" width="8" height="2" rx="1" fill="currentColor"/><rect x="11.25" y="3" width="1.5" height="18" rx=".75" fill="var(--signal)"/></svg>
-        VeluneOS
-      </a>
-      <nav class="primary-nav" aria-label="주 메뉴">
-        <a href="comparison-beta.html" aria-current="page">Compare</a>
-        <a href="trace.html">Trace</a>
-        <a href="index.html#how">작동 방식</a>
-        <a href="sample-comparison.html">샘플 리포트</a>
-        <a class="lang" href="comparison-beta-en.html" hreflang="en" lang="en">EN</a>
-        <a class="button small primary nav-cta" href="#request">변경 리뷰 요청</a>
-      </nav>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <ul class="nav-links"><li><a href="comparison-beta.html" aria-current="page">Compare</a></li><li><a href="trace.html">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li></ul>
+    <div class="nav-right">
+      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
+      <a class="btn btn-dark btn-sm" href="comparison-beta.html#request">Request access</a>
       <details class="menu">
-        <summary>메뉴</summary>
-        <div class="menu-panel">
-          <a href="comparison-beta.html" aria-current="page">Compare</a>
+        <summary>Menu</summary>
+        <nav class="menu-panel" aria-label="Menu">
+          <a href="comparison-beta.html">Compare</a>
           <a href="trace.html">Trace</a>
-          <a href="index.html#how">작동 방식</a>
-          <a href="sample-comparison.html">샘플 리포트</a>
-          <a href="#request">변경 리뷰 요청</a>
-          <a href="comparison-beta-en.html" hreflang="en" lang="en">English</a>
-        </div>
+          <a href="docs/index.html">Docs</a>
+          <a href="sample-comparison.html">Sample report</a>
+          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="comparison-beta.html#request">Request access</a>
+        </nav>
       </details>
     </div>
-  </header>
+  </div>
+</header>
+<main id="main">
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="wrap">
+    <div class="tags"><span class="tag tag-hosted">Hosted · private beta</span><span class="tag tag-local">Preparation runs locally</span></div>
+    <h1 id="page-title">VeluneOS Compare</h1>
+    <p class="lead">Compare a Reference run and a Target run of your robot — before and after a software, configuration or hardware change. Get a stated decision and the structural differences to review, each with its time window.</p>
+    <div class="cta-row">
+      <a class="btn btn-dark" href="#request">Request Beta access</a>
+      <a class="btn btn-line" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+    </div>
+  </div>
+</section>
 
-  <main id="main">
-    <section class="hero">
-      <div class="wrap hero-grid split">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="dot" aria-hidden="true"></span>VeluneOS Compare · Private Beta</p>
-          <h1>두 실행을 비교하고,<br />달라진 것을 보세요.</h1>
-          <p class="lead">
-            Reference 실행과 Target 실행을 고르세요. 변경 전과 후, 두 소프트웨어 버전,
-            두 대의 로봇. Velune Adapter가 두 실행을 내 컴퓨터에서 준비하고, Compare가
-            구조적 차이와 확인할 곳을 보고합니다.
-          </p>
-          <div class="button-row">
-            <a class="button primary" href="#request">변경 리뷰 요청</a>
-            <a class="button" href="sample-comparison.html">샘플 리포트 보기</a>
-          </div>
-          <p class="small muted hero-aside">
-            이미 Beta에 참여 중이신가요? 키트와 함께 받은 접속 정보로 <a class="text-link" href="https://compare.veluneos.ai/compare">Compare 열기</a>.
-          </p>
+<section aria-labelledby="what-title">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">What it reports</p><h2 id="what-title">Structure, not payloads.</h2></div>
+    <ul class="list-plain">
+      <li><b>A stated decision</b><span>REVIEW_REQUIRED, NO_MATERIAL_STRUCTURAL_CHANGE, INCONCLUSIVE_DIFFERENCE or INSUFFICIENT_COVERAGE — never a blank.</span></li>
+      <li><b>Streams in one run only</b><span>Streams present in the Reference run or the Target run, but not both.</span></li>
+      <li><b>Message interval changes</b><span>Recorded intervals longer or shorter in Target, with values from both runs and whether they returned.</span></li>
+      <li><b>Activity loss and recovery</b><span>Where a stream recorded no messages in one run, and when it came back.</span></li>
+      <li><b>Timestamp representation</b><span>A change in timestamp precision, reported on its own rather than as a slowdown.</span></li>
+      <li><b>Evidence quality and coverage</b><span>Each finding is comparable, limited or inconclusive; what could not be compared is listed.</span></li>
+    </ul>
+    <p class="note">Findings follow a fixed review order, not a severity score. Compare does not decide root cause, fault, safety, regression or release readiness — your engineers do.</p>
+    <div class="cta-row" style="justify-content:flex-start;margin-top:28px"><a class="btn btn-line" href="sample-comparison.html">See a sample report <span class="arrow" aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+<section class="alt" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">How it works</p><h2 id="how-title">Prepare locally. Upload one file.</h2></div>
+    <div class="flow">
+      <div class="zone zone-local">
+        <span class="zone-label">Your machine</span>
+        <p class="zone-note">Raw MCAP stays here.</p>
+        <div class="steps">
+          <div class="step"><div class="box runs"><span class="r">reference.mcap</span><span class="t">target.mcap</span></div><em>your recordings</em></div>
+          <span class="chev" aria-hidden="true">→</span>
+          <div class="step"><div class="box">Velune Adapter</div><em>map · confirm · prepare</em></div>
         </div>
-
-        <figure class="panel" aria-labelledby="sample-caption">
-          <div class="panel-head">
-            <span class="run-pair">
-              <span class="run-tag ref">REFERENCE</span>
-              <span aria-hidden="true">vs</span>
-              <span class="run-tag tgt">TARGET</span>
-            </span>
-            <span>REVIEW_REQUIRED · schema 0.5.0</span>
-          </div>
-          <div class="panel-body">
-            <div class="timeline" role="img" aria-label="5개 stream의 30초 타임라인. Planner stream은 Reference에만 있음, diagnostics stream은 Target에만 있음, LiDAR는 10~20초 동안 Target 메시지 간격이 더 김, 카메라는 12~17초 동안 Target 활동 없음, IMU는 변화 없음.">
-              <span></span>
-              <span class="axis">0</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">5</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">10</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">15</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">20</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis">25</span><span class="axis"></span><span class="axis"></span><span class="axis"></span><span class="axis"></span>
-              <span class="label">CAMERA <span class="key">001</span></span>
-              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell miss"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
-              <span class="label">IMU <span class="key">002</span></span>
-              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
-              <span class="label">LIDAR <span class="key">003</span></span>
-              <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell slow"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
-              <span class="label hot">PLANNER <span class="key">004</span></span>
-              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
-              <span class="label">DIAG <span class="key">005</span></span>
-              <i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i><i class="cell only"></i>
-            </div>
-            <div class="legend" aria-hidden="true">
-              <span><i></i>차이 없음</span>
-              <span><i class="miss"></i>Target 활동 없음</span>
-              <span><i class="slow"></i>Target 간격이 더 김</span>
-              <span><i class="only"></i>한 실행에만 있음</span>
-            </div>
-            <div class="finding list">
-              <div class="finding-kicker">검토 순서</div>
-              <ol class="review-order">
-                <li><span class="mono">004</span> <span class="cat">PLANNING_LOCAL</span> — Reference에만 있음</li>
-                <li><span class="mono">005</span> <span class="cat">SYSTEM_DIAGNOSTICS</span> — Target에만 있음</li>
-                <li><span class="mono">003</span> <span class="cat">PERCEPTION_LIDAR</span> — Target의 메시지 간격이 더 김 <span class="mono win">00:10 → 00:20 · 회복</span></li>
-                <li><span class="mono">001</span> <span class="cat">PERCEPTION_CAMERA</span> — Target 활동 없음 <span class="mono win">00:12 → 00:17 · 회복</span></li>
-              </ol>
-            </div>
-          </div>
-          <figcaption class="panel-foot" id="sample-caption">
-            <span class="human-gate">엔지니어 검토 필요</span>
-            <span>샘플: 합성 실행, Beta Kit, VeluneOS Compare 서비스 · <a href="sample-comparison.html">전체 리포트</a></span>
-          </figcaption>
-        </figure>
       </div>
-    </section>
-
-    <section class="section" id="reports" aria-labelledby="reports-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">결과물</p>
-          <h2 id="reports-title">하나의 결정. 검토 순서. 모든 결과에 evidence.</h2>
-          <p>모든 비교는 빈칸 없이 명시된 결정과 검토할 차이를 돌려줍니다. 각 차이에는 시간 구간과, 기록된 evidence가 그것을 얼마나 뒷받침하는지가 함께 표시됩니다.</p>
+      <div class="seam"><span class="file-chip">comparison.velune</span></div>
+      <div class="zone zone-hosted">
+        <span class="zone-label">Hosted</span>
+        <p class="zone-note">Beta sign-in required.</p>
+        <div class="steps">
+          <div class="step"><div class="box">VeluneOS Compare</div><em>not stored</em></div>
+          <span class="chev" aria-hidden="true">→</span>
+          <div class="step"><div class="box dark">Evidence report</div><em>HTML · MD · JSON</em></div>
         </div>
-        <div class="grid-4">
-          <div class="card"><span class="mono-label">Decision</span><h3>명시된 결과</h3><p><code>REVIEW_REQUIRED</code>, <code>NO_MATERIAL_STRUCTURAL_CHANGE</code>, <code>INCONCLUSIVE_DIFFERENCE</code>, <code>INSUFFICIENT_COVERAGE</code> 중 하나.</p></div>
-          <div class="card"><span class="mono-label">Presence</span><h3>한 실행에만 있는 stream</h3><p>Reference나 Target 중 한쪽에만 존재하는 stream.</p></div>
-          <div class="card"><span class="mono-label">Timing</span><h3>메시지 간격 변화</h3><p>Target에서 길어지거나 짧아진 기록 간격. 일시적·지속적 구분과 양쪽 값 포함.</p></div>
-          <div class="card"><span class="mono-label">Activity</span><h3>활동 손실과 회복</h3><p>한 실행에서 stream이 조용해진 구간과, 다시 돌아왔는지·언제 돌아왔는지.</p></div>
-          <div class="card"><span class="mono-label">Timestamps</span><h3>표현 방식 변화</h3><p>timestamp 정밀도 변화는 별도로 보고되며 느려진 것으로 계산되지 않습니다.</p></div>
-          <div class="card"><span class="mono-label">Quality</span><h3>Evidence 품질과 coverage</h3><p>각 결과는 comparable, limited, inconclusive로 표시되고, coverage 한계는 숨기지 않고 나열됩니다.</p></div>
-          <div class="card"><span class="mono-label">Your streams</span><h3>각 key 옆의 내 카테고리</h3><p>사용자가 지정한 카테고리를 중립 stream key 옆에 표시하고, 서로 다르게 분류된 stream이 한 key로 묶이면 알려줍니다.</p></div>
-          <div class="card"><span class="mono-label">Output</span><h3>보관할 수 있는 리포트</h3><p>HTML·Markdown 리포트, <code>comparison_report.json</code>(schema 0.5.0), 요약, 카테고리 표.</p></div>
-        </div>
-        <p class="note">
-          결과는 심각도 점수가 아니라 고정·문서화된 검토 순서를 따릅니다. VeluneOS Compare는
-          근본 원인, 결함, 안전성, 회귀 여부, 릴리스 가능 여부를 판단하지 않습니다.
-          <strong>알려진 한계:</strong> 타이밍은 기록된 로그 시간 기준이라 서로 다른 시계 사이의
-          지연은 평가하지 않습니다. stream은 topic 이름이 같거나 사용자가 짝을 확인한 경우에만 두
-          실행 사이에서 비교됩니다. 같은 타입의 센서를 하나 빼고 다른 하나를 추가한 경우는 아직 비교용으로
-          준비할 수 없습니다.
-          <a class="text-link" href="sample-comparison.html">전체 샘플 리포트 보기</a>.
-        </p>
       </div>
-    </section>
+    </div>
+    <p class="flow-aside">Velune Trace is a separate tool for one log. It is not a step in this workflow.</p>
+  </div>
+</section>
 
-    <section class="section" id="run" aria-labelledby="run-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">비교 실행 방법</p>
-          <h2 id="run-title">로컬에서 준비하고, 파생 파일 하나만 업로드.</h2>
-          <p>입력: MCAP 기록 두 개, Reference 실행과 Target 실행. Reference는 사용자가 고른 기준일 뿐 정상이라는 뜻이 아닙니다. Beta 참여 팀은 Velune Adapter Beta Kit(Python 3.12 또는 3.13)를 받습니다.</p>
-        </div>
-        <ol class="steps">
-          <li>
-            <h3>Beta Kit 설치 <span class="where">내 컴퓨터</span></h3>
-            <p>Velune Adapter 0.2.0과 <code>velune</code> 명령. <a class="text-link" href="downloads/velune-adapter-beta-kit.zip">키트 다운로드</a> · <a class="text-link" href="downloads/velune-adapter-beta-kit.zip.sha256">SHA256</a></p>
-          </li>
-          <li>
-            <h3>Stream 찾기 <span class="where">내 컴퓨터</span></h3>
-            <p>두 MCAP 파일을 로컬에서 읽고 모든 stream과 등장 위치를 나열합니다.</p>
-<pre class="code">velune mapping init reference.mcap target.mcap --output mapping.json</pre>
-          </li>
-          <li>
-            <h3>Stream에 이름 붙이기</h3>
-            <p><code>mapping.json</code>에서 리포트에서 알아볼 stream에 <code>canonical_subsystem_id</code>와 <code>canonical_category_id</code>를 지정합니다(예: <code>PERCEPTION</code> / <code>PERCEPTION_LIDAR</code>, 최소 하나). 지정 여부와 관계없이 모든 stream이 비교되며, 지정하지 않은 stream은 중립 key로 표시됩니다.</p>
-          </li>
-          <li>
-            <h3>Stream 짝 확인 <span class="where">내 컴퓨터</span></h3>
-            <p>두 실행의 stream은 같은 topic 이름으로 짝지어집니다. 한쪽에만 있는 topic은 다른 실행의 같은 타입 topic과 짝지어질 수 있는데, 이름만 바뀐 topic이면 맞지만 다른 센서라면 틀립니다. 이런 짝은 모두 <code>correspondence_review</code>에 나열되며, 하나하나 확인하기 전까지 <code>prepare</code>는 진행되지 않습니다. 보통은 목록이 비어 있습니다.</p>
-          </li>
-          <li>
-            <h3>준비하고 확인 <span class="where">내 컴퓨터</span></h3>
-            <p><code>comparison.velune</code>과, 그 안의 모든 항목을 나열한 <code>comparison.preview.json</code>을 만듭니다. 업로드 전에 preview를 확인하세요.</p>
-<pre class="code">velune prepare reference.mcap target.mcap \
-  --mapping-profile mapping.json --output comparison.velune</pre>
-          </li>
-          <li>
-            <h3>업로드 <span class="where">VeluneOS Compare</span></h3>
-            <p>Beta 접속 정보로 <a class="text-link" href="https://compare.veluneos.ai/compare">compare.veluneos.ai</a>에 로그인해 <code>comparison.velune</code>을 올리세요. 리포트는 몇 초 안에 돌아오고 다운로드할 수 있습니다.</p>
-          </li>
-          <li>
-            <h3>검증하고 결정 <span class="where">엔지니어</span></h3>
-            <p>검토 순서부터 보고, 카테고리 표를 확인한 뒤, 보고된 구간을 기존 도구에서 여세요. 엔지니어링 결정은 엔지니어의 몫입니다.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section" id="boundary" aria-labelledby="boundary-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">데이터 경계</p>
-          <h2 id="boundary-title">업로드되는 것과 남는 것.</h2>
-        </div>
-        <div class="boundary">
-          <div class="card">
-            <h3><code>comparison.velune</code> 안에 있는 것</h3>
-            <ul class="checklist">
-              <li>중립적인 stream·schema key — 원래 topic·schema 이름은 포함되지 않음</li>
-              <li>각 실행 시작 기준 상대 시간의 초 단위 메시지 수와 간격 통계</li>
-              <li>파일 크기, 길이 같은 실행 단위 메타데이터</li>
-              <li>사용자가 지정한 카테고리</li>
-              <li>각 stream이 두 실행 사이에서 어떻게 짝지어졌는지(stream key와 근거만)</li>
-              <li>모든 파일의 SHA-256 해시가 담긴 manifest</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>절대 포함되지 않는 것</h3>
-            <ul class="checklist no">
-              <li>원본 MCAP, rosbag2 파일</li>
-              <li>메시지 payload: 이미지, point cloud, GPS 위치</li>
-              <li>원래 파일·topic·schema 이름, 절대 timestamp</li>
-              <li>인증 정보</li>
-            </ul>
-          </div>
-        </div>
-        <p class="note">
-          서비스는 업로드마다 임시 디렉터리에서 처리하고 리포트를 돌려준 뒤 삭제합니다. 리포트는
-          서버에 저장되지 않습니다. 접속 로그에는 요청 시각과 상태만 기록되며 파일 내용은 기록되지
-          않습니다. 준비된 파일을 완전한 익명 데이터라고 설명하지 않으며, Beta 기간에는 전송 경계를
-          각 팀과 함께 검토합니다.
-        </p>
-      </div>
-    </section>
-
-    <section class="section" id="access" aria-labelledby="access-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">이용 방식</p>
-          <h2 id="access-title">같은 Compare. 데이터 사용 방식만 선택합니다.</h2>
-          <p>두 방식 모두 같은 엔진, 같은 리포트입니다. 어느 쪽이든 원본 MCAP은 업로드되지 않습니다.</p>
-        </div>
-        <div class="grid-2">
-          <article class="card product-card">
-            <span class="mono-label">Contribution Access · 무료</span>
-            <p>승인된 파생 데이터가 여러 고객의 승인된 데이터를 이용한 집계·비교 분석을 포함해 VeluneOS 제품과 서비스의 개발, 평가, 개선에 사용될 수 있습니다.</p>
-          </article>
-          <article class="card product-card">
-            <span class="mono-label">Private Access · 팀별 견적</span>
-            <p>데이터는 요청한 서비스를 제공하고 운영하는 데에만 사용되며, VeluneOS 제품이나 서비스 개선에 재사용되지 않습니다.</p>
-          </article>
-        </div>
-        <p class="note">
-          <strong>요청서에서 방식을 고르는 것은 동의가 아닙니다.</strong> 데이터 사용 조건은
-          첫 업로드 전에 서면으로 확정합니다. Beta는 서비스 주도로 운영됩니다. VeluneOS
-          운영자가 입력과 작업 상태를 확인하고 리포트 품질을 함께 검토합니다. 셀프 가입이나
-          온라인 결제는 없습니다.
-        </p>
-      </div>
-    </section>
-
-
-
-    <section class="section" id="request" aria-labelledby="request-title">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">변경 리뷰 요청</p>
-          <h2 id="request-title">실제 질문에서 시작하세요.</h2>
-          <p>
-            두 실행 사이에 무엇을 바꿨는지, 무엇을 알고 싶은지 알려주세요. 비교가 적합한지,
-            어떻게 진행할지 이메일로 답변드립니다.
-          </p>
-        </div>
-        <form class="form" id="review-form" novalidate
-          data-mail-user="contact" data-mail-domain="veluneos.ai"
-          data-subject="변경 리뷰 요청 — VeluneOS Compare"
-          data-footer="참고: 원본 로그나 민감한 정보는 첨부하지 않았습니다."
-          data-missing="다음 항목을 입력해 주세요:"
-          data-opening="이메일 프로그램에서 초안을 엽니다. 아직 아무것도 전송되지 않았습니다."
-          data-empty="입력 안 함">
-          <div class="form-row">
-            <div class="field">
-              <label for="f-org">기관 또는 팀 *</label>
-              <input id="f-org" name="organization" autocomplete="organization" data-label="기관 / 팀" data-required />
-            </div>
-            <div class="field">
-              <label for="f-name">이름 *</label>
-              <input id="f-name" name="name" autocomplete="name" data-label="담당자" data-required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field">
-              <label for="f-email">업무용 이메일 *</label>
-              <input id="f-email" name="email" type="email" autocomplete="email" data-label="회신 이메일" data-required />
-            </div>
-            <div class="field">
-              <label for="f-format">로그 형식</label>
-              <select id="f-format" name="format" data-label="로그 형식">
-                <option value="">선택</option>
-                <option>MCAP</option>
-                <option>rosbag2 (MCAP storage)</option>
-                <option>rosbag2 (SQLite storage)</option>
-                <option>사내 자체 형식</option>
-                <option>잘 모르겠음</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="f-change">두 실행 사이에 무엇이 바뀌었나요? *</label>
-            <span class="hint" id="f-change-hint">예: LiDAR 드라이버 업데이트, 펌웨어 2.3 → 2.4, 같은 경로.</span>
-            <textarea id="f-change" name="change" aria-describedby="f-change-hint" data-label="두 실행 사이의 변경" data-required></textarea>
-          </div>
-          <div class="field">
-            <label for="f-question">무엇을 알고 싶으신가요?</label>
-            <textarea id="f-question" name="question" data-label="질문"></textarea>
-          </div>
-          <div class="form-row">
-            <div class="field">
-              <label for="f-robot">로봇 유형</label>
-              <select id="f-robot" name="robot" data-label="로봇 유형">
-                <option value="">선택</option>
-                <option>AMR / 물류 로봇</option>
-                <option>자율주행 차량 / 셔틀</option>
-                <option>산업용 / 협동 로봇 팔</option>
-                <option>서비스 로봇</option>
-                <option>드론</option>
-                <option>연구용 플랫폼</option>
-                <option>기타</option>
-              </select>
-            </div>
-            <fieldset class="field" data-label="이용 방식">
-              <legend>이용 방식</legend>
-              <div class="choice-row">
-                <label class="choice"><input type="radio" name="access" data-value="Contribution Access" /> <span><strong>Contribution</strong>무료</span></label>
-                <label class="choice"><input type="radio" name="access" data-value="Private Access" /> <span><strong>Private</strong>견적</span></label>
-              </div>
-            </fieldset>
-          </div>
-          <p class="small muted">
-            원본 로그, 인증 정보, 개인정보, 민감한 사고 세부 내용은 적지 마세요. 버튼을 누르면
-            이메일 프로그램에서 초안이 열립니다. 이 페이지는 아무것도 저장하거나 전송하지 않습니다.
-          </p>
-          <div class="button-row">
-            <button class="button primary" type="submit">요청 이메일 만들기</button>
-            <a class="button" href="mailto:contact@veluneos.ai">또는 contact@veluneos.ai로 메일</a>
-          </div>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrap footer-grid">
-      <div>
-        <a class="brand" href="index.html">VeluneOS</a>
-        <p class="tagline">The Flight Recorder for Embodied AI Systems.</p>
-        <p>Find the events. Engineers find the cause.</p>
-        <p>© 2026 VeluneOS · <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a></p>
-      </div>
-      <div>
-        <h2>제품</h2>
+<section aria-labelledby="kit-title">
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Velune Adapter</p><h2 id="kit-title">Get the Adapter Kit.</h2><p>The Beta Kit installs Velune Adapter and the <code>velune</code> command. Python 3.12 or 3.13. It runs on your machine and never uploads anything itself.</p></div>
+    <div class="two">
+      <div class="panel">
+        <h3>Download</h3>
         <ul>
-          <li><a href="comparison-beta.html">VeluneOS Compare</a></li>
-          <li><a href="trace.html">Velune Trace</a></li>
-          <li><a href="sample-comparison.html">샘플 리포트</a></li>
+          <li><a class="text-link" href="downloads/velune-adapter-beta-kit.zip">velune-adapter-beta-kit.zip</a> (Beta Kit 0.1.1b5)</li>
+          <li><a class="text-link" href="downloads/velune-adapter-beta-kit.zip.sha256">SHA-256 checksum</a></li>
+          <li>Includes <code>BETA_QUICKSTART.md</code> and <code>SHA256SUMS</code> for both packages</li>
         </ul>
       </div>
-      <div>
-        <h2>리소스</h2>
+      <div class="panel">
+        <h3>Use it</h3>
         <ul>
-          <li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li>
-          <li><a href="#request">변경 리뷰 요청</a></li>
-          <li><a href="comparison-beta-en.html" hreflang="en" lang="en">English</a></li>
+          <li><a class="text-link" href="docs/adapter.html">Prepare two runs</a> — install, map, confirm, prepare</li>
+          <li><a class="text-link" href="docs/compare.html">Upload and read the report</a></li>
+          <li><a class="text-link" href="docs/data-boundaries.html">What is in the uploaded file</a></li>
         </ul>
       </div>
     </div>
-  </footer>
-  <script src="assets/site.js" defer></script>
+  </div>
+</section>
+
+<section class="alt" id="request" aria-labelledby="request-title">
+  <div class="wrap request">
+    <div>
+      <p class="eyebrow">Request Beta access</p>
+      <h2 id="request-title">Start from a real change.</h2>
+      <p style="margin-top:16px;font-size:17px;color:var(--ink-2)">Tell us what changed between two runs and what you need to know. During the Private Beta we work through comparisons with each team directly.</p>
+      <ol class="next-steps">
+        <li><span>01</span>We reply by email to discuss whether the comparison fits.</li>
+        <li><span>02</span>Data-use terms are confirmed in writing before your first upload.</li>
+        <li><span>03</span>You receive Compare credentials and prepare your runs with the Adapter Kit.</li>
+      </ol>
+      <p class="note">Access options: <b>Contribution</b> (no fee — approved derived data may be used to develop and improve VeluneOS products and services) or <b>Private</b> (quoted per team — your data is used only to provide the service you requested). Choosing an option here is not consent.</p>
+      <p class="note">Already in the Beta? <a class="text-link" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>.</p>
+    </div>
+    <form class="form" id="review-form" novalidate
+      data-mail-user="contact" data-mail-domain="veluneos.ai"
+      data-subject="Beta Access Request — VeluneOS Compare"
+      data-footer="Note: no raw logs or sensitive information are attached."
+      data-missing="Please fill in:"
+      data-opening="Opening a draft in your email client. Nothing has been sent yet."
+      data-empty="Not provided">
+      <div class="field"><label for="f-org">Organization or team *</label><input id="f-org" name="organization" autocomplete="organization" data-label="Organization / Team" data-required /></div>
+      <div class="field"><label for="f-name">Your name *</label><input id="f-name" name="name" autocomplete="name" data-label="Contact" data-required /></div>
+      <div class="field"><label for="f-email">Work email *</label><input id="f-email" name="email" type="email" autocomplete="email" data-label="Reply email" data-required /></div>
+      <div class="field"><label for="f-format">Log format</label>
+        <select id="f-format" name="format" data-label="Log format">
+          <option value="">Select</option><option>MCAP</option><option>rosbag2 (MCAP storage)</option><option>rosbag2 (SQLite storage)</option><option>Internal custom format</option><option>Not sure</option>
+        </select></div>
+      <div class="field full"><label for="f-change">What changed between the two runs? *</label><span class="hint" id="f-change-hint">For example: LiDAR driver update, firmware 2.3 → 2.4, same route.</span><textarea id="f-change" name="change" aria-describedby="f-change-hint" data-label="What changed between the runs" data-required></textarea></div>
+      <div class="field full"><label for="f-question">What do you want to know?</label><textarea id="f-question" name="question" data-label="Question"></textarea></div>
+      <div class="field"><label for="f-robot">Robot type</label>
+        <select id="f-robot" name="robot" data-label="Robot type">
+          <option value="">Select</option><option>AMR / logistics robot</option><option>Autonomous vehicle / shuttle</option><option>Industrial / collaborative arm</option><option>Service robot</option><option>Drone</option><option>Research platform</option><option>Other</option>
+        </select></div>
+      <fieldset class="field" data-label="Access preference"><legend>Access preference</legend>
+        <div class="choice-row">
+          <label class="choice"><input type="radio" name="access" data-value="Contribution Access" /> <span><strong>Contribution</strong>no fee</span></label>
+          <label class="choice"><input type="radio" name="access" data-value="Private Access" /> <span><strong>Private</strong>quoted</span></label>
+        </div>
+      </fieldset>
+      <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      <div class="form-foot">
+        <span>Do not include raw logs, credentials or personal data. This opens a draft in your email client; this page stores and sends nothing.</span>
+        <button class="btn btn-dark" type="submit">Create request email</button>
+      </div>
+    </form>
+  </div>
+</section>
+<script src="assets/site.js" defer></script>
+
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <span>Find the events. Engineers find the cause.</span>
+    <nav aria-label="Footer">
+      <a href="comparison-beta.html">Compare</a>
+      <a href="trace.html">Trace</a>
+      <a href="docs/index.html">Docs</a>
+      <a href="sample-comparison.html">Sample report</a>
+      <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+      <a href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>
+    </nav>
+  </div>
+</footer>
 </body>
 </html>

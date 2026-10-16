@@ -1,0 +1,112 @@
+<div class="wrap docs">
+{docs_nav}
+<article class="doc">
+  <p class="crumbs">Docs / Compare workflow</p>
+  <h1>Prepare two runs with Velune Adapter</h1>
+  <p class="lead">Velune Adapter runs on your machine. It reads a Reference run and a Target run and writes one derived file, <code>comparison.velune</code>, for VeluneOS Compare. This page covers Beta Kit 0.1.1b5, which matches the current Compare service.</p>
+  <div class="callout warn"><b>Use the Beta Kit and the <code>velune</code> command.</b> The public <a class="text-link" href="https://github.com/veluneos/velune-adapter">velune-adapter repository</a> documents the lower-level <code>velune-adapter inspect / build / validate</code> commands. Their output is not a <code>comparison.velune</code> file, and Compare will not accept it.</div>
+
+  <h2 id="install">1. Install the Beta Kit</h2>
+  <p>Requires Python 3.12 or 3.13. Download <a class="text-link" href="../downloads/velune-adapter-beta-kit.zip">velune-adapter-beta-kit.zip</a> (<a class="text-link" href="../downloads/velune-adapter-beta-kit.zip.sha256">SHA-256</a>) and unzip it. It contains two Python packages, <code>BETA_QUICKSTART.md</code> and <code>SHA256SUMS</code>.</p>
+<pre><span class="p">$</span> cd beta-kit
+<span class="p">$</span> sha256sum -c SHA256SUMS
+<span class="d">velune_adapter-0.2.0-py3-none-any.whl: OK
+velune_local_prepare-0.1.1b5-py3-none-any.whl: OK</span>
+<span class="p">$</span> python3 -m venv .venv
+<span class="p">$</span> source .venv/bin/activate
+<span class="p">$</span> pip install velune_adapter-0.2.0-py3-none-any.whl velune_local_prepare-0.1.1b5-py3-none-any.whl
+<span class="p">$</span> velune --help
+<span class="d">usage: velune [-h] {mapping,prepare} ...</span></pre>
+  <p>You use one command, <code>velune</code>, with two subcommands: <code>mapping</code> and <code>prepare</code>. <code>pip</code> also installs the packages the Adapter needs to read MCAP (such as <code>mcap</code>, <code>zstandard</code> and <code>lz4</code>) from your package index.</p>
+
+  <h2 id="runs">2. Choose the two runs</h2>
+  <ul>
+    <li><b>Reference</b> — the run you compare against, for example before a change. It is the baseline you choose, not a claim that it is correct.</li>
+    <li><b>Target</b> — the run you want to compare, for example after a change.</li>
+    <li>Each run is <b>one <code>.mcap</code> file</b>. For a rosbag2 recording stored as MCAP, pass the <code>.mcap</code> file inside the bag directory. rosbag2 SQLite (<code>.db3</code>) files cannot be read.</li>
+    <li>Comparisons are most useful when both runs exercise the same scenario (same route, task or test).</li>
+  </ul>
+
+  <h2 id="discover">3. Discover streams</h2>
+<pre><span class="p">$</span> velune mapping init reference.mcap target.mcap --output mapping.json
+<span class="d">Discovered 5 streams across Reference and Target.
+Mapping template: /path/to/mapping.json
+Next: fill canonical_subsystem_id and canonical_category_id for the streams you want to recognise in the report (at least one). Every stream is compared and transferred either way; a stream without a category appears in the report by its neutral key.</span></pre>
+  <p>This reads both files locally and writes <code>mapping.json</code>, listing every stream and how the Adapter pairs streams across the two runs. <code>--output</code> defaults to <code>./mapping.json</code>. <code>mapping.json</code> contains your topic and schema names; it stays on your machine and is not part of the uploaded file.</p>
+
+  <h2 id="mapping">4. Configure the mapping</h2>
+  <p>Each discovered stream is a rule:</p>
+<pre>{
+  "raw_match_key": "/lidar/points",
+  "canonical_subsystem_id": null,
+  "canonical_category_id": null,
+  "_presence": "both",
+  "_reference_schema": "…",
+  "_target_schema": "…"
+}</pre>
+  <ul>
+    <li><code>raw_match_key</code> — the topic found in your recordings.</li>
+    <li><code>_presence</code> — <code>both</code>, <code>reference</code> or <code>target</code>: where the stream appears.</li>
+    <li><code>canonical_subsystem_id</code> / <code>canonical_category_id</code> — the labels you assign, for example <code>"PERCEPTION"</code> / <code>"PERCEPTION_LIDAR"</code>. Set both or neither.</li>
+  </ul>
+  <p>Assign labels to the streams you want to recognise in the report — <b>at least one</b>. Every stream is compared either way; a stream without labels appears in the report by its neutral key (for example <code>stream.unmapped.003</code>). The report never shows your topic names, so labels are how you recognise streams.</p>
+  <div class="callout">Example labels used in the sample: <code>PERCEPTION_CAMERA</code>, <code>PERCEPTION_LIDAR</code>, <code>LOCALIZATION_IMU</code>, <code>PLANNING_LOCAL</code>, <code>SYSTEM_DIAGNOSTICS</code>. Labels are free text (non-empty, no leading or trailing spaces); they name streams in the report and do not change how they are compared.</div>
+
+  <h2 id="correspondence">5. Confirm stream pairings</h2>
+  <p>Streams are paired across runs by identical topic name. Two cases need your confirmation, and <code>mapping init</code> lists them under <code>correspondence_review</code>:</p>
+  <ul>
+    <li><code>matched_by_message_type</code> — a topic exists in only one run and the Adapter paired it with a topic of the same message type in the other run. Right for a renamed topic, wrong for a different sensor.</li>
+    <li><code>duplicate_topic_name</code> — a topic name appears more than once, so the pairing between channels is ambiguous.</li>
+  </ul>
+<pre><span class="d">Check: 1 Reference/Target pairing(s) are not based on an identical, unique topic name. …
+  - /lidar (Reference) &lt;-&gt; /lidar_top (Target): matched_by_message_type</span>
+
+"correspondence_review": [
+  {
+    "reference_topic": "/lidar",
+    "target_topic": "/lidar_top",
+    "reference_channel_id": 2,
+    "target_channel_id": 2,
+    "basis": "matched_by_message_type",
+    "same_stream": null
+  }
+]</pre>
+  <p>Set <code>"same_stream": true</code> only if the pair really is the same stream. In the usual case — every stream keeps its topic name — the list is empty and there is nothing to confirm.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th><code>same_stream</code></th><th>What <code>velune prepare</code> does</th></tr></thead>
+    <tbody>
+      <tr><td><code>null</code> (unanswered)</td><td>Stops without producing a file and lists the pairs to review.</td></tr>
+      <tr><td><code>true</code></td><td>Prepares the file. The pairing is recorded as confirmed by you, and the report shows it.</td></tr>
+      <tr><td><code>false</code></td><td>Stops without producing a file. This kit cannot yet compare two runs where one sensor was removed and a different sensor of the same type was added. Contact <a class="text-link" href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>.</td></tr>
+    </tbody>
+  </table></div>
+  <p>A <code>mapping.json</code> created by an older kit has no <code>correspondence_review</code> section; if any pairing needs review, re-run <code>velune mapping init</code>.</p>
+
+  <h2 id="prepare">6. Generate comparison.velune</h2>
+<pre><span class="p">$</span> velune prepare reference.mcap target.mcap \
+    --mapping-profile mapping.json --output comparison.velune
+<span class="d">Velune Adapter — preparation complete
+Artifact: /path/to/comparison.velune
+Transfer ID: vtransfer_sha256_…
+Transfer preview: /path/to/comparison.preview.json (11 files in comparison.velune, 132279 bytes -- raw MCAP, payloads, original paths/topic/schema names, and absolute timestamps are not included; see the file for the full list of what is)
+
+Next: review the transfer preview, then upload this file to VeluneOS Compare
+https://compare.veluneos.ai/compare</span></pre>
+  <p>Pass the same two files, in the same order, that you used for <code>mapping init</code>. <code>--output</code> defaults to <code>./comparison.velune</code>; running <code>prepare</code> again overwrites it. Nothing is sent over the network.</p>
+  <p>If the artifact is written but its preview cannot be, <code>prepare</code> prints “preparation incomplete”, exits with an error, and you should not upload the file until you can review it.</p>
+  <div class="callout">If you labelled only some streams, <code>prepare</code> may add a note that streams were “excluded from the comparison”. That refers to category labels only: the Compare service still compares every stream in the file and shows unlabelled ones by neutral key.</div>
+
+  <h2 id="preview">7. Review comparison.preview.json</h2>
+  <p>Open the preview before uploading anything. It describes exactly what is inside <code>comparison.velune</code>:</p>
+  <ul>
+    <li><code>files</code> — every entry in the archive, with size, SHA-256 and top-level fields (11 entries: manifests, per-run observation series, stream inventories and run manifests, the mapping record and the stream pairing record).</li>
+    <li><code>explicitly_excluded_categories</code> — what is not in the file: raw MCAP and logs, raw and decoded payloads, absolute local paths, original file, topic and schema names, absolute timestamps, credentials and environment variables, and more.</li>
+    <li><code>privacy_declarations</code> — per-file declarations, for example <code>original_topic_name_included: false</code>.</li>
+    <li><code>streams</code> — each stream's neutral key and role.</li>
+    <li><code>network_transfer_performed: false</code> and <code>instruction</code>: send only <code>comparison.velune</code>, nothing else on this machine.</li>
+  </ul>
+  <p>The file still describes your system's structure (stream counts, message rates and timing). It is not described as anonymous. See <a class="text-link" href="data-boundaries.html">Data boundaries</a>.</p>
+
+  <div class="doc-pager"><a href="trace.html">← Velune Trace</a><a href="compare.html">Upload and read the report →</a></div>
+</article>
+</div>

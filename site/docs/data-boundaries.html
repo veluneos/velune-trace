@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data boundaries — Docs — VeluneOS</title>
+  <meta name="description" content="What stays on your machine, what is uploaded, and what VeluneOS never decides." />
+  <link rel="canonical" href="https://veluneos.ai/docs/data-boundaries" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VeluneOS" />
+  <meta property="og:title" content="Data boundaries — Docs — VeluneOS" />
+  <meta property="og:description" content="What stays on your machine, what is uploaded, and what VeluneOS never decides." />
+  <meta property="og:url" content="https://veluneos.ai/docs/data-boundaries" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../assets/site.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li></ul>
+    <div class="nav-right">
+      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
+      <a class="btn btn-dark btn-sm" href="../comparison-beta.html#request">Request access</a>
+      <details class="menu">
+        <summary>Menu</summary>
+        <nav class="menu-panel" aria-label="Menu">
+          <a href="../comparison-beta.html">Compare</a>
+          <a href="../trace.html">Trace</a>
+          <a href="../docs/index.html">Docs</a>
+          <a href="../sample-comparison.html">Sample report</a>
+          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="../comparison-beta.html#request">Request access</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+<main id="main">
+<div class="wrap docs">
+<nav class="docs-nav" aria-label="Docs"><p>Start</p><a href="index.html">Getting started</a><p>Velune Trace</p><a href="trace.html">Install and run Trace</a><p>Compare workflow</p><a href="adapter.html">Prepare two runs</a><a href="compare.html">Upload and read the report</a><p>Reference</p><a href="data-boundaries.html" aria-current="page">Data boundaries</a><a href="reference.html">Formats, limits, troubleshooting</a></nav>
+<article class="doc">
+  <p class="crumbs">Docs / Reference</p>
+  <h1>Data boundaries</h1>
+  <p class="lead">Raw recordings stay on your machine. You decide when to upload one derived file, and you can read exactly what is in it first.</p>
+
+  <h2 id="local">Stays on your machine</h2>
+  <ul>
+    <li>Raw MCAP and rosbag2 files</li>
+    <li>Message payloads: images, point clouds, GPS positions, decoded data</li>
+    <li>Original file, topic and schema names; absolute local paths</li>
+    <li>Absolute timestamps</li>
+    <li>Credentials and environment variables</li>
+    <li><code>mapping.json</code> (it contains your topic names)</li>
+  </ul>
+  <p>Velune Trace and Velune Adapter run locally and perform no network transfer.</p>
+
+  <h2 id="uploaded">What is inside comparison.velune</h2>
+  <ul>
+    <li>Neutral stream and schema keys (for example <code>stream.unmapped.003</code>)</li>
+    <li>Per-second message counts and interval statistics, in time relative to the start of each run</li>
+    <li>Run-level metadata such as duration and counts</li>
+    <li>The category labels you assigned</li>
+    <li>How each stream was paired across runs (stream key and basis only)</li>
+    <li>Manifests with SHA-256 hashes of every file</li>
+  </ul>
+  <p>The preview file, <code>comparison.preview.json</code>, lists every entry and the excluded categories. <a class="text-link" href="adapter.html#preview">How to review it</a>.</p>
+  <div class="callout warn"><b>Derived does not mean anonymous.</b> The file still describes the structure of your system — which streams exist, how often they publish and how their timing behaves. We do not describe it as fully anonymous. During the Beta, transfer boundaries are reviewed with each team.</div>
+
+  <h2 id="service">On the Compare service</h2>
+  <ul>
+    <li>Access requires Beta credentials (HTTPS, browser sign-in).</li>
+    <li>Each upload is processed in a temporary directory that is deleted when the report is returned. Reports are not stored on the server.</li>
+    <li>Access logs record request time and status, not file contents.</li>
+  </ul>
+
+  <h2 id="use">How your data may be used</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Option</th><th>Terms</th></tr></thead>
+    <tbody>
+      <tr><td><b>Contribution Access</b> · no fee</td><td>Approved derived data may be used to develop, evaluate and improve VeluneOS products and services, including aggregate or comparative analysis across customers' approved data.</td></tr>
+      <tr><td><b>Private Access</b> · quoted per team</td><td>Your data is used only to provide and operate the service you requested. It is not reused to improve VeluneOS products or services.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Both options use the same engine and produce the same report. Choosing an option in a request is not consent: data-use terms are confirmed in writing before your first upload.</p>
+
+  <h2 id="never">What VeluneOS never decides</h2>
+  <ul>
+    <li>Root cause</li>
+    <li>Fault, responsibility or liability</li>
+    <li>Whether the robot is safe</li>
+    <li>Whether a change is a regression</li>
+    <li>Release go / no-go</li>
+  </ul>
+  <p>Find the events. Engineers find the cause.</p>
+
+  <div class="doc-pager"><a href="compare.html">← Upload and read the report</a><a href="reference.html">Formats, limits, troubleshooting →</a></div>
+</article>
+</div>
+
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <span>Find the events. Engineers find the cause.</span>
+    <nav aria-label="Footer">
+      <a href="../comparison-beta.html">Compare</a>
+      <a href="../trace.html">Trace</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="../sample-comparison.html">Sample report</a>
+      <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+      <a href="mailto:contact@veluneos.ai">contact@veluneos.ai</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

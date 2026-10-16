@@ -1,0 +1,7 @@
+# Former English URLs (the site is English-only). Stub pages remain as a fallback.
+/en / 301
+/en.html / 301
+/comparison-beta-en /comparison-beta 301
+/comparison-beta-en.html /comparison-beta 301
+/trace-en /trace 301
+/trace-en.html /trace 301
