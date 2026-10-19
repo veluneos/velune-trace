@@ -1,7 +1,7 @@
 <section class="page-hero" aria-labelledby="page-title">
   <div class="wrap">
-    <div class="tags"><span class="tag tag-plain">Sample report · synthetic runs</span></div>
-    <h1 id="page-title">Five changes in. One unedited report out.</h1>
+    <div class="tags"><span class="bl">Sample report · synthetic runs</span></div>
+    <h1 id="page-title">Five changes in. One <mark class="window">unedited</mark> report out.</h1>
     <p class="lead">We generated two 30-second MCAP recordings with known differences, prepared them with the published Adapter Kit, and uploaded the file to VeluneOS Compare. The report below is its output, unedited. Check it against what we changed.</p>
   </div>
 </section>
@@ -11,12 +11,12 @@
     <div class="sec-head"><p class="eyebrow">Ground truth vs report</p><h2 id="gt-title">What we changed, and what Compare reported.</h2></div>
     <div class="table-wrap">
       <table class="truth">
-        <thead><tr><th scope="col">Stream in the synthetic runs</th><th scope="col">What we changed in Target</th><th scope="col">What the report says</th><th scope="col"></th></tr></thead>
+        <thead><tr><th scope="col">Stream in the synthetic runs</th><th scope="col">What we changed in Target</th><th scope="col">What the report says</th><th scope="col"><span class="sr-only">Match</span></th></tr></thead>
         <tbody>
           <tr><td class="k">/planner/status</td><td>Removed</td><td class="k">Stream 004 (PLANNING_LOCAL) — present in Reference only</td><td class="ok">matches</td></tr>
           <tr><td class="k">/diagnostics/thermal</td><td>Added, 1 Hz</td><td class="k">Stream 005 (SYSTEM_DIAGNOSTICS) — present in Target only</td><td class="ok">matches</td></tr>
-          <tr><td class="k">/lidar/points</td><td>10 Hz → 5 Hz from 10 s to 20 s</td><td class="k">Stream 003 (PERCEPTION_LIDAR) — message interval longer in Target, T+10s → T+20s, returned</td><td class="ok">matches</td></tr>
-          <tr><td class="k">/camera/front/image</td><td>Silent from 12 s to 17 s</td><td class="k">Stream 001 (PERCEPTION_CAMERA) — Target recorded no messages, T+12s → T+17s, returned</td><td class="ok">matches</td></tr>
+          <tr><td class="k">/lidar/points</td><td>10 Hz → 5 Hz from 10 s to 20 s</td><td class="k">Stream 003 (PERCEPTION_LIDAR) — message interval longer in Target, <span class="tc">T+10s → T+20s</span>, returned</td><td class="ok">matches</td></tr>
+          <tr><td class="k">/camera/front/image</td><td>Silent from 12 s to 17 s</td><td class="k">Stream 001 (PERCEPTION_CAMERA) — Target recorded no messages, <span class="tc">T+12s → T+17s</span>, returned</td><td class="ok">matches</td></tr>
           <tr><td class="k">/imu</td><td>Unchanged, 100 Hz</td><td class="k">Stream 002 (LOCALIZATION_IMU) — no material difference observed</td><td class="ok">matches</td></tr>
         </tbody>
       </table>
@@ -27,7 +27,7 @@
 
 <section class="alt" id="report" aria-labelledby="report-title" style="padding-top:72px">
   <div class="wrap">
-    <div class="sec-head"><p class="eyebrow">The report</p><h2 id="report-title">Exactly as the service returned it.</h2>
+    <div class="sec-head"><p class="eyebrow">The report · unedited service output</p><h2 id="report-title">Exactly as the service returned it.</h2>
       <p>Download:
         <a class="text-link" href="{root}samples/compare-sample-report.html">report.html</a> ·
         <a class="text-link" href="{root}samples/compare-sample-report.md">report.md</a> ·
@@ -35,7 +35,9 @@
         <a class="text-link" href="{root}samples/comparison_summary.md">comparison_summary.md</a> ·
         <a class="text-link" href="{root}samples/stream_categories.json">stream_categories.json</a></p>
     </div>
-    <iframe class="report-frame" src="{root}samples/compare-sample-report.html" title="VeluneOS Compare sample report" sandbox></iframe>
+    <div class="frame" style="margin:10px"><iframe class="report-frame" src="{root}samples/compare-sample-report.html" title="VeluneOS Compare sample report" sandbox></iframe></div>
     <div class="beta-bar" style="margin-top:28px"><span><b>Run it on your own change.</b> Prepare two runs locally and compare them in the Private Beta.</span><a class="link" href="{root}comparison-beta.html#request">Request Beta access <span class="arrow" aria-hidden="true">→</span></a></div>
   </div>
 </section>
+
+<script src="{root}assets/evidence.js" defer></script>

@@ -12,14 +12,14 @@
   <meta property="og:description" content="Install and run Velune Trace on one MCAP log." />
   <meta property="og:url" content="https://veluneos.ai/docs/trace" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../assets/site.css" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="../index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="../index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li></ul>
     <div class="nav-right">
       <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
@@ -52,7 +52,7 @@
     <li>Download <code>velune-trace-v0.5.1.zip</code> and <code>SHA256SUMS</code> from the <a class="text-link" href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1">v0.5.1 release</a> into the same directory.</li>
     <li>Verify, extract, and install the pinned dependencies:</li>
   </ol>
-<pre><span class="p">$</span> sha256sum -c SHA256SUMS            <span class="d"># expect: velune-trace-v0.5.1.zip: OK</span>
+<pre tabindex="0"><span class="p">$</span> sha256sum -c SHA256SUMS            <span class="d"># expect: velune-trace-v0.5.1.zip: OK</span>
 <span class="p">$</span> unzip velune-trace-v0.5.1.zip
 <span class="p">$</span> cd velune-trace-v0.5.1
 <span class="p">$</span> python3 -m venv .venv
@@ -62,7 +62,7 @@
   <p>The repository's <code>main</code> branch carries v0.5.2 (install from source with <code>git clone https://github.com/veluneos/velune-trace.git</code>, then the same venv steps using <code>requirements.txt</code>). The full instructions ship in the archive as <code>release/INSTALL.md</code>.</p>
 
   <h2 id="sample">Try it on the bundled sample</h2>
-<pre><span class="p">$</span> .venv/bin/python tools/create_sample_mcap.py
+<pre tabindex="0"><span class="p">$</span> .venv/bin/python tools/create_sample_mcap.py
 <span class="d">created examples/sample.mcap</span>
 <span class="p">$</span> ./bin/velune validation-report examples/sample.mcap \
     --export-dir velune_report --window-sec 1 --top 5 --allowed-lateness-sec 2
@@ -72,7 +72,7 @@ LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report
   <p>Open <code>velune_report/summary.md</code>. For the sample, the top window for <code>/lidar_top</code> is window 2 (count 19 of an expected 20, max gap 0.1 s).</p>
 
   <h2 id="own-log">Run on your own log</h2>
-<pre><span class="p">$</span> ./bin/velune validation-report /path/to/your_log.mcap \
+<pre tabindex="0"><span class="p">$</span> ./bin/velune validation-report /path/to/your_log.mcap \
     --export-dir velune_report --window-sec 1 --top 10 --allowed-lateness-sec 2</pre>
   <ul>
     <li><code>--window-sec</code> — window length in seconds.</li>
@@ -83,7 +83,7 @@ LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report
   <p>Then open the listed windows in your existing viewer and investigate there.</p>
 
   <h2 id="outputs">Output files</h2>
-  <div class="table-wrap"><table>
+  <div class="table-wrap" tabindex="0"><table>
     <thead><tr><th>File</th><th>Contents</th></tr></thead>
     <tbody>
       <tr><td><code>summary.md</code></td><td>Readable timing summary and top evidence windows per topic</td></tr>
@@ -96,7 +96,7 @@ LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report
   </table></div>
 
   <h2 id="commands">Commands</h2>
-  <div class="table-wrap"><table>
+  <div class="table-wrap" tabindex="0"><table>
     <thead><tr><th>Command</th><th>What it does</th></tr></thead>
     <tbody>
       <tr><td><code>validation-report</code></td><td>Full local evidence report — the recommended starting point</td></tr>
@@ -117,7 +117,7 @@ LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report
 </main>
 <footer class="footer">
   <div class="wrap">
-    <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="../comparison-beta.html">Compare</a>

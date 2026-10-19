@@ -19,12 +19,12 @@ BODIES = Path(__file__).resolve().parent / "site_pages"
 ORIGIN = "https://veluneos.ai"
 COMPARE_URL = "https://compare.veluneos.ai/compare"
 
-FAVICON = (
-    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E"
-    "%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E"
-    "%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E"
-    "%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E"
+MARK = (
+    '<svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
+    '<rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/>'
+    '<path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg>'
 )
+BRAND = MARK + '<span>Velune<span class="os">OS</span></span>'
 
 # (output path in site/, body file, title, description, canonical path, nav key)
 PAGES = [
@@ -87,7 +87,7 @@ def nav(root: str, current: str) -> str:
     return f"""<a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="{root}index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="{root}index.html" aria-label="VeluneOS home">{BRAND}</a>
     <ul class="nav-links">{links}</ul>
     <div class="nav-right">
       <a class="signin" href="{COMPARE_URL}">Sign in</a>
@@ -111,7 +111,7 @@ def nav(root: str, current: str) -> str:
 def footer(root: str) -> str:
     return f"""<footer class="footer">
   <div class="wrap">
-    <a class="brand" href="{root}index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="{root}index.html">{BRAND}</a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="{root}comparison-beta.html">Compare</a>
@@ -141,6 +141,10 @@ def page(out: str, body_name: str, title: str, desc: str, canonical: str, curren
     body = (BODIES / f"{body_name}.html").read_text(encoding="utf-8").replace("{root}", root)
     if out.startswith("docs/"):
         body = body.replace("{docs_nav}", docs_nav(out.split("/", 1)[1]))
+    # Scrollable regions must be reachable by keyboard.
+    body = (body.replace("<pre>", '<pre tabindex="0">')
+                .replace('<div class="term">', '<div class="term" tabindex="0">')
+                .replace('<div class="table-wrap">', '<div class="table-wrap" tabindex="0">'))
     url = ORIGIN + canonical
     return f"""<!doctype html>
 <html lang="en">
@@ -156,7 +160,7 @@ def page(out: str, body_name: str, title: str, desc: str, canonical: str, curren
   <meta property="og:description" content="{escape(desc)}" />
   <meta property="og:url" content="{url}" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="{FAVICON}" />
+  <link rel="icon" href="{root}assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="{root}assets/site.css" />
 </head>
 <body>
@@ -209,7 +213,7 @@ NOT_FOUND = """<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Page not found — VeluneOS</title>
   <meta name="robots" content="noindex" />
-  <link rel="icon" href="{favicon}" />
+  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
@@ -256,7 +260,7 @@ def main() -> int:
     for stub_file, _old, target_file, new in MOVED:
         (SITE / stub_file).write_text(stub(target_file, new), encoding="utf-8")
         print(f"wrote site/{stub_file} (moved stub)")
-    (SITE / "404.html").write_text(NOT_FOUND.replace("{favicon}", FAVICON), encoding="utf-8")
+    (SITE / "404.html").write_text(NOT_FOUND, encoding="utf-8")
     (SITE / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (SITE / "_redirects").write_text(redirects(), encoding="utf-8")
     print("wrote site/404.html, site/sitemap.xml, site/_redirects")

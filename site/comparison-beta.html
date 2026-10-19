@@ -12,14 +12,14 @@
   <meta property="og:description" content="Prepare two MCAP recordings locally with Velune Adapter, upload one derived file, and get an evidence report of the structural differences." />
   <meta property="og:url" content="https://veluneos.ai/comparison-beta" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="assets/site.css" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <ul class="nav-links"><li><a href="comparison-beta.html" aria-current="page">Compare</a></li><li><a href="trace.html">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li></ul>
     <div class="nav-right">
       <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
@@ -40,14 +40,28 @@
 </header>
 <main id="main">
 <section class="page-hero" aria-labelledby="page-title">
-  <div class="wrap">
-    <div class="tags"><span class="tag tag-hosted">Hosted · private beta</span><span class="tag tag-local">Preparation runs locally</span></div>
-    <h1 id="page-title">VeluneOS Compare</h1>
-    <p class="lead">Compare a Reference run and a Target run of your robot — before and after a software, configuration or hardware change. Get a stated decision and the structural differences to review, each with its time window.</p>
-    <div class="cta-row">
-      <a class="btn btn-dark" href="#request">Request Beta access</a>
-      <a class="btn btn-line" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+  <div class="wrap page-grid">
+    <div class="reveal">
+      <div class="tags"><span class="bl">Hosted · private beta</span><span class="bl">Preparation runs locally</span></div>
+      <h1 id="page-title">VeluneOS Compare</h1>
+      <p class="lead">Compare a Reference run and a Target run of your robot — before and after a software, configuration or hardware change. Get a stated decision and the structural differences to review, each with its <mark class="window">time window</mark>.</p>
+      <div class="cta-row">
+        <a class="btn btn-dark" href="#request">Request Beta access</a>
+        <a class="btn btn-line" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+      </div>
     </div>
+    <figure class="excerpt frame" aria-labelledby="cmp-cap">
+      <div class="excerpt-head"><span class="eyebrow">Report excerpt · finding 3 of 4</span><span class="bl">Published sample</span></div>
+      <div class="mini-track" style="margin-top:18px" aria-hidden="true"><span class="win" style="left:33.33%;width:33.33%"></span><span class="line r"></span><span class="line t" style="right:66.67%"></span><span class="line t" style="left:66.67%"></span></div>
+      <div class="detail">
+        <dl>
+          <dt>What</dt><dd class="what">Recorded message interval longer in Target — Stream 003</dd>
+          <dt>When</dt><dd><span class="tc">T+10s → T+20s</span></dd>
+          <dt>Evidence</dt><dd><span class="mono">median interval 100.0 → 200.0 ms · returned to the Reference pattern at T+20s · Comparable</span></dd>
+        </dl>
+      </div>
+      <figcaption class="excerpt-foot" id="cmp-cap"><span>Reconstructed from the published sample report — not a screenshot of the Compare app.</span><a href="sample-comparison.html">Full sample report →</a></figcaption>
+    </figure>
   </div>
 </section>
 
@@ -71,27 +85,25 @@
   <div class="wrap">
     <div class="sec-head"><p class="eyebrow">How it works</p><h2 id="how-title">Prepare locally. Upload one file.</h2></div>
     <div class="flow">
-      <div class="zone zone-local">
-        <span class="zone-label">Your machine</span>
-        <p class="zone-note">Raw MCAP stays here.</p>
-        <div class="steps">
-          <div class="step"><div class="box runs"><span class="r">reference.mcap</span><span class="t">target.mcap</span></div><em>your recordings</em></div>
-          <span class="chev" aria-hidden="true">→</span>
-          <div class="step"><div class="box">Velune Adapter</div><em>map · confirm · prepare</em></div>
-        </div>
+      <div class="flow-zones" aria-hidden="true">
+        <div></div>
+        <div><span class="bl">Your machine · local</span><span>Raw MCAP stays here</span></div>
+        <div><span class="bl">Hosted · private beta</span><span>Beta sign-in</span></div>
       </div>
-      <div class="seam"><span class="file-chip">comparison.velune</span></div>
-      <div class="zone zone-hosted">
-        <span class="zone-label">Hosted</span>
-        <p class="zone-note">Beta sign-in required.</p>
-        <div class="steps">
-          <div class="step"><div class="box">VeluneOS Compare</div><em>not stored</em></div>
-          <span class="chev" aria-hidden="true">→</span>
-          <div class="step"><div class="box dark">Evidence report</div><em>HTML · MD · JSON</em></div>
+      <div class="lane-row">
+        <span class="lane-name">Compare</span>
+        <div class="lane-local">
+          <span class="node runs"><span class="r">reference.mcap</span><span class="t">target.mcap</span></span><span class="to" aria-hidden="true">→</span>
+          <span class="node">Velune Adapter<small>map · confirm · prepare</small></span><span class="to" aria-hidden="true">→</span>
+          <span class="node file">comparison.velune</span>
+        </div>
+        <div class="lane-hosted">
+          <span class="node">VeluneOS Compare</span><span class="to" aria-hidden="true">→</span>
+          <span class="node out">Evidence report</span>
         </div>
       </div>
     </div>
-    <p class="flow-aside">Velune Trace is a separate tool for one log. It is not a step in this workflow.</p>
+    <div class="flow-foot"><span><b>Only comparison.velune is uploaded.</b> Velune Trace is a separate tool for one log; it is not a step in this workflow.</span><a class="link" href="docs/adapter.html">Step-by-step guide <span class="arrow" aria-hidden="true">→</span></a></div>
   </div>
 </section>
 
@@ -168,11 +180,12 @@
   </div>
 </section>
 <script src="assets/site.js" defer></script>
+<script src="assets/evidence.js" defer></script>
 
 </main>
 <footer class="footer">
   <div class="wrap">
-    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="comparison-beta.html">Compare</a>

@@ -12,14 +12,14 @@
   <meta property="og:description" content="Upload comparison.velune to VeluneOS Compare and read the evidence report." />
   <meta property="og:url" content="https://veluneos.ai/docs/compare" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../assets/site.css" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="../index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="../index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li></ul>
     <div class="nav-right">
       <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
@@ -56,7 +56,7 @@
   <p>The upload is processed in a temporary directory that is deleted when the report is returned.</p>
 
   <h2 id="errors">If the upload is rejected</h2>
-  <div class="table-wrap"><table>
+  <div class="table-wrap" tabindex="0"><table>
     <thead><tr><th>Code</th><th>Meaning</th><th>What to do</th></tr></thead>
     <tbody>
       <tr><td><code>TRANSFER_CONTRACT_UNSUPPORTED</code></td><td>The file was prepared with an older Beta Kit.</td><td>Install Beta Kit 0.1.1b5, re-run <code>velune mapping init</code> and <code>velune prepare</code>.</td></tr>
@@ -69,7 +69,7 @@
 
   <h2 id="decision">2. The decision</h2>
   <p>Every comparison returns one stated decision:</p>
-  <div class="table-wrap"><table>
+  <div class="table-wrap" tabindex="0"><table>
     <thead><tr><th>Decision</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td><code>REVIEW_REQUIRED</code></td><td>Structural differences observed for review.</td></tr>
@@ -118,7 +118,7 @@
 </main>
 <footer class="footer">
   <div class="wrap">
-    <a class="brand" href="../index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="../comparison-beta.html">Compare</a>

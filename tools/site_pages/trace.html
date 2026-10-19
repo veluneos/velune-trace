@@ -1,13 +1,28 @@
 <section class="page-hero" aria-labelledby="page-title">
-  <div class="wrap">
-    <div class="tags"><span class="tag tag-local">Open source · MIT</span><span class="tag tag-plain">Runs locally</span></div>
-    <h1 id="page-title">Velune Trace</h1>
-    <p class="lead">Find where to look first in one large MCAP log. Trace ranks, per topic, the time windows with the most irregular message timing — gaps, jitter, count shortfalls, out-of-order timestamps — so you open the right range in your own viewer.</p>
-    <div class="cta-row">
-      <a class="btn btn-dark" href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1">Download Trace</a>
-      <a class="btn btn-line" href="https://github.com/veluneos/velune-trace">View on GitHub</a>
-      <a class="btn btn-line" href="{root}docs/trace.html">Docs</a>
+  <div class="wrap page-grid">
+    <div class="reveal">
+      <div class="tags"><span class="bl">Open source · MIT</span><span class="bl">Runs locally</span></div>
+      <h1 id="page-title">Velune Trace</h1>
+      <p class="lead">Find where to <mark class="window">look first</mark> in one large MCAP log. Trace ranks, per topic, the time windows with the most irregular message timing — gaps, jitter, count shortfalls, out-of-order timestamps — so you open the right range in your own viewer.</p>
+      <div class="cta-row">
+        <a class="btn btn-dark" href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1">Download Trace</a>
+        <a class="btn btn-line" href="https://github.com/veluneos/velune-trace">View on GitHub</a>
+        <a class="btn btn-line" href="{root}docs/trace.html">Docs</a>
+      </div>
     </div>
+    <figure class="excerpt frame" aria-labelledby="trace-cap">
+      <div class="excerpt-head"><span class="eyebrow">Ranked windows · /lidar_top</span><span class="bl">Bundled sample log</span></div>
+      <div class="mini-track" style="margin-top:18px" aria-hidden="true"><span class="win" style="left:40%;width:20%"></span><span class="line"></span><span class="tick" style="left:20%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:60%"></span><span class="tick" style="left:80%"></span></div>
+      <div class="mini-cap" style="display:grid;grid-template-columns:repeat(5,1fr);text-align:center" aria-hidden="true"><span>window 0</span><span>1</span><span>2</span><span>3</span><span>4</span></div>
+      <div class="detail">
+        <dl>
+          <dt>Rank</dt><dd class="what">#1 — window 2</dd>
+          <dt>Window</dt><dd><span class="tc">1 s · count 19 of 20 expected</span></dd>
+          <dt>Evidence</dt><dd><span class="mono">max gap 0.100 s · jitter 0.011 s</span></dd>
+        </dl>
+      </div>
+      <figcaption class="excerpt-foot" id="trace-cap"><span>From velune_report/summary.md of the bundled sample. A ranking is a review order, not a fault probability.</span></figcaption>
+    </figure>
   </div>
 </section>
 
@@ -20,7 +35,7 @@
 ### /lidar_top
 - Count: 99 · Expected count/window: 20
 Top evidence windows:
-- Window 2: count=19, expected=20, max_gap=0.100000000, jitter=0.011453071
+<span class="h">- Window 2: count=19, expected=20, max_gap=0.100000000, jitter=0.011453071</span>
 - Window 0: count=20, expected=20, max_gap=0.050000000, jitter=0.000000000
 <span class="d">LOCAL_ONLY_NOTICE=No telemetry or automatic upload was performed.</span></div>
     <p class="note">Output of the bundled sample log, run from the repository. Values exact; lines shortened. A ranking is a review order, not a fault probability.</p>
@@ -50,3 +65,5 @@ Top evidence windows:
     <p class="note">Trace works inside one log. To see what changed between two separate runs, use <a class="text-link" href="{root}comparison-beta.html">VeluneOS Compare</a> — Trace is not required for it.</p>
   </div>
 </section>
+
+<script src="{root}assets/evidence.js" defer></script>

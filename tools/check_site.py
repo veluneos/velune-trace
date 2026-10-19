@@ -139,6 +139,10 @@ def main(argv: list[str]) -> int:
         elif not (SITE / "assets" / url).exists():
             problems.append(f"site.css: missing {url}")
 
+    # Evidence Yellow is a highlight device: never a text colour (1.6:1 on white).
+    for m in re.finditer(r"(?<![-\w])color:\s*(var\(--window\)|#f5c518)", css, re.I):
+        problems.append(f"site.css: Evidence Yellow used as text colour near: {css[max(0, m.start() - 60):m.end()]!r}")
+
     kit = SITE / "downloads/velune-adapter-beta-kit.zip"
     want = (SITE / "downloads/velune-adapter-beta-kit.zip.sha256").read_text().split()[0]
     got = sha256(kit.read_bytes()).hexdigest()

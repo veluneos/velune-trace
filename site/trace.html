@@ -12,14 +12,14 @@
   <meta property="og:description" content="Open-source, local tool that ranks the time windows with the most irregular message timing in one MCAP log." />
   <meta property="og:url" content="https://veluneos.ai/trace" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23ffffff'/%3E%3Crect x='6.5' y='5' width='4.5' height='14' rx='1.5' fill='%233f74c7'/%3E%3Crect x='13' y='5' width='4.5' height='14' rx='1.5' fill='%23c7871a'/%3E%3C/svg%3E" />
+  <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="assets/site.css" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="VeluneOS home"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <ul class="nav-links"><li><a href="comparison-beta.html">Compare</a></li><li><a href="trace.html" aria-current="page">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li></ul>
     <div class="nav-right">
       <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
@@ -40,28 +40,43 @@
 </header>
 <main id="main">
 <section class="page-hero" aria-labelledby="page-title">
-  <div class="wrap">
-    <div class="tags"><span class="tag tag-local">Open source · MIT</span><span class="tag tag-plain">Runs locally</span></div>
-    <h1 id="page-title">Velune Trace</h1>
-    <p class="lead">Find where to look first in one large MCAP log. Trace ranks, per topic, the time windows with the most irregular message timing — gaps, jitter, count shortfalls, out-of-order timestamps — so you open the right range in your own viewer.</p>
-    <div class="cta-row">
-      <a class="btn btn-dark" href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1">Download Trace</a>
-      <a class="btn btn-line" href="https://github.com/veluneos/velune-trace">View on GitHub</a>
-      <a class="btn btn-line" href="docs/trace.html">Docs</a>
+  <div class="wrap page-grid">
+    <div class="reveal">
+      <div class="tags"><span class="bl">Open source · MIT</span><span class="bl">Runs locally</span></div>
+      <h1 id="page-title">Velune Trace</h1>
+      <p class="lead">Find where to <mark class="window">look first</mark> in one large MCAP log. Trace ranks, per topic, the time windows with the most irregular message timing — gaps, jitter, count shortfalls, out-of-order timestamps — so you open the right range in your own viewer.</p>
+      <div class="cta-row">
+        <a class="btn btn-dark" href="https://github.com/veluneos/velune-trace/releases/tag/v0.5.1">Download Trace</a>
+        <a class="btn btn-line" href="https://github.com/veluneos/velune-trace">View on GitHub</a>
+        <a class="btn btn-line" href="docs/trace.html">Docs</a>
+      </div>
     </div>
+    <figure class="excerpt frame" aria-labelledby="trace-cap">
+      <div class="excerpt-head"><span class="eyebrow">Ranked windows · /lidar_top</span><span class="bl">Bundled sample log</span></div>
+      <div class="mini-track" style="margin-top:18px" aria-hidden="true"><span class="win" style="left:40%;width:20%"></span><span class="line"></span><span class="tick" style="left:20%"></span><span class="tick" style="left:40%"></span><span class="tick" style="left:60%"></span><span class="tick" style="left:80%"></span></div>
+      <div class="mini-cap" style="display:grid;grid-template-columns:repeat(5,1fr);text-align:center" aria-hidden="true"><span>window 0</span><span>1</span><span>2</span><span>3</span><span>4</span></div>
+      <div class="detail">
+        <dl>
+          <dt>Rank</dt><dd class="what">#1 — window 2</dd>
+          <dt>Window</dt><dd><span class="tc">1 s · count 19 of 20 expected</span></dd>
+          <dt>Evidence</dt><dd><span class="mono">max gap 0.100 s · jitter 0.011 s</span></dd>
+        </dl>
+      </div>
+      <figcaption class="excerpt-foot" id="trace-cap"><span>From velune_report/summary.md of the bundled sample. A ranking is a review order, not a fault probability.</span></figcaption>
+    </figure>
   </div>
 </section>
 
 <section aria-labelledby="out-title">
   <div class="wrap">
     <div class="sec-head"><p class="eyebrow">Real output</p><h2 id="out-title">One command. Ranked windows.</h2></div>
-<div class="term"><span class="p">$</span> ./bin/velune validation-report examples/sample.mcap \
+<div class="term" tabindex="0"><span class="p">$</span> ./bin/velune validation-report examples/sample.mcap \
     --export-dir velune_report --window-sec 1 --top 5 --allowed-lateness-sec 2
 <span class="d"># velune_report/summary.md (excerpt)</span>
 ### /lidar_top
 - Count: 99 · Expected count/window: 20
 Top evidence windows:
-- Window 2: count=19, expected=20, max_gap=0.100000000, jitter=0.011453071
+<span class="h">- Window 2: count=19, expected=20, max_gap=0.100000000, jitter=0.011453071</span>
 - Window 0: count=20, expected=20, max_gap=0.050000000, jitter=0.000000000
 <span class="d">LOCAL_ONLY_NOTICE=No telemetry or automatic upload was performed.</span></div>
     <p class="note">Output of the bundled sample log, run from the repository. Values exact; lines shortened. A ranking is a review order, not a fault probability.</p>
@@ -92,10 +107,12 @@ Top evidence windows:
   </div>
 </section>
 
+<script src="assets/evidence.js" defer></script>
+
 </main>
 <footer class="footer">
   <div class="wrap">
-    <a class="brand" href="index.html"><span class="mark" aria-hidden="true"><i></i><i></i></span>VeluneOS</a>
+    <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="comparison-beta.html">Compare</a>
