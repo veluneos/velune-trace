@@ -20,10 +20,10 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
-    <ul class="nav-links"><li><a href="comparison-beta.html" aria-current="page">Compare</a></li><li><a href="trace.html">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li></ul>
+    <ul class="nav-links"><li><a href="comparison-beta.html" aria-current="page">Compare</a></li><li><a href="trace.html">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li><li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li></ul>
     <div class="nav-right">
-      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
-      <a class="btn btn-dark btn-sm" href="comparison-beta.html#request">Request access</a>
+      <a class="req" href="comparison-beta.html#request">Request access</a>
+      <a class="btn btn-dark btn-sm open" href="https://compare.veluneos.ai/compare">Open Compare <span aria-hidden="true">↗</span></a>
       <details class="menu">
         <summary>Menu</summary>
         <nav class="menu-panel" aria-label="Menu">
@@ -31,7 +31,8 @@
           <a href="trace.html">Trace</a>
           <a href="docs/index.html">Docs</a>
           <a href="sample-comparison.html">Sample report</a>
-          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+          <a href="downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
           <a href="comparison-beta.html#request">Request access</a>
         </nav>
       </details>
@@ -41,14 +42,18 @@
 <main id="main">
 <section class="page-hero" aria-labelledby="page-title">
   <div class="wrap page-grid">
-    <div class="reveal">
+    <div>
       <div class="tags"><span class="bl">Hosted · private beta</span><span class="bl">Preparation runs locally</span></div>
       <h1 id="page-title">VeluneOS Compare</h1>
-      <p class="lead">Compare a Reference run and a Target run of your robot — before and after a software, configuration or hardware change. Get a stated decision and the structural differences to review, each with its <mark class="window">time window</mark>.</p>
+      <p class="lead">Compare a Reference run and a Target run of your robot. Get a stated decision and the structural differences to review, each with its <mark class="window">time window</mark>.</p>
       <div class="cta-row">
-        <a class="btn btn-dark" href="#request">Request Beta access</a>
-        <a class="btn btn-line" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+        <a class="btn btn-dark" href="https://compare.veluneos.ai/compare">Open Compare <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-line" href="downloads/velune-adapter-beta-kit.zip">Get Adapter Kit</a>
       </div>
+      <dl class="access">
+        <dt>Beta users</dt><dd>Open Compare → sign in with your Beta credentials → upload <code>comparison.velune</code></dd>
+        <dt>New to Compare</dt><dd><a class="text-link" href="#request">Request access</a> → approval and written data-use terms → credentials</dd>
+      </dl>
     </div>
     <figure class="excerpt frame" aria-labelledby="cmp-cap">
       <div class="excerpt-head"><span class="eyebrow">Report excerpt · finding 3 of 4</span><span class="bl">Published sample</span></div>
@@ -60,73 +65,33 @@
           <dt>Evidence</dt><dd><span class="mono">median interval 100.0 → 200.0 ms · returned to the Reference pattern at T+20s · Comparable</span></dd>
         </dl>
       </div>
-      <figcaption class="excerpt-foot" id="cmp-cap"><span>Reconstructed from the published sample report — not a screenshot of the Compare app.</span><a href="sample-comparison.html">Full sample report →</a></figcaption>
+      <figcaption class="excerpt-foot" id="cmp-cap"><span>Reconstructed from the published sample report, not a screenshot of the app.</span><a href="sample-comparison.html">Full report →</a></figcaption>
     </figure>
   </div>
 </section>
 
-<section aria-labelledby="what-title">
-  <div class="wrap">
-    <div class="sec-head"><p class="eyebrow">What it reports</p><h2 id="what-title">Structure, not payloads.</h2></div>
-    <ul class="list-plain">
-      <li><b>A stated decision</b><span>REVIEW_REQUIRED, NO_MATERIAL_STRUCTURAL_CHANGE, INCONCLUSIVE_DIFFERENCE or INSUFFICIENT_COVERAGE — never a blank.</span></li>
-      <li><b>Streams in one run only</b><span>Streams present in the Reference run or the Target run, but not both.</span></li>
-      <li><b>Message interval changes</b><span>Recorded intervals longer or shorter in Target, with values from both runs and whether they returned.</span></li>
-      <li><b>Activity loss and recovery</b><span>Where a stream recorded no messages in one run, and when it came back.</span></li>
-      <li><b>Timestamp representation</b><span>A change in timestamp precision, reported on its own rather than as a slowdown.</span></li>
-      <li><b>Evidence quality and coverage</b><span>Each finding is comparable, limited or inconclusive; what could not be compared is listed.</span></li>
-    </ul>
-    <p class="note">Findings follow a fixed review order, not a severity score. Compare does not decide root cause, fault, safety, regression or release readiness — your engineers do.</p>
-    <div class="cta-row" style="justify-content:flex-start;margin-top:28px"><a class="btn btn-line" href="sample-comparison.html">See a sample report <span class="arrow" aria-hidden="true">→</span></a></div>
-  </div>
-</section>
-
-<section class="alt" id="how" aria-labelledby="how-title">
-  <div class="wrap">
-    <div class="sec-head"><p class="eyebrow">How it works</p><h2 id="how-title">Prepare locally. Upload one file.</h2></div>
-    <div class="flow">
-      <div class="flow-zones" aria-hidden="true">
-        <div></div>
-        <div><span class="bl">Your machine · local</span><span>Raw MCAP stays here</span></div>
-        <div><span class="bl">Hosted · private beta</span><span>Beta sign-in</span></div>
-      </div>
-      <div class="lane-row">
-        <span class="lane-name">Compare</span>
-        <div class="lane-local">
-          <span class="node runs"><span class="r">reference.mcap</span><span class="t">target.mcap</span></span><span class="to" aria-hidden="true">→</span>
-          <span class="node">Velune Adapter<small>map · confirm · prepare</small></span><span class="to" aria-hidden="true">→</span>
-          <span class="node file">comparison.velune</span>
-        </div>
-        <div class="lane-hosted">
-          <span class="node">VeluneOS Compare</span><span class="to" aria-hidden="true">→</span>
-          <span class="node out">Evidence report</span>
-        </div>
-      </div>
+<section aria-labelledby="use-title" style="padding-bottom:72px">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow">Use it</p>
+      <h2 id="use-title" style="font-size:28px">Prepare locally. Upload one file.</h2>
+      <ol class="steps" style="margin-top:20px">
+        <li><span>Install the <a class="text-link" href="downloads/velune-adapter-beta-kit.zip">Adapter Kit</a> on the machine with your recordings (Python 3.12 or 3.13).</span></li>
+        <li><span><code>velune mapping init</code> on the Reference and Target MCAP; label streams and confirm any pairing the Adapter asks about.</span></li>
+        <li><span><code>velune prepare</code> writes <code>comparison.velune</code> and a preview of everything inside it.</span></li>
+        <li><span>Open Compare, sign in, upload <code>comparison.velune</code>, download the report.</span></li>
+      </ol>
+      <p class="fine">Raw MCAP is not uploaded; Compare accepts only <code>comparison.velune</code>. Velune Trace is not required. <a class="text-link" href="docs/adapter.html">Step-by-step guide</a></p>
     </div>
-    <div class="flow-foot"><span><b>Only comparison.velune is uploaded.</b> Velune Trace is a separate tool for one log; it is not a step in this workflow.</span><a class="link" href="docs/adapter.html">Step-by-step guide <span class="arrow" aria-hidden="true">→</span></a></div>
-  </div>
-</section>
-
-<section aria-labelledby="kit-title">
-  <div class="wrap">
-    <div class="sec-head"><p class="eyebrow">Velune Adapter</p><h2 id="kit-title">Get the Adapter Kit.</h2><p>The Beta Kit installs Velune Adapter and the <code>velune</code> command. Python 3.12 or 3.13. It runs on your machine and never uploads anything itself.</p></div>
-    <div class="two">
-      <div class="panel">
-        <h3>Download</h3>
-        <ul>
-          <li><a class="text-link" href="downloads/velune-adapter-beta-kit.zip">velune-adapter-beta-kit.zip</a> (Beta Kit 0.1.1b5)</li>
-          <li><a class="text-link" href="downloads/velune-adapter-beta-kit.zip.sha256">SHA-256 checksum</a></li>
-          <li>Includes <code>BETA_QUICKSTART.md</code> and <code>SHA256SUMS</code> for both packages</li>
-        </ul>
-      </div>
-      <div class="panel">
-        <h3>Use it</h3>
-        <ul>
-          <li><a class="text-link" href="docs/adapter.html">Prepare two runs</a> — install, map, confirm, prepare</li>
-          <li><a class="text-link" href="docs/compare.html">Upload and read the report</a></li>
-          <li><a class="text-link" href="docs/data-boundaries.html">What is in the uploaded file</a></li>
-        </ul>
-      </div>
+    <div>
+      <p class="eyebrow">What the report contains</p>
+      <ul class="list-plain" style="margin-top:20px">
+        <li><b>Decision</b><span>REVIEW_REQUIRED, NO_MATERIAL_STRUCTURAL_CHANGE, INCONCLUSIVE_DIFFERENCE or INSUFFICIENT_COVERAGE</span></li>
+        <li><b>Findings</b><span>Streams in one run only, interval changes, activity loss and recovery, timestamp representation changes</span></li>
+        <li><b>For each finding</b><span>Its window, values from both runs and evidence quality</span></li>
+        <li><b>Output</b><span>HTML, Markdown and JSON, downloaded in the browser</span></li>
+      </ul>
+      <p class="fine">A review order, not a severity score. Compare does not decide root cause, fault, safety, regression or release readiness. <a class="text-link" href="docs/compare.html">Reading the report</a></p>
     </div>
   </div>
 </section>
@@ -142,8 +107,8 @@
         <li><span>02</span>Data-use terms are confirmed in writing before your first upload.</li>
         <li><span>03</span>You receive Compare credentials and prepare your runs with the Adapter Kit.</li>
       </ol>
-      <p class="note">Access options: <b>Contribution</b> (no fee — approved derived data may be used to develop and improve VeluneOS products and services) or <b>Private</b> (quoted per team — your data is used only to provide the service you requested). Choosing an option here is not consent.</p>
-      <p class="note">Already in the Beta? <a class="text-link" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>.</p>
+      <p class="fine">Access options: <b>Contribution</b> (no fee — approved derived data may be used to develop and improve VeluneOS products and services) or <b>Private</b> (quoted per team — your data is used only to provide the service you requested). Choosing an option here is not consent.</p>
+      <p class="fine">Already in the Beta? <a class="text-link" href="https://compare.veluneos.ai/compare">Sign in to Compare</a>.</p>
     </div>
     <form class="form" id="review-form" novalidate
       data-mail-user="contact" data-mail-domain="veluneos.ai"
@@ -180,7 +145,6 @@
   </div>
 </section>
 <script src="assets/site.js" defer></script>
-<script src="assets/evidence.js" defer></script>
 
 </main>
 <footer class="footer">

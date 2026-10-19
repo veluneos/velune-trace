@@ -20,10 +20,10 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="../index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
-    <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li></ul>
+    <ul class="nav-links"><li><a href="../comparison-beta.html">Compare</a></li><li><a href="../trace.html">Trace</a></li><li><a href="../docs/index.html" aria-current="page">Docs</a></li><li><a href="../sample-comparison.html">Sample report</a></li><li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li></ul>
     <div class="nav-right">
-      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
-      <a class="btn btn-dark btn-sm" href="../comparison-beta.html#request">Request access</a>
+      <a class="req" href="../comparison-beta.html#request">Request access</a>
+      <a class="btn btn-dark btn-sm open" href="https://compare.veluneos.ai/compare">Open Compare <span aria-hidden="true">↗</span></a>
       <details class="menu">
         <summary>Menu</summary>
         <nav class="menu-panel" aria-label="Menu">
@@ -31,7 +31,8 @@
           <a href="../trace.html">Trace</a>
           <a href="../docs/index.html">Docs</a>
           <a href="../sample-comparison.html">Sample report</a>
-          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+          <a href="../downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
           <a href="../comparison-beta.html#request">Request access</a>
         </nav>
       </details>
@@ -40,7 +41,7 @@
 </header>
 <main id="main">
 <div class="wrap docs">
-<nav class="docs-nav" aria-label="Docs"><p>Start</p><a href="index.html">Getting started</a><p>Velune Trace</p><a href="trace.html">Install and run Trace</a><p>Compare workflow</p><a href="adapter.html">Prepare two runs</a><a href="compare.html" aria-current="page">Upload and read the report</a><p>Reference</p><a href="data-boundaries.html">Data boundaries</a><a href="reference.html">Formats, limits, troubleshooting</a></nav>
+<details class="docs-toc"><summary><span class="eyebrow">Docs</span> Upload and read the report</summary><nav aria-label="Docs (menu)"><p>Start</p><a href="index.html">Getting started</a><p>Velune Trace</p><a href="trace.html">Install and run Trace</a><p>Compare workflow</p><a href="adapter.html">Prepare two runs</a><a href="compare.html" aria-current="page">Upload and read the report</a><p>Reference</p><a href="data-boundaries.html">Data boundaries</a><a href="reference.html">Formats, limits, troubleshooting</a></nav></details><nav class="docs-nav" aria-label="Docs"><p>Start</p><a href="index.html">Getting started</a><p>Velune Trace</p><a href="trace.html">Install and run Trace</a><p>Compare workflow</p><a href="adapter.html">Prepare two runs</a><a href="compare.html" aria-current="page">Upload and read the report</a><p>Reference</p><a href="data-boundaries.html">Data boundaries</a><a href="reference.html">Formats, limits, troubleshooting</a></nav>
 <article class="doc">
   <p class="crumbs">Docs / Compare workflow</p>
   <h1>Upload and read the report</h1>
@@ -56,7 +57,7 @@
   <p>The upload is processed in a temporary directory that is deleted when the report is returned.</p>
 
   <h2 id="errors">If the upload is rejected</h2>
-  <div class="table-wrap" tabindex="0"><table>
+  <div class="tablebox" tabindex="0"><table>
     <thead><tr><th>Code</th><th>Meaning</th><th>What to do</th></tr></thead>
     <tbody>
       <tr><td><code>TRANSFER_CONTRACT_UNSUPPORTED</code></td><td>The file was prepared with an older Beta Kit.</td><td>Install Beta Kit 0.1.1b5, re-run <code>velune mapping init</code> and <code>velune prepare</code>.</td></tr>
@@ -69,7 +70,7 @@
 
   <h2 id="decision">2. The decision</h2>
   <p>Every comparison returns one stated decision:</p>
-  <div class="table-wrap" tabindex="0"><table>
+  <div class="tablebox" tabindex="0"><table>
     <thead><tr><th>Decision</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td><code>REVIEW_REQUIRED</code></td><td>Structural differences observed for review.</td></tr>

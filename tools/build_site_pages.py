@@ -83,15 +83,15 @@ def nav(root: str, current: str) -> str:
         item("trace", "trace.html", "Trace"),
         item("docs", "docs/index.html", "Docs"),
         item("sample", "sample-comparison.html", "Sample report"),
-    ])
+    ]) + '<li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li>'
     return f"""<a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="{root}index.html" aria-label="VeluneOS home">{BRAND}</a>
     <ul class="nav-links">{links}</ul>
     <div class="nav-right">
-      <a class="signin" href="{COMPARE_URL}">Sign in</a>
-      <a class="btn btn-dark btn-sm" href="{root}comparison-beta.html#request">Request access</a>
+      <a class="req" href="{root}comparison-beta.html#request">Request access</a>
+      <a class="btn btn-dark btn-sm open" href="{COMPARE_URL}">Open Compare <span aria-hidden="true">↗</span></a>
       <details class="menu">
         <summary>Menu</summary>
         <nav class="menu-panel" aria-label="Menu">
@@ -99,7 +99,8 @@ def nav(root: str, current: str) -> str:
           <a href="{root}trace.html">Trace</a>
           <a href="{root}docs/index.html">Docs</a>
           <a href="{root}sample-comparison.html">Sample report</a>
-          <a href="{COMPARE_URL}">Sign in to Compare</a>
+          <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+          <a href="{root}downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
           <a href="{root}comparison-beta.html#request">Request access</a>
         </nav>
       </details>
@@ -126,26 +127,89 @@ def footer(root: str) -> str:
 
 
 def docs_nav(current_file: str) -> str:
-    parts = ['<nav class="docs-nav" aria-label="Docs">']
+    links = []
+    current_label = "Docs"
     for group, items in DOCS_NAV:
-        parts.append(f"<p>{group}</p>")
+        links.append(f"<p>{group}</p>")
         for href, label in items:
             cur = ' aria-current="page"' if href == current_file else ""
-            parts.append(f'<a href="{href}"{cur}>{label}</a>')
-    parts.append("</nav>")
-    return "".join(parts)
+            if cur:
+                current_label = label
+            links.append(f'<a href="{href}"{cur}>{label}</a>')
+    inner = "".join(links)
+    return (f'<details class="docs-toc"><summary><span class="eyebrow">Docs</span> {current_label}</summary>'
+            f'<nav aria-label="Docs (menu)">{inner}</nav></details>'
+            f'<nav class="docs-nav" aria-label="Docs">{inner}</nav>')
+
+
+def sample_report() -> tuple[str, str]:
+    """The service's sample report, embedded without an iframe.
+
+    Returns (body_html, scoped_css). The report text and markup are copied from
+    site/samples/compare-sample-report.html (unedited service output); only the
+    heading levels are shifted down by one so the page keeps a single <h1>,
+    its <main> becomes <div class="svc-main"> (one main landmark per page),
+    scrollable tables get tabindex=0 for keyboard access, and
+    the report's stylesheet is scoped to .svc-report (light theme only).
+    """
+    import re
+
+    raw = (SITE / "samples" / "compare-sample-report.html").read_text(encoding="utf-8")
+    body = re.search(r"<body[^>]*>(.*)</body>", raw, re.S).group(1).strip()
+    # one <main> per page: the report's own <main> becomes a div
+    body = re.sub(r"<main(\b[^>]*)>", r'<div class="svc-main"\1>', body).replace("</main>", "</div>")
+    # scrollable tables must be keyboard reachable on this page
+    body = body.replace('<div class="table-wrap">', '<div class="table-wrap" tabindex="0">')
+    for n in (5, 4, 3, 2, 1):
+        body = re.sub(rf"<(/?)h{n}(\b[^>]*)>", rf"<\1h{n + 1}\2>", body)
+    css = re.search(r"<style>(.*?)</style>", raw, re.S).group(1)
+    css = re.sub(r':root\[data-theme="dark"\]\s*\{[^{}]*\}', "", css)
+
+    def scope_rules(block: str) -> list[str]:
+        rules = []
+        for sel, decl in re.findall(r"([^{}]+)\{([^{}]*)\}", block):
+            scoped = []
+            for part in sel.split(","):
+                part = part.strip()
+                if not part:
+                    continue
+                if part in (":root", "body", ':root:not([data-theme="light"])'):
+                    scoped.append(".svc-report")
+                else:
+                    part = re.sub(r"\bh([1-5])\b", lambda m: f"h{int(m.group(1)) + 1}", part)
+                    part = re.sub(r"^main\b", ".svc-main", part)
+                    scoped.append(f".svc-report {part}")
+            if scoped:
+                rules.append(f"{', '.join(scoped)} {{{decl.strip()}}}")
+        return rules
+
+    out = []
+    pos = 0
+    for m in re.finditer(r"@media([^{]+)\{((?:[^{}]*\{[^{}]*\})*)\s*\}", css):
+        out += scope_rules(css[pos:m.start()])
+        query = m.group(1).strip()
+        if "prefers-color-scheme" not in query:  # the site is light-only
+            out.append(f"@media {query} {{\n  " + "\n  ".join(scope_rules(m.group(2))) + "\n}")
+        pos = m.end()
+    out += scope_rules(css[pos:])
+    header = "/* Scoped copy of the stylesheet in samples/compare-sample-report.html (generated by tools/build_site_pages.py). */\n"
+    return body, header + "\n".join(out) + "\n"
 
 
 def page(out: str, body_name: str, title: str, desc: str, canonical: str, current: str) -> str:
     root = "../" if "/" in out else ""
-    body = (BODIES / f"{body_name}.html").read_text(encoding="utf-8").replace("{root}", root)
+    raw_body = (BODIES / f"{body_name}.html").read_text(encoding="utf-8")
+    body = raw_body.replace("{root}", root)
     if out.startswith("docs/"):
         body = body.replace("{docs_nav}", docs_nav(out.split("/", 1)[1]))
+    if "{sample_report}" in body:
+        body = body.replace("{sample_report}", sample_report()[0])
     # Scrollable regions must be reachable by keyboard.
     body = (body.replace("<pre>", '<pre tabindex="0">')
                 .replace('<div class="term">', '<div class="term" tabindex="0">')
-                .replace('<div class="table-wrap">', '<div class="table-wrap" tabindex="0">'))
+                .replace('<div class="tablebox">', '<div class="tablebox" tabindex="0">'))
     url = ORIGIN + canonical
+    extra_css = f'\n  <link rel="stylesheet" href="{root}assets/sample-report.css" />' if "{sample_report}" in raw_body else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -161,7 +225,7 @@ def page(out: str, body_name: str, title: str, desc: str, canonical: str, curren
   <meta property="og:url" content="{url}" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" href="{root}assets/brand/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="{root}assets/site.css" />
+  <link rel="stylesheet" href="{root}assets/site.css" />{extra_css}
 </head>
 <body>
 {nav(root, current)}
@@ -261,6 +325,7 @@ def main() -> int:
         (SITE / stub_file).write_text(stub(target_file, new), encoding="utf-8")
         print(f"wrote site/{stub_file} (moved stub)")
     (SITE / "404.html").write_text(NOT_FOUND, encoding="utf-8")
+    (SITE / "assets" / "sample-report.css").write_text(sample_report()[1], encoding="utf-8")
     (SITE / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (SITE / "_redirects").write_text(redirects(), encoding="utf-8")
     print("wrote site/404.html, site/sitemap.xml, site/_redirects")

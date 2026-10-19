@@ -20,10 +20,10 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="VeluneOS home"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/><path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg><span>Velune<span class="os">OS</span></span></a>
-    <ul class="nav-links"><li><a href="comparison-beta.html">Compare</a></li><li><a href="trace.html" aria-current="page">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li></ul>
+    <ul class="nav-links"><li><a href="comparison-beta.html">Compare</a></li><li><a href="trace.html" aria-current="page">Trace</a></li><li><a href="docs/index.html">Docs</a></li><li><a href="sample-comparison.html">Sample report</a></li><li><a href="https://github.com/veluneos/velune-trace">GitHub</a></li></ul>
     <div class="nav-right">
-      <a class="signin" href="https://compare.veluneos.ai/compare">Sign in</a>
-      <a class="btn btn-dark btn-sm" href="comparison-beta.html#request">Request access</a>
+      <a class="req" href="comparison-beta.html#request">Request access</a>
+      <a class="btn btn-dark btn-sm open" href="https://compare.veluneos.ai/compare">Open Compare <span aria-hidden="true">↗</span></a>
       <details class="menu">
         <summary>Menu</summary>
         <nav class="menu-panel" aria-label="Menu">
@@ -31,7 +31,8 @@
           <a href="trace.html">Trace</a>
           <a href="docs/index.html">Docs</a>
           <a href="sample-comparison.html">Sample report</a>
-          <a href="https://compare.veluneos.ai/compare">Sign in to Compare</a>
+          <a href="https://github.com/veluneos/velune-trace">GitHub</a>
+          <a href="downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
           <a href="comparison-beta.html#request">Request access</a>
         </nav>
       </details>
@@ -41,7 +42,7 @@
 <main id="main">
 <section class="page-hero" aria-labelledby="page-title">
   <div class="wrap page-grid">
-    <div class="reveal">
+    <div>
       <div class="tags"><span class="bl">Open source · MIT</span><span class="bl">Runs locally</span></div>
       <h1 id="page-title">Velune Trace</h1>
       <p class="lead">Find where to <mark class="window">look first</mark> in one large MCAP log. Trace ranks, per topic, the time windows with the most irregular message timing — gaps, jitter, count shortfalls, out-of-order timestamps — so you open the right range in your own viewer.</p>
@@ -79,7 +80,7 @@ Top evidence windows:
 <span class="h">- Window 2: count=19, expected=20, max_gap=0.100000000, jitter=0.011453071</span>
 - Window 0: count=20, expected=20, max_gap=0.050000000, jitter=0.000000000
 <span class="d">LOCAL_ONLY_NOTICE=No telemetry or automatic upload was performed.</span></div>
-    <p class="note">Output of the bundled sample log, run from the repository. Values exact; lines shortened. A ranking is a review order, not a fault probability.</p>
+    <p class="fine">Output of the bundled sample log, run from the repository. Values exact; lines shortened. A ranking is a review order, not a fault probability.</p>
   </div>
 </section>
 
@@ -103,11 +104,10 @@ Top evidence windows:
       <div class="panel"><h3>Trace does</h3><ul><li>Read MCAP files entirely on your machine</li><li>Profile per-topic message timing</li><li>Rank windows by gaps, jitter, count shortfall and ordering</li><li>Write Markdown and JSON with integrity hashes</li></ul></div>
       <div class="panel"><h3>Trace does not</h3><ul><li>Replace your viewer or recording tools</li><li>Decide root cause, fault or safety</li><li>Tell you whether a window is normal</li><li>Send telemetry or upload your logs</li></ul></div>
     </div>
-    <p class="note">Trace works inside one log. To see what changed between two separate runs, use <a class="text-link" href="comparison-beta.html">VeluneOS Compare</a> — Trace is not required for it.</p>
+    <p class="fine">Trace works inside one log. To see what changed between two separate runs, use <a class="text-link" href="comparison-beta.html">VeluneOS Compare</a> — Trace is not required for it.</p>
   </div>
 </section>
 
-<script src="assets/evidence.js" defer></script>
 
 </main>
 <footer class="footer">
