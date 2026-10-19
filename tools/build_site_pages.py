@@ -19,12 +19,13 @@ BODIES = Path(__file__).resolve().parent / "site_pages"
 ORIGIN = "https://veluneos.ai"
 COMPARE_URL = "https://compare.veluneos.ai/compare"
 
-MARK = (
-    '<svg class="mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
-    '<rect class="w" x="38" y="27" width="24" height="46" rx="1.5"/>'
-    '<path class="k" d="M16 14h18v12h-6v48h6v12H16zM84 14H66v12h6v48h-6v12h18z"/></svg>'
-)
-BRAND = MARK + '<span>Velune<span class="os">OS</span></span>'
+# Official horizontal lockup (Final Magenta V + outlined VeluneOS wordmark), 20px high.
+LOCKUP = "assets/brand/veluneos-lockup-horizontal.svg"
+FAVICON = "assets/brand/veluneos-favicon.svg"
+
+
+def brand(root: str) -> str:
+    return f'<img class="lockup" src="{root}{LOCKUP}" alt="VeluneOS" width="130" height="20" />'
 
 # (output path in site/, body file, title, description, canonical path, nav key)
 PAGES = [
@@ -87,7 +88,7 @@ def nav(root: str, current: str) -> str:
     return f"""<a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="{root}index.html" aria-label="VeluneOS home">{BRAND}</a>
+    <a class="brand" href="{root}index.html" aria-label="VeluneOS home">{brand(root)}</a>
     <ul class="nav-links">{links}</ul>
     <div class="nav-right">
       <a class="req" href="{root}comparison-beta.html#request">Request access</a>
@@ -112,7 +113,7 @@ def nav(root: str, current: str) -> str:
 def footer(root: str) -> str:
     return f"""<footer class="footer">
   <div class="wrap">
-    <a class="brand" href="{root}index.html">{BRAND}</a>
+    <a class="brand" href="{root}index.html">{brand(root)}</a>
     <span>Find the events. Engineers find the cause.</span>
     <nav aria-label="Footer">
       <a href="{root}comparison-beta.html">Compare</a>
@@ -224,7 +225,7 @@ def page(out: str, body_name: str, title: str, desc: str, canonical: str, curren
   <meta property="og:description" content="{escape(desc)}" />
   <meta property="og:url" content="{url}" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="{root}assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="{root}{FAVICON}" type="image/svg+xml" />
   <link rel="stylesheet" href="{root}assets/site.css" />{extra_css}
 </head>
 <body>
@@ -277,7 +278,7 @@ NOT_FOUND = """<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Page not found — VeluneOS</title>
   <meta name="robots" content="noindex" />
-  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/brand/veluneos-favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
