@@ -31,10 +31,11 @@ full evidence mapping): a three-level progressive-disclosure page --
     difference_type, schema/bundle/Adapter provenance -- present for an
     engineer who wants it, never required to get the headline value.
 
-The existing page's color tokens and base typography are preserved from
-the current site/sample-comparison.html; new component styles are
-appended to the same <style> block using the same variables, not a new
-design system.
+The base color tokens and typography (BASE_STYLE) are the ones the sample
+page carried inline before the site moved to external stylesheets; they
+are kept here verbatim so this renderer no longer reads
+site/sample-comparison.html. Component styles (EXTRA_STYLE) use the same
+variables, not a new design system.
 """
 
 from __future__ import annotations
@@ -46,8 +47,6 @@ from pathlib import Path
 
 from stream_display import resolve_stream_display_name
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-EXISTING_PAGE = REPO_ROOT / "site" / "sample-comparison.html"
 
 CLASS_LABELS = {
     "reference_nonempty_target_empty": "Reference active, Target empty",
@@ -66,6 +65,275 @@ FULL_MISMATCH_TYPES = (
     "reference_nonempty_target_empty",
     "reference_empty_target_nonempty",
 )
+
+# Verbatim first <style> block of site/sample-comparison.html at ff51cf7,
+# the last commit whose page carried inline styles.
+BASE_STYLE = """<style>
+.sample-banner {
+  max-width: 760px;
+  margin: 0 auto 1.5rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #33445c;
+  border-radius: 10px;
+  background: rgba(66, 149, 255, 0.1);
+  color: #cbd8e8;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+.sample-banner strong { color: #68a9ff; letter-spacing: 0.06em; }
+.sample-banner a { color: #f4f7fb; text-decoration: underline; }
+.sample-return {
+  max-width: 760px;
+  margin: 2rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #202a38;
+  text-align: center;
+}
+.sample-return a {
+  display: inline-block;
+  padding: 12px 18px;
+  border: 1px solid #4295ff;
+  border-radius: 9px;
+  background: #4295ff;
+  color: #06101d;
+  font-weight: 700;
+  text-decoration: none;
+}
+:root {
+  --bg: #080b10;
+  --bg-secondary: #152133;
+  --card-bg: rgba(18, 25, 35, 0.82);
+  --fg: #f4f7fb;
+  --muted: #b8c2cf;
+  --muted-2: #8491a1;
+  --accent: #68a9ff;
+  --border: #33445c;
+  --border-2: #273447;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 2rem 1.5rem 4rem;
+  background: radial-gradient(circle at top, var(--bg-secondary) 0, var(--bg) 42%);
+  color: var(--fg);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+main { max-width: 760px; margin: 0 auto; }
+header h1 {
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  font-weight: 750;
+  color: var(--accent);
+  margin: 0 0 0.4rem;
+}
+header p.scope {
+  color: var(--fg);
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+header p.scope-meta {
+  color: var(--muted-2);
+  margin: 0 0 1.75rem;
+  font-size: 0.8rem;
+}
+section.summary {
+  margin-bottom: 2rem;
+}
+.summary-line {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.summary-line-secondary {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+.chip-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.chip {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+section.status {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--card-bg);
+}
+section.status h2 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+section.status p { margin: 0; color: var(--muted); }
+section.findings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+article.card {
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  background: var(--card-bg);
+  padding: 1.5rem;
+}
+.card-eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+.card-metric {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin: 0 0 0.9rem;
+}
+.value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.value-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.value-role {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.value-number {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.value-arrow { font-size: 1.3rem; color: var(--muted); }
+.value-delta {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.inspect-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border-2);
+  flex-wrap: wrap;
+}
+.inspect-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.inspect-target {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+.interval-block { margin-top: 1.1rem; }
+.interval-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+  margin: 0 0 0.5rem;
+}
+.window-block { margin-top: 0.75rem; }
+.window-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 0.15rem;
+}
+.window-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.window-value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+}
+.copy-button {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+}
+.copy-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.copy-fallback {
+  font-size: 0.68rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+details {
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--card-bg);
+}
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+details summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+details ul, details p { color: var(--muted); }
+details ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+details p:first-child { margin-top: 0.5rem; }
+footer {
+  max-width: 760px;
+  margin: 3rem auto 0;
+  color: var(--muted-2);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border-2);
+  padding-top: 1rem;
+}
+@media (max-width: 480px) {
+  body { padding: 1.5rem 1rem 3rem; }
+  .value-row { gap: 0.75rem; }
+  .value-number { font-size: 1.5rem; }
+}
+</style>"""
 
 EXTRA_STYLE = """
 <style>
@@ -212,12 +480,6 @@ def esc(value: object) -> str:
     return html.escape(str(value))
 
 
-def extract_style_block(existing_page_text: str) -> str:
-    start = existing_page_text.index("<style>")
-    end = existing_page_text.index("</style>") + len("</style>")
-    return existing_page_text[start:end]
-
-
 def mmss(ns: int) -> str:
     total_sec = round(ns / 1_000_000_000)
     return f"{total_sec // 60:02d}:{total_sec % 60:02d}"
@@ -313,8 +575,7 @@ def build_background_list(
 
 
 def load_style_block() -> str:
-    existing = EXISTING_PAGE.read_text(encoding="utf-8")
-    return extract_style_block(existing) + EXTRA_STYLE
+    return BASE_STYLE + EXTRA_STYLE
 
 
 def build_report_body(
