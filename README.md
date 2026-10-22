@@ -49,11 +49,13 @@ includes its own Quickstart.
 
 ## Performance Model
 
-Velune separates first-pass scanning/indexing from post-index evidence retrieval.
+Velune Trace has two processing paths. They were benchmarked separately, and their numbers should not be combined.
 
-In our benchmark, Velune built an index for a 10.7GB / ~9.2M-event log in about 4 minutes 36 seconds. After indexing, a related evidence-chain query took about 0.002 seconds.
+**MCAP → local report (`validation-report`, the Quick Start path).** In a historical validation run, `validation-report` produced a complete local report bundle from a 10.11 GiB MCAP benchmark corpus in about 36.89 seconds (best-effort cold cache). The corpus is size-targeted and built from repeated nuScenes-derived payloads; it is not 10 GiB of unique driving data. Source: [`benchmarks/mcap_core_bundle_10gib_validation_record.md`](benchmarks/mcap_core_bundle_10gib_validation_record.md).
 
-The 0.002 second figure is not the first full scan time for a raw MCAP file. Initial scan/indexing time and post-index retrieval time are measured separately.
+**Structured JSONL trace events → SQLite index (`indexer/`).** Velune built an index for a 10.7 GB / ~9.2M-event corpus of structured JSONL trace events in about 4 minutes 36 seconds. After indexing, a related evidence-chain query took about 0.002 seconds. Source: [`benchmarks/benchmark_10gb_summary.md`](benchmarks/benchmark_10gb_summary.md).
+
+The 0.002 second figure is post-index retrieval only. It is not a scan time for a raw MCAP file and does not apply to `validation-report`.
 
 ## Review Depth
 
@@ -64,7 +66,7 @@ For a broader investigation view, users can set `--top 10`, `--top 15`, `--top 3
 
 ## Engine Proof: Large-Log Evidence Extraction
 
-Velune Trace has been validated on a large robotics log benchmark.
+The JSONL → SQLite indexing path has been validated on a large trace-event benchmark (structured JSONL trace events, not raw MCAP).
 
 - Input size: 10.7 GB
 - Indexed events: 9,237,885
@@ -80,13 +82,25 @@ The point is to reduce the investigation scope to the evidence windows worth rev
 
 ---
 
-## 3-Minute Quick Start
+## Quick Start
 
-### Step 1. Create the sample MCAP
+The commands below are for a bash shell and were run on Ubuntu. CI tests Python 3.12.
+
+### Step 1. Clone and install
+
+    git clone https://github.com/veluneos/velune-trace.git
+    cd velune-trace
+    python3 -m venv .venv
+    source .venv/bin/activate
+    python3 -m pip install -r requirements.txt
+
+### Step 2. Create the sample MCAP
 
     python3 tools/create_sample_mcap.py
 
-### Step 2. Run Velune on the sample
+This writes `examples/sample.mcap`.
+
+### Step 3. Run Velune on the sample
 
     ./bin/velune validation-report examples/sample.mcap \
       --export-dir velune_report \
@@ -94,7 +108,11 @@ The point is to reduce the investigation scope to the evidence windows worth rev
       --top 5 \
       --allowed-lateness-sec 2
 
-### Step 3. Run Velune on your own MCAP
+### Step 4. Read the summary
+
+    cat velune_report/summary.md
+
+### Step 5. Run Velune on your own MCAP
 
     ./bin/velune validation-report /path/to/your_log.mcap \
       --export-dir velune_report \
@@ -104,7 +122,7 @@ The point is to reduce the investigation scope to the evidence windows worth rev
 
 Replace `/path/to/your_log.mcap` with the path to your own MCAP file.
 
-### Step 4. Review the local report
+### Local report files
 
 Velune creates:
 
@@ -161,7 +179,7 @@ Engineers determine cause.
 
 ## Validated On
 
-- 10.7 GB benchmark corpus
+- 10.7 GB benchmark corpus (structured JSONL trace events, indexing path)
 - 9,237,885 indexed events
 - MCAP files generated from the public nuScenes dataset
 - Controlled dropout recovery fixture
@@ -311,7 +329,7 @@ It is designed to work before or alongside visualization tools.
 
 | Validation | Result |
 |---|---:|
-| 10.7 GB benchmark corpus | PASS |
+| 10.7 GB JSONL trace-event benchmark corpus | PASS |
 | Events indexed | 9,237,885 |
 | Initial index build | 276 sec |
 | SQLite index size | ~4.8 GB |
@@ -325,6 +343,8 @@ Important note:
 The 0.002 sec retrieval result is measured after the corpus has already been indexed.
 
 Velune does not claim raw 10GB parsing in 0.002 sec.
+
+The indexing rows above describe the JSONL → SQLite path. For the MCAP `validation-report` path, see [Performance Model](#performance-model).
 
 ---
 
@@ -499,3 +519,9 @@ It helps engineers get from a large robotics log corpus to a small, reproducible
 
 Find the events.  
 Engineers find the cause.
+
+---
+
+## License
+
+MIT. See [LICENSE](LICENSE) for the full terms.
