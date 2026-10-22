@@ -36,16 +36,17 @@ PAGES = [
     ("comparison-beta.html", "compare", "VeluneOS Compare — Compare two robot runs",
      "Prepare two MCAP recordings locally with Velune Adapter, upload one derived file, "
      "and get an evidence report of the structural differences.", "/comparison-beta", "compare"),
-    ("trace.html", "trace", "Velune Trace — Find where to look in a large robotics log",
-     "Open-source, local tool that ranks the time windows with the most irregular "
-     "message timing in one MCAP log.", "/trace", "trace"),
+    ("trace.html", "trace", "Velune Trace — Find irregular timing in ROS 2 MCAP logs",
+     "Open-source, local CLI for ROS 2 MCAP recordings. Ranks the time windows with "
+     "the most irregular message timing. Raw logs stay on your machine.", "/trace", "trace"),
     ("sample-comparison.html", "sample", "Sample report — VeluneOS Compare",
-     "Five designed differences in, one unedited VeluneOS Compare report out.",
+     "Four designed changes in, one unedited VeluneOS Compare report out.",
      "/sample-comparison", "sample"),
     ("docs/index.html", "docs-index", "Docs — VeluneOS",
      "Get started with Velune Trace, Velune Adapter and VeluneOS Compare.", "/docs/", "docs"),
-    ("docs/trace.html", "docs-trace", "Velune Trace — Docs — VeluneOS",
-     "Install and run Velune Trace on one MCAP log.", "/docs/trace", "docs"),
+    ("docs/trace.html", "docs-trace", "Install and run Velune Trace on a ROS 2 MCAP log — Docs — VeluneOS",
+     "Install Velune Trace, run it locally on one ROS 2 MCAP log and read the ranked "
+     "evidence windows of irregular message timing.", "/docs/trace", "docs"),
     ("docs/adapter.html", "docs-adapter", "Prepare two runs with Velune Adapter — Docs — VeluneOS",
      "Install the Beta Kit, discover streams, configure mapping, confirm pairings and "
      "generate comparison.velune.", "/docs/adapter", "docs"),
@@ -91,8 +92,8 @@ def nav(root: str, current: str) -> str:
     <a class="brand" href="{root}index.html" aria-label="VeluneOS home">{brand(root)}</a>
     <ul class="nav-links">{links}</ul>
     <div class="nav-right">
-      <a class="req" href="{root}comparison-beta.html#request">Request access</a>
-      <a class="btn btn-dark btn-sm open" href="{COMPARE_URL}">Open Compare <span aria-hidden="true">↗</span></a>
+      <a class="req" href="{COMPARE_URL}">Sign in <span aria-hidden="true">↗</span></a>
+      <a class="btn btn-dark btn-sm" href="{root}comparison-beta.html#request">Request <span class="nav-long">Beta </span>Access</a>
       <details class="menu">
         <summary>Menu</summary>
         <nav class="menu-panel" aria-label="Menu">
@@ -102,7 +103,8 @@ def nav(root: str, current: str) -> str:
           <a href="{root}sample-comparison.html">Sample report</a>
           <a href="https://github.com/veluneos/velune-trace">GitHub</a>
           <a href="{root}downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
-          <a href="{root}comparison-beta.html#request">Request access</a>
+          <a href="{root}comparison-beta.html#request">Request Beta Access</a>
+          <a href="{COMPARE_URL}">Sign in to Compare <span aria-hidden="true">↗</span></a>
         </nav>
       </details>
     </div>

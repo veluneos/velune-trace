@@ -417,6 +417,10 @@ button.trow[aria-pressed="true"] { background: var(--mist); box-shadow: inset 0 
 }
 
 /* ---------- mobile ---------- */
+@media (max-width: 420px) {
+  .nav-right .nav-long { display: none; }   /* header CTA reads "Request Access" so the lockup keeps its width */
+}
+
 @media (max-width: 600px) {
   :root { --gutter: 20px; }
   .nav .wrap { gap: 12px; }

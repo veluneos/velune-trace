@@ -5,11 +5,12 @@
       <h1 id="page-title">VeluneOS Compare</h1>
       <p class="lead">Compare a Reference run and a Target run of your robot. Get a stated decision and the structural differences to review, each with its <mark class="window">time window</mark>.</p>
       <div class="cta-row">
-        <a class="btn btn-dark" href="https://compare.veluneos.ai/compare">Open Compare <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-dark" href="#request">Request Beta Access</a>
+        <a class="btn btn-line" href="https://compare.veluneos.ai/compare">Sign in to Compare <span aria-hidden="true">↗</span></a>
         <a class="btn btn-line" href="{root}downloads/velune-adapter-beta-kit.zip">Get Adapter Kit</a>
       </div>
       <dl class="access">
-        <dt>Beta users</dt><dd>Open Compare → sign in with your Beta credentials → upload <code>comparison.velune</code></dd>
+        <dt>Beta users</dt><dd>Sign in to Compare with your Beta credentials → upload <code>comparison.velune</code></dd>
         <dt>New to Compare</dt><dd><a class="text-link" href="#request">Request access</a> → approval and written data-use terms → credentials</dd>
       </dl>
     </div>
@@ -37,7 +38,7 @@
         <li><span>Install the <a class="text-link" href="{root}downloads/velune-adapter-beta-kit.zip">Adapter Kit</a> on the machine with your recordings (Python 3.12 or 3.13).</span></li>
         <li><span><code>velune mapping init</code> on the Reference and Target MCAP; label streams and confirm any pairing the Adapter asks about.</span></li>
         <li><span><code>velune prepare</code> writes <code>comparison.velune</code> and a preview of everything inside it.</span></li>
-        <li><span>Open Compare, sign in, upload <code>comparison.velune</code>, download the report.</span></li>
+        <li><span>Sign in to Compare, upload <code>comparison.velune</code>, download the report.</span></li>
       </ol>
       <p class="fine">Raw MCAP is not uploaded; Compare accepts only <code>comparison.velune</code>. Velune Trace is not required. <a class="text-link" href="{root}docs/adapter.html">Step-by-step guide</a></p>
     </div>
@@ -73,7 +74,9 @@
       data-subject="Beta Access Request — VeluneOS Compare"
       data-footer="Note: no raw logs or sensitive information are attached."
       data-missing="Please fill in:"
-      data-opening="Opening a draft in your email client. Nothing has been sent yet."
+      data-invalid="Please check:"
+      data-opening="Opening a draft in your email client. Nothing has been sent yet: send the email to complete your request."
+      data-fallback="If no draft opens, send these details to"
       data-empty="Not provided">
       <div class="field"><label for="f-org">Organization or team *</label><input id="f-org" name="organization" autocomplete="organization" data-label="Organization / Team" data-required /></div>
       <div class="field"><label for="f-name">Your name *</label><input id="f-name" name="name" autocomplete="name" data-label="Contact" data-required /></div>
@@ -96,7 +99,7 @@
       </fieldset>
       <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       <div class="form-foot">
-        <span>Do not include raw logs, credentials or personal data. This opens a draft in your email client; this page stores and sends nothing.</span>
+        <span>Do not include raw logs, credentials or personal data. This form does not store or transmit what you type: it opens a draft in your email client, and your request reaches us only when you send that email.</span>
         <button class="btn btn-dark" type="submit">Create request email</button>
       </div>
     </form>
