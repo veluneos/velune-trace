@@ -32,6 +32,11 @@ velune_report/
 
 Review `velune_report/summary.md` first.
 
+These files are local. They contain your original topic names, the
+absolute recording times and the source file name; they are not
+anonymized, despite the name `shareable_anonymous_report.json`. Review
+them before sharing any of them (see `docs/TRUST_AND_PRIVACY.md`).
+
 When a completely unobserved aligned range is derived from adjacent
 observed timestamps, the ranked evidence record includes:
 

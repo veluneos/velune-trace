@@ -16,15 +16,20 @@
   </ul>
   <p>Velune Trace and Velune Adapter run locally and perform no network transfer.</p>
 
+  <h2 id="trace">Velune Trace report files</h2>
+  <p>Velune Trace reports stay on your machine, but they are <b>not</b> anonymized — including <code>shareable_anonymous_report.json</code>, whose name is kept for compatibility. Four of the files contain your original topic names and the absolute recording times, and three name your source file. Even without payloads, this metadata can be sensitive: share a report file only after the data owner has reviewed and approved it. <a class="text-link" href="trace.html#outputs">What each file contains</a>.</p>
+
   <h2 id="uploaded">What is inside comparison.velune</h2>
   <ul>
     <li>Neutral stream and schema keys (for example <code>stream.unmapped.003</code>)</li>
     <li>Per-second message counts and interval statistics, in time relative to the start of each run</li>
     <li>Run-level metadata such as duration and counts</li>
-    <li>The category labels you assigned</li>
+    <li>The category labels you assigned, exactly as typed</li>
+    <li>The size in bytes of each raw MCAP file, and the time the file was prepared</li>
     <li>How each stream was paired across runs (stream key and basis only)</li>
     <li>Manifests with SHA-256 hashes of every file</li>
   </ul>
+  <p>It does not contain raw MCAP, payloads, original file, topic or schema names, local paths, or absolute recording times.</p>
   <p>The preview file, <code>comparison.preview.json</code>, lists every entry and the excluded categories. <a class="text-link" href="adapter.html#preview">How to review it</a>.</p>
   <div class="callout warn"><b>Derived does not mean anonymous.</b> The file still describes the structure of your system — which streams exist, how often they publish and how their timing behaves. We do not describe it as fully anonymous. During the Beta, transfer boundaries are reviewed with each team.</div>
 
