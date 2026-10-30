@@ -1,4 +1,4 @@
-# Velune Trace v0.5.3 — Quick Start
+# Velune Trace v0.5.4 — Quick Start
 
 ## 1. Create the deterministic sample MCAP
 
@@ -32,6 +32,11 @@ velune_report/
 
 Review `velune_report/summary.md` first.
 
+Each run writes into its own `--export-dir`. If that directory already
+holds a report, the command stops without changing it; use a new
+`--export-dir` (as in step 4), or add `--overwrite` to replace the report
+on purpose.
+
 These files are local. They contain your original topic names, the
 absolute recording times and the source file name; they are not
 anonymized, despite the name `shareable_anonymous_report.json`. Review
@@ -49,5 +54,5 @@ fault conclusion.
 ## 4. Run on your own MCAP
 
 ```bash
-env -u PYTHONPATH -u PYTHONHOME       PYTHONNOUSERSITE=1       VELUNE_PYTHON="$PWD/.venv/bin/python"       ./bin/velune validation-report       /path/to/your_log.mcap       --export-dir velune_report       --window-sec 1       --top 5       --allowed-lateness-sec 2
+env -u PYTHONPATH -u PYTHONHOME       PYTHONNOUSERSITE=1       VELUNE_PYTHON="$PWD/.venv/bin/python"       ./bin/velune validation-report       /path/to/your_log.mcap       --export-dir my_report       --window-sec 1       --top 5       --allowed-lateness-sec 2
 ```
