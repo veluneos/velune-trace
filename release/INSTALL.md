@@ -1,4 +1,4 @@
-# Velune Trace v0.5.2 — Installation
+# Velune Trace v0.5.3 — Installation
 
 ## Validated environment
 
@@ -12,7 +12,7 @@ Other environments may work, but they are not claimed by this release.
 
 Download both files into the same directory:
 
-- `velune-trace-v0.5.2.zip`
+- `velune-trace-v0.5.3.zip`
 - `SHA256SUMS`
 
 ## Verify release integrity
@@ -26,7 +26,7 @@ sha256sum -c SHA256SUMS
 Continue only when the result is:
 
 ```text
-velune-trace-v0.5.2.zip: OK
+velune-trace-v0.5.3.zip: OK
 ```
 
 The checksum verifies the downloaded Velune Trace archive. It does not
@@ -35,8 +35,8 @@ certify the operating system or third-party Python package repositories.
 ## Extract
 
 ```bash
-unzip velune-trace-v0.5.2.zip
-cd velune-trace-v0.5.2
+unzip velune-trace-v0.5.3.zip
+cd velune-trace-v0.5.3
 ```
 
 ## Create an isolated Python environment

@@ -2,6 +2,59 @@
 
 All notable changes to Velune Trace are recorded here.
 
+## [0.5.3] - 2026-10-30
+
+### Fixed
+
+- `windowed-verify` scored a window that was MORE regular than the
+  baseline (smaller maximum gap or smaller jitter) as irregular, because
+  the gap and jitter terms used the absolute log ratio. Such windows could
+  outrank windows containing real long gaps. Only gaps and jitter above
+  the baseline now raise a window's score, the same direction already
+  used by `validation-report`. Windows where two or more messages share
+  one timestamp (zero gap) keep the same +10 contribution as before.
+- `windowed-verify` could not see a gap whose interval crosses a window
+  boundary, because `max_gap` is measured only between messages inside
+  one window. The gap term now uses the largest interval that ends in the
+  window, including the interval from the previous observed message.
+- Four README links pointed to files that are not part of the release
+  package, so the release-package link validation failed. The Velune
+  Adapter Beta Kit links now point to the same download on veluneos.ai,
+  and the two benchmark-record links point to the same files on GitHub,
+  pinned to commit ba50e23.
+
+### Changed
+
+- Ranking order and scores of `windowed-verify` can differ from v0.5.2.
+  Every per-window score is computed from the same windows and the same
+  observed timestamps; window construction, counts, `max_gap`, `jitter`,
+  `evidence_command`, and the full-window ranking eligibility rule are
+  unchanged.
+- Windows with fewer than three messages no longer receive the +10
+  "no jitter measurable" contribution, and single-message windows no
+  longer receive the +10 "zero gap" contribution. They are still scored
+  by the count term and by any real gap that ends in them.
+- Human-readable output adds a `median_gap_in` baseline line and a
+  `gap_in` table column.
+
+### Added
+
+- `--export-json`: per-window `stats.entry_gap` (seconds from the
+  previous observed message to the window's first message; `null` for
+  the first non-empty window and for empty windows) and
+  `stats.max_gap_incl_entry` (`0.0` for empty windows); baseline
+  `median_max_gap_incl_entry`; two explanatory `notes` lines. No existing
+  field was removed, renamed, or changed in meaning.
+- Ranking regression tests (`tests/test_windowed_verify_scoring.py`).
+
+### Boundaries
+
+This patch changes `windowed-verify` scoring and four README links only. `validation-report`,
+`evidence-window`, `compare`, `compare-all`, the indexer, the extractor,
+and the viewer are unchanged. Ranking remains observed timing
+irregularity only; it does not infer root cause, fault, liability, or
+safety.
+
 ## [0.5.2] - 2026-09-08
 
 ### Fixed
