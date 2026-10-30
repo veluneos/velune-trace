@@ -155,11 +155,15 @@ def estimate_baseline(rows):
         return {
             "median_count": 0,
             "median_max_gap": 0.0,
+            "median_max_gap_incl_entry": 0.0,
             "median_jitter": 0.0,
         }
 
     counts = sorted(r["stats"]["count"] for r in non_empty)
     max_gaps = sorted(r["stats"]["max_gap"] for r in non_empty)
+    max_gaps_incl_entry = sorted(
+        r["stats"].get("max_gap_incl_entry", r["stats"]["max_gap"]) for r in non_empty
+    )
     jitters = sorted(r["stats"]["jitter"] for r in non_empty)
 
     mid = len(non_empty) // 2
@@ -167,20 +171,22 @@ def estimate_baseline(rows):
     return {
         "median_count": counts[mid],
         "median_max_gap": max_gaps[mid],
+        "median_max_gap_incl_entry": max_gaps_incl_entry[mid],
         "median_jitter": jitters[mid],
     }
 
 
-def safe_log_ratio(value, baseline):
+def upper_log_ratio(value, baseline):
+    """Irregularity contribution of a gap or jitter value: only values ABOVE the
+    baseline count. A window that is more regular than the baseline is not
+    irregular (same direction as validation-report's observed_score)."""
     if baseline <= EPSILON:
-        if value <= EPSILON:
-            return 0.0
-        return 10.0
+        return 0.0 if value <= EPSILON else 10.0
 
-    if value <= EPSILON:
-        return 10.0
+    if value <= baseline:
+        return 0.0
 
-    return abs(math.log(value / baseline))
+    return math.log(value / baseline)
 
 
 def normalized_window_score(stats, baseline):
@@ -196,8 +202,18 @@ def normalized_window_score(stats, baseline):
         else:
             score += abs(math.log(stats["count"] / median_count))
 
-    score += safe_log_ratio(stats["max_gap"], median_max_gap)
-    score += safe_log_ratio(stats["jitter"], median_jitter)
+    # Gap side: the largest interval that ENDS in this window, including the
+    # interval from the previous message across the window boundary.
+    # All messages sharing one timestamp (two or more messages, zero gap) stays
+    # anomalous, as it was in v0.5.2.
+    if stats["count"] >= 2 and stats["max_gap"] <= EPSILON:
+        score += 10.0
+    else:
+        score += upper_log_ratio(
+            stats.get("max_gap_incl_entry", stats["max_gap"]),
+            baseline.get("median_max_gap_incl_entry", median_max_gap),
+        )
+    score += upper_log_ratio(stats["jitter"], median_jitter)
 
     return score
 
@@ -292,6 +308,29 @@ def main(argv=None):
                 "evidence_command": None,
             })
 
+        # Interval from the previous observed message to this window's first
+        # message. A window with no earlier message (recording start) has none.
+        previous_ns = None
+        for row, window in zip(rows, windows):
+            stats = row["stats"]
+            if window["times"]:
+                first_ns = min(window["times"])
+                entry_gap = (
+                    (first_ns - previous_ns) / 1_000_000_000
+                    if previous_ns is not None
+                    else None
+                )
+                stats["entry_gap"] = entry_gap
+                stats["max_gap_incl_entry"] = (
+                    max(stats["max_gap"], entry_gap)
+                    if entry_gap is not None
+                    else stats["max_gap"]
+                )
+                previous_ns = max(window["times"])
+            else:
+                stats["entry_gap"] = None
+                stats["max_gap_incl_entry"] = 0.0
+
         baseline = estimate_baseline(rows)
 
         for row in rows:
@@ -332,11 +371,12 @@ def main(argv=None):
         print("Baseline")
         print(f"  median_count   : {baseline['median_count']}")
         print(f"  median_max_gap : {baseline['median_max_gap']:.6f}")
+        print(f"  median_gap_in  : {baseline['median_max_gap_incl_entry']:.6f}")
         print(f"  median_jitter  : {baseline['median_jitter']:.6f}")
 
         print()
-        print("rank | window | start_sec          | end_sec            | count | hz      | max_gap  | jitter   | score")
-        print("-----|--------|--------------------|--------------------|-------|---------|----------|----------|----------")
+        print("rank | window | start_sec          | end_sec            | count | hz      | max_gap  | gap_in   | jitter   | score")
+        print("-----|--------|--------------------|--------------------|-------|---------|----------|----------|----------|----------")
 
         for rank, row in enumerate(ranked[:top], start=1):
             stats = row["stats"]
@@ -349,6 +389,7 @@ def main(argv=None):
                 f"{stats['count']:<5} | "
                 f"{stats['window_hz']:<7.3f} | "
                 f"{stats['max_gap']:<8.6f} | "
+                f"{(stats.get('max_gap_incl_entry') or 0.0):<8.6f} | "
                 f"{stats['jitter']:<8.6f} | "
                 f"{row['score']:<8.6f}"
             )
@@ -366,6 +407,9 @@ def main(argv=None):
                 "Velune does not assign fault.",
                 "Velune does not calculate liability.",
                 "Windows are ranked by baseline-normalized observed timing irregularity only.",
+                "Only gaps and jitter above the baseline raise a window's score.",
+                "gap_in (max_gap_incl_entry) includes the interval from the previous message across the window "
+                "boundary; max_gap is measured inside the window only.",
             ],
             "file": filename,
             "topic": topic,
