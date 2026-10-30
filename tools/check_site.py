@@ -5,7 +5,7 @@
 - no external resource loads (stylesheets, scripts, images, iframes, fonts)
 - each page: <html lang="en">, one <h1>, <title>, meta description, canonical
 - no claims the product must not make (root cause, regression detection, anonymity, ...)
-- Beta Kit ZIP matches its .sha256; sample files are byte-identical to a base revision
+- every Beta Kit ZIP matches its .sha256; sample files are byte-identical to a base revision
 
 Usage: python3 tools/check_site.py [base-revision]   (default 83cb11f)
 """
@@ -143,11 +143,13 @@ def main(argv: list[str]) -> int:
     for m in re.finditer(r"(?<![-\w])color:\s*(var\(--window\)|#f5c518)", css, re.I):
         problems.append(f"site.css: Evidence Yellow used as text colour near: {css[max(0, m.start() - 60):m.end()]!r}")
 
-    kit = SITE / "downloads/velune-adapter-beta-kit.zip"
-    want = (SITE / "downloads/velune-adapter-beta-kit.zip.sha256").read_text().split()[0]
-    got = sha256(kit.read_bytes()).hexdigest()
-    if got != want:
-        problems.append(f"Beta Kit ZIP sha256 {got} != {want}")
+    kit_hashes = []
+    for kit in sorted((SITE / "downloads").glob("velune-adapter-beta-kit*.zip")):
+        line = (kit.parent / f"{kit.name}.sha256").read_text().split()
+        got = sha256(kit.read_bytes()).hexdigest()
+        if line != [got, kit.name]:
+            problems.append(f"{kit.name}: sha256 {got} does not match {kit.name}.sha256 ({' '.join(line)})")
+        kit_hashes.append(f"{kit.name} {got}")
 
     for f in sorted((SITE / "samples").iterdir()):
         if f.is_file():
@@ -158,7 +160,7 @@ def main(argv: list[str]) -> int:
             if old != f.read_bytes():
                 problems.append(f"samples/{f.name} differs from {base}")
 
-    print(f"pages checked: {len(pages)}; Beta Kit sha256: {got}")
+    print(f"pages checked: {len(pages)}; Beta Kits: {'; '.join(kit_hashes)}")
     for p in problems:
         print("PROBLEM:", p)
     print(f"{len(problems)} problem(s)")
