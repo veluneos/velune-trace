@@ -43,17 +43,17 @@ comparison and current access at **[veluneos.ai](https://veluneos.ai)**.
 Velune Adapter, the customer-local tool that prepares a Reference/Target
 pair into one `comparison.velune` file for VeluneOS Compare, is
 available as a Beta Kit download:
-[`velune-adapter-beta-kit.zip`](site/downloads/velune-adapter-beta-kit.zip)
-([SHA256](site/downloads/velune-adapter-beta-kit.zip.sha256)). The kit
+[`velune-adapter-beta-kit.zip`](https://veluneos.ai/downloads/velune-adapter-beta-kit.zip)
+([SHA256](https://veluneos.ai/downloads/velune-adapter-beta-kit.zip.sha256)). The kit
 includes its own Quickstart.
 
 ## Performance Model
 
 Velune Trace has two processing paths. They were benchmarked separately, and their numbers should not be combined.
 
-**MCAP → local report (`validation-report`, the Quick Start path).** In a historical validation run, `validation-report` produced a complete local report bundle from a 10.11 GiB MCAP benchmark corpus in about 36.89 seconds (best-effort cold cache). The corpus is size-targeted and built from repeated nuScenes-derived payloads; it is not 10 GiB of unique driving data. Source: [`benchmarks/mcap_core_bundle_10gib_validation_record.md`](benchmarks/mcap_core_bundle_10gib_validation_record.md).
+**MCAP → local report (`validation-report`, the Quick Start path).** In a historical validation run, `validation-report` produced a complete local report bundle from a 10.11 GiB MCAP benchmark corpus in about 36.89 seconds (best-effort cold cache). The corpus is size-targeted and built from repeated nuScenes-derived payloads; it is not 10 GiB of unique driving data. Source: [`benchmarks/mcap_core_bundle_10gib_validation_record.md`](https://github.com/veluneos/velune-trace/blob/ba50e237813d64f3af737651037b1df7dedec708/benchmarks/mcap_core_bundle_10gib_validation_record.md).
 
-**Structured JSONL trace events → SQLite index (`indexer/`).** Velune built an index for a 10.7 GB / ~9.2M-event corpus of structured JSONL trace events in about 4 minutes 36 seconds. After indexing, a related evidence-chain query took about 0.002 seconds. Source: [`benchmarks/benchmark_10gb_summary.md`](benchmarks/benchmark_10gb_summary.md).
+**Structured JSONL trace events → SQLite index (`indexer/`).** Velune built an index for a 10.7 GB / ~9.2M-event corpus of structured JSONL trace events in about 4 minutes 36 seconds. After indexing, a related evidence-chain query took about 0.002 seconds. Source: [`benchmarks/benchmark_10gb_summary.md`](https://github.com/veluneos/velune-trace/blob/ba50e237813d64f3af737651037b1df7dedec708/benchmarks/benchmark_10gb_summary.md).
 
 The 0.002 second figure is post-index retrieval only. It is not a scan time for a raw MCAP file and does not apply to `validation-report`.
 
