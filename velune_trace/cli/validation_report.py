@@ -145,7 +145,7 @@ def finalize_window(topic, w, expected_count, top_heap, top):
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="velune validation-report",
-        description="Generate bounded streaming anonymous validation reports from an MCAP file."
+        description="Generate a bounded streaming validation report from an MCAP file. The report contains original topic names and absolute timestamps; it is not anonymized. Review it before sharing."
     )
     parser.add_argument("file", help="Input MCAP file")
     parser.add_argument("--export-dir", default="velune_report", help="Output report directory")

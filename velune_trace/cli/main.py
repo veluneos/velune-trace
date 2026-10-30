@@ -75,7 +75,7 @@ def print_usage() -> None:
     )
     print(
         "  validation-report  "
-        "Generate anonymous validation report"
+        "Generate a local validation report (contains topic names and absolute times; review before sharing)"
     )
 
 
