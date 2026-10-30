@@ -43,8 +43,8 @@ comparison and current access at **[veluneos.ai](https://veluneos.ai)**.
 Velune Adapter, the customer-local tool that prepares a Reference/Target
 pair into one `comparison.velune` file for VeluneOS Compare, is
 available as a Beta Kit download:
-[`velune-adapter-beta-kit.zip`](https://veluneos.ai/downloads/velune-adapter-beta-kit.zip)
-([SHA256](https://veluneos.ai/downloads/velune-adapter-beta-kit.zip.sha256)). The kit
+[`velune-adapter-beta-kit-0.1.1b6.zip`](https://veluneos.ai/downloads/velune-adapter-beta-kit-0.1.1b6.zip)
+([SHA256](https://veluneos.ai/downloads/velune-adapter-beta-kit-0.1.1b6.zip.sha256)). The kit
 includes its own Quickstart.
 
 ## Performance Model
@@ -112,10 +112,14 @@ This writes `examples/sample.mcap`.
 
     cat velune_report/summary.md
 
+Each run writes into its own `--export-dir`. If that directory already
+holds a report, the command stops without changing it; use a new
+`--export-dir`, or add `--overwrite` to replace the report on purpose.
+
 ### Step 5. Run Velune on your own MCAP
 
     ./bin/velune validation-report /path/to/your_log.mcap \
-      --export-dir velune_report \
+      --export-dir my_report \
       --window-sec 1 \
       --top 5 \
       --allowed-lateness-sec 2
@@ -126,7 +130,7 @@ Replace `/path/to/your_log.mcap` with the path to your own MCAP file.
 
 Velune creates:
 
-    velune_report/
+    my_report/
     ├── report_manifest.json
     ├── summary.md
     ├── shareable_anonymous_report.json
@@ -254,14 +258,14 @@ With Velune
 The primary evaluation path is:
 
     ./bin/velune validation-report /path/to/your_log.mcap \
-      --export-dir velune_report \
+      --export-dir my_report \
       --window-sec 1 \
       --top 5 \
       --allowed-lateness-sec 2
 
 This produces:
 
-    velune_report/
+    my_report/
     ├── report_manifest.json
     ├── summary.md
     ├── shareable_anonymous_report.json
