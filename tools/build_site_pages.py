@@ -102,7 +102,7 @@ def nav(root: str, current: str) -> str:
           <a href="{root}docs/index.html">Docs</a>
           <a href="{root}sample-comparison.html">Sample report</a>
           <a href="https://github.com/veluneos/velune-trace">GitHub</a>
-          <a href="{root}downloads/velune-adapter-beta-kit.zip">Adapter Kit (.zip)</a>
+          <a href="{root}downloads/velune-adapter-beta-kit-0.1.1b6.zip">Adapter Kit (.zip)</a>
           <a href="{root}comparison-beta.html#request">Request Beta Access</a>
           <a href="{COMPARE_URL}">Sign in to Compare <span aria-hidden="true">↗</span></a>
         </nav>

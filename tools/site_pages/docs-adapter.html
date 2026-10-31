@@ -3,18 +3,18 @@
 <article class="doc">
   <p class="crumbs">Docs / Compare workflow</p>
   <h1>Prepare two runs with Velune Adapter</h1>
-  <p class="lead">Velune Adapter runs on your machine. It reads a Reference run and a Target run and writes one derived file, <code>comparison.velune</code>, for VeluneOS Compare. This page covers Beta Kit 0.1.1b5, which matches the current Compare service.</p>
+  <p class="lead">Velune Adapter runs on your machine. It reads a Reference run and a Target run and writes one derived file, <code>comparison.velune</code>, for VeluneOS Compare. This page covers Beta Kit 0.1.1b6, which matches the current Compare service.</p>
   <div class="callout warn"><b>Use the Beta Kit and the <code>velune</code> command.</b> The public <a class="text-link" href="https://github.com/veluneos/velune-adapter">velune-adapter repository</a> documents the lower-level <code>velune-adapter inspect / build / validate</code> commands. Their output is not a <code>comparison.velune</code> file, and Compare will not accept it.</div>
 
   <h2 id="install">1. Install the Beta Kit</h2>
-  <p>Requires Python 3.12 or 3.13. Download <a class="text-link" href="../downloads/velune-adapter-beta-kit.zip">velune-adapter-beta-kit.zip</a> (<a class="text-link" href="../downloads/velune-adapter-beta-kit.zip.sha256">SHA-256</a>) and unzip it. It contains two Python packages, <code>BETA_QUICKSTART.md</code> and <code>SHA256SUMS</code>.</p>
+  <p>Requires Python 3.12 or 3.13. Download <a class="text-link" href="../downloads/velune-adapter-beta-kit-0.1.1b6.zip">velune-adapter-beta-kit-0.1.1b6.zip</a> (<a class="text-link" href="../downloads/velune-adapter-beta-kit-0.1.1b6.zip.sha256">SHA-256</a>) and unzip it. It contains two Python packages, <code>BETA_QUICKSTART.md</code> and <code>SHA256SUMS</code>.</p>
 <pre><span class="p">$</span> cd beta-kit
 <span class="p">$</span> sha256sum -c SHA256SUMS
 <span class="d">velune_adapter-0.2.0-py3-none-any.whl: OK
-velune_local_prepare-0.1.1b5-py3-none-any.whl: OK</span>
+velune_local_prepare-0.1.1b6-py3-none-any.whl: OK</span>
 <span class="p">$</span> python3 -m venv .venv
 <span class="p">$</span> source .venv/bin/activate
-<span class="p">$</span> pip install velune_adapter-0.2.0-py3-none-any.whl velune_local_prepare-0.1.1b5-py3-none-any.whl
+<span class="p">$</span> pip install velune_adapter-0.2.0-py3-none-any.whl velune_local_prepare-0.1.1b6-py3-none-any.whl
 <span class="p">$</span> velune --help
 <span class="d">usage: velune [-h] {mapping,prepare} ...</span></pre>
   <p>You use one command, <code>velune</code>, with two subcommands: <code>mapping</code> and <code>prepare</code>. <code>pip</code> also installs the packages the Adapter needs to read MCAP (such as <code>mcap</code>, <code>zstandard</code> and <code>lz4</code>) from your package index.</p>
@@ -30,9 +30,12 @@ velune_local_prepare-0.1.1b5-py3-none-any.whl: OK</span>
   <h2 id="discover">3. Discover streams</h2>
 <pre><span class="p">$</span> velune mapping init reference.mcap target.mcap --output mapping.json
 <span class="d">Discovered 5 streams across Reference and Target.
+Reference: /path/to/reference.mcap
+Target:    /path/to/target.mcap
 Mapping template: /path/to/mapping.json
 Next: fill canonical_subsystem_id and canonical_category_id for the streams you want to recognise in the report (at least one). Every stream is compared and transferred either way; a stream without a category appears in the report by its neutral key.</span></pre>
   <p>This reads both files locally and writes <code>mapping.json</code>, listing every stream and how the Adapter pairs streams across the two runs. <code>--output</code> defaults to <code>./mapping.json</code>. <code>mapping.json</code> contains your topic and schema names; it stays on your machine and is not part of the uploaded file.</p>
+  <p>The first file is the <b>Reference</b>, the second the <b>Target</b>; the command prints both so you can check the order, and records their file names and sizes in <code>mapping.json</code> under <code>_source_runs</code>. If <code>mapping.json</code> already exists, the command stops without changing it. Choose another <code>--output</code>, or add <code>--overwrite</code> to replace it.</p>
 
   <h2 id="mapping">4. Configure the mapping</h2>
   <p>Each discovered stream is a rule:</p>
@@ -50,7 +53,8 @@ Next: fill canonical_subsystem_id and canonical_category_id for the streams you 
     <li><code>canonical_subsystem_id</code> / <code>canonical_category_id</code> — the labels you assign, for example <code>"PERCEPTION"</code> / <code>"PERCEPTION_LIDAR"</code>. Set both or neither.</li>
   </ul>
   <p>Assign labels to the streams you want to recognise in the report — <b>at least one</b>. Every stream is compared either way; a stream without labels appears in the report by its neutral key (for example <code>stream.unmapped.003</code>). The report never shows your topic names, so labels are how you recognise streams.</p>
-  <div class="callout">Example labels used in the sample: <code>PERCEPTION_CAMERA</code>, <code>PERCEPTION_LIDAR</code>, <code>LOCALIZATION_IMU</code>, <code>PLANNING_LOCAL</code>, <code>SYSTEM_DIAGNOSTICS</code>. Labels are free text (non-empty, no leading or trailing spaces); they name streams in the report and do not change how they are compared.</div>
+  <div class="callout">Example labels used in the sample: <code>PERCEPTION_CAMERA</code>, <code>PERCEPTION_LIDAR</code>, <code>LOCALIZATION_IMU</code>, <code>PLANNING_LOCAL</code>, <code>SYSTEM_DIAGNOSTICS</code>. There is no fixed list: labels name streams in the report and do not change how they are compared. Use upper-case letters, digits and underscores; <code>prepare</code> warns about any other text but still accepts it, and refuses labels longer than 128 characters, which Compare cannot accept.</div>
+  <div class="callout warn"><b>Labels are sent exactly as you type them.</b> Never put company, product, robot or person names, e-mail addresses, IP addresses, file paths or credentials in a label.</div>
 
   <h2 id="correspondence">5. Confirm stream pairings</h2>
   <p>Streams are paired across runs by identical topic name. Two cases need your confirmation, and <code>mapping init</code> lists them under <code>correspondence_review</code>:</p>
@@ -87,14 +91,17 @@ Next: fill canonical_subsystem_id and canonical_category_id for the streams you 
     --mapping-profile mapping.json --output comparison.velune
 <span class="d">Velune Adapter — preparation complete
 Artifact: /path/to/comparison.velune
+Reference: /path/to/reference.mcap
+Target:    /path/to/target.mcap
 Transfer ID: vtransfer_sha256_…
 Transfer preview: /path/to/comparison.preview.json (11 files in comparison.velune, 132279 bytes -- raw MCAP, payloads, original paths/topic/schema names, and absolute timestamps are not included; see the file for the full list of what is)
 
 Next: review the transfer preview, then upload this file to VeluneOS Compare
-https://compare.veluneos.ai/compare</span></pre>
-  <p>Pass the same two files, in the same order, that you used for <code>mapping init</code>. <code>--output</code> defaults to <code>./comparison.velune</code>; running <code>prepare</code> again overwrites it. Nothing is sent over the network.</p>
+https://compare.veluneos.ai/compare
+If you agreed a separate review with VeluneOS instead, do not upload: send the file only through the channel agreed with VeluneOS.</span></pre>
+  <p>Pass the same two files, in the same order, that you used for <code>mapping init</code>, and check the <code>Reference:</code> and <code>Target:</code> lines. The Adapter cannot tell which run is your baseline; if the order is reversed from <code>mapping init</code>, <code>prepare</code> prints a warning, but the check is yours. <code>--output</code> defaults to <code>./comparison.velune</code>. If that file or its preview already exists, <code>prepare</code> stops before doing any work and changes nothing; use a new <code>--output</code> for each pair, or add <code>--overwrite</code>. Nothing is sent over the network.</p>
   <p>If the artifact is written but its preview cannot be, <code>prepare</code> prints “preparation incomplete”, exits with an error, and you should not upload the file until you can review it.</p>
-  <div class="callout">If you labelled only some streams, <code>prepare</code> may add a note that streams were “excluded from the comparison”. That refers to category labels only: the Compare service still compares every stream in the file and shows unlabelled ones by neutral key.</div>
+  <div class="callout">If you labelled only some streams, <code>prepare</code> prints a note such as “3 of 5 streams have no category”. Those streams are still in the file and are still compared; the report shows them by neutral key. (Kit 0.1.1b5 and earlier worded this note as streams “excluded from the comparison”; that wording was wrong.)</div>
 
   <h2 id="preview">7. Review comparison.preview.json</h2>
   <p>Open the preview before uploading anything. It describes exactly what is inside <code>comparison.velune</code>:</p>
@@ -105,7 +112,8 @@ https://compare.veluneos.ai/compare</span></pre>
     <li><code>streams</code> — each stream's neutral key and role.</li>
     <li><code>network_transfer_performed: false</code> and <code>instruction</code>: send only <code>comparison.velune</code>, nothing else on this machine.</li>
   </ul>
-  <p>The file still describes your system's structure (stream counts, message rates and timing). It is not described as anonymous. See <a class="text-link" href="data-boundaries.html">Data boundaries</a>.</p>
+  <p>The file still describes your system's structure (stream counts, message rates and timing), carries the labels you typed, each raw file's size and the time it was prepared. Leaving out raw data does not by itself make it anonymous or safe to share; the data owner decides whether it may leave your environment. See <a class="text-link" href="data-boundaries.html">Data boundaries</a>.</p>
+  <div class="callout"><b>Separate review with VeluneOS.</b> If VeluneOS reviews your files directly instead of you uploading to Compare, there is no automatic upload or intake system: agree with VeluneOS in advance which files are shared and through which channel, then send only <code>comparison.velune</code> files (never raw MCAP, <code>mapping.json</code>, Trace reports or logs).</div>
 
   <div class="doc-pager"><a href="trace.html">← Velune Trace</a><a href="compare.html">Upload and read the report →</a></div>
 </article>
