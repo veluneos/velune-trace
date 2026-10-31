@@ -44,12 +44,12 @@ Top evidence windows:
 
 <section class="alt" aria-labelledby="files-title">
   <div class="wrap">
-    <div class="sec-head"><p class="eyebrow">What you get</p><h2 id="files-title">Local, reproducible files.</h2><p>Nothing is uploaded and the source log is not modified.</p></div>
+    <div class="sec-head"><p class="eyebrow">What you get</p><h2 id="files-title">Local, reproducible files.</h2><p>Nothing is uploaded and the source log is not modified. The files leave out raw payloads, but their metadata can still be sensitive: review them, and have the data owner approve, before sharing any of them.</p></div>
     <ul class="list-plain">
       <li><b>summary.md</b><span>Readable timing summary and top evidence windows per topic. Start here.</span></li>
       <li><b>evidence_windows.json</b><span>Ranked windows with count, expected count, max gap and jitter.</span></li>
       <li><b>topic_profile.json</b><span>Topic-level timing profile across the whole log.</span></li>
-      <li><b>shareable_anonymous_report.json</b><span>An optional report designed to leave out raw sensor payloads, for sharing outside your environment. Review it before sharing.</span></li>
+      <li><b>shareable_anonymous_report.json</b><span>Machine-readable copy of the report. Despite its name it is not anonymized: like summary.md, evidence_windows.json and topic_profile.json, it contains your original topic names and the absolute recording times.</span></li>
       <li><b>report_manifest.json · SCHEMA.md</b><span>Bundle identity and SHA-256 integrity metadata; a description of every field.</span></li>
     </ul>
   </div>

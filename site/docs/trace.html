@@ -91,11 +91,12 @@ LOCAL_OUTPUTS_NOTICE=All report files were written locally. Review velune_report
       <tr><td><code>summary.md</code></td><td>Readable timing summary and top evidence windows per topic</td></tr>
       <tr><td><code>evidence_windows.json</code></td><td>Ranked windows with count, expected count, max gap and jitter</td></tr>
       <tr><td><code>topic_profile.json</code></td><td>Topic-level timing profile across the log</td></tr>
-      <tr><td><code>shareable_anonymous_report.json</code></td><td>Optional report designed to leave out raw sensor payloads. Review it before sharing; it still describes your topics and timing.</td></tr>
+      <tr><td><code>shareable_anonymous_report.json</code></td><td>Machine-readable copy of the report. The name is kept for compatibility; the file is <b>not</b> anonymized</td></tr>
       <tr><td><code>report_manifest.json</code></td><td>Bundle identity, provenance and SHA-256 integrity metadata</td></tr>
       <tr><td><code>SCHEMA.md</code></td><td>Description of every report field</td></tr>
     </tbody>
   </table></div>
+  <div class="callout warn"><b>Review before sharing.</b> The report files contain no raw payloads, but that does not make them anonymous or safe to share. <code>summary.md</code>, <code>evidence_windows.json</code>, <code>topic_profile.json</code> and <code>shareable_anonymous_report.json</code> contain your original topic names and the absolute recording times; <code>summary.md</code>, <code>shareable_anonymous_report.json</code> and <code>report_manifest.json</code> name your source file. None of them contains local paths, user or host names, or credentials. Before any of these files leaves your environment, the data owner must review and approve it. See <a class="text-link" href="data-boundaries.html#trace">Data boundaries</a>.</div>
 
   <h2 id="commands">Commands</h2>
   <div class="tablebox" tabindex="0"><table>

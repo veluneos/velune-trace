@@ -21,6 +21,7 @@ It does not require a cloud account.
 The validation-report command writes outputs to a local directory:
 
     velune_report/
+    ├── report_manifest.json
     ├── summary.md
     ├── shareable_anonymous_report.json
     ├── topic_profile.json
@@ -28,6 +29,25 @@ The validation-report command writes outputs to a local directory:
     └── SCHEMA.md
 
 These files remain local unless the user manually decides to share them.
+
+## What the Report Files Contain
+
+Leaving out raw data does not by itself make a report anonymous or safe
+to share. `shareable_anonymous_report.json` keeps its name for
+compatibility, but it is not anonymized.
+
+| File | Original topic names | Absolute timestamps (epoch) | Other identifying data |
+|---|---|---|---|
+| `summary.md` | yes | yes (window start/end) | source file name, file size |
+| `topic_profile.json` | yes | yes (`first_ns`, `last_ns`) | per-topic counts and rates |
+| `evidence_windows.json` | yes | yes (`start_ns`, `end_ns`, `start_sec`, `end_sec`) | per-topic counts and gaps |
+| `shareable_anonymous_report.json` | yes (topic list, keys, each window) | yes | source file name, file size, report time |
+| `report_manifest.json` | no | no (report time only) | source file name, file size |
+| `SCHEMA.md` | no | no | none |
+
+None of these files contains raw payloads, message contents, local paths,
+user names, host names or credentials. Message counts and rates still
+describe how your system is built.
 
 ## Raw Data Boundary
 
@@ -44,11 +64,13 @@ Velune Trace does not require users to share:
 
 ## Optional Validation Engagements
 
-The anonymous report is intended for direct validation engagements only.
+Report files are shared only within a direct validation engagement, and
+only after the user has reviewed them internally.
 
-Users should review the generated files internally before sharing anything.
-
-If a validation engagement exists, share only the agreed anonymous artifact through the agreed private channel.
+Agree in advance which files may be shared and through which private
+channel, then share only those files. If topic names, recording times or
+the source file name must not leave your environment, do not share these
+report files.
 
 Do not submit private logs or confidential operational data through public GitHub Issues.
 

@@ -144,10 +144,32 @@ Velune Trace produces local evidence artifacts:
 - `summary.md` — human-readable timing evidence summary
 - `evidence_windows.json` — ranked evidence windows
 - `topic_profile.json` — topic-level timing profile
-- `shareable_anonymous_report.json` — optional anonymized report suitable for sharing outside your environment
+- `shareable_anonymous_report.json` — machine-readable copy of the report (the file name is kept for compatibility; the file is **not** anonymized)
 - `SCHEMA.md` — report schema description
 
-The shareable report is designed to avoid raw sensor payloads.
+### Before you share any report file
+
+The report files contain no raw sensor payloads. That alone does not make
+them anonymous or safe to share outside your environment: four of the
+files contain your original topic names and the absolute time of the
+recording, and three name your source file.
+
+| File | Original topic names | Absolute timestamps (epoch) | Other identifying data |
+|---|---|---|---|
+| `summary.md` | yes | yes (window start/end) | source file name, file size |
+| `topic_profile.json` | yes | yes (`first_ns`, `last_ns`) | per-topic counts and rates |
+| `evidence_windows.json` | yes | yes (`start_ns`, `end_ns`, `start_sec`, `end_sec`) | per-topic counts and gaps |
+| `shareable_anonymous_report.json` | yes (topic list, keys, each window) | yes | source file name, file size, report time |
+| `report_manifest.json` | no | no (report time only) | source file name, file size |
+| `SCHEMA.md` | no | no | none |
+
+None of these files contains raw payloads, message contents, local paths,
+user names, host names or credentials. Message counts and rates still
+describe how your system is built.
+
+Even without payloads, this metadata can be sensitive. Before any report
+file leaves your environment, the owner of the data must review it and
+approve sending it. See [Trust and Privacy Model](docs/TRUST_AND_PRIVACY.md).
 
 ---
 

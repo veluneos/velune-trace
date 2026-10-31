@@ -29,7 +29,7 @@ Commands:
   compare-all        Compare all common topics between two windows
   windowed-verify    Rank timing-irregular windows for one topic
   evidence-window    Extract a reproducible evidence window
-  validation-report  Generate anonymous validation report
+  validation-report  Generate a local validation report (contains topic names and absolute times; review before sharing)
 
 Examples:
   ./bin/velune validation-report /path/to/your_log.mcap \

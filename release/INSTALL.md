@@ -59,3 +59,7 @@ env -u PYTHONPATH -u PYTHONHOME       PYTHONNOUSERSITE=1       VELUNE_PYTHON="$P
 
 Velune Trace operates locally. It does not perform telemetry,
 automatically upload raw MCAP files, infer root cause, or assign fault.
+
+The reports it writes contain original topic names and absolute
+timestamps and are not anonymized. Review them before sharing (see
+`docs/TRUST_AND_PRIVACY.md`).
