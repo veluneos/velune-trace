@@ -2,6 +2,42 @@
 
 All notable changes to Velune Trace are recorded here.
 
+## [0.5.4] - 2026-10-31
+
+### Changed
+
+- `validation-report` no longer replaces an existing report. If any of
+  the six report files is already in `--export-dir`, the command stops
+  with exit status 2 before reading the MCAP and changes nothing. Add the
+  new `--overwrite` option to replace the report on purpose. Scripts that
+  write repeatedly into the same `--export-dir` need `--overwrite`.
+  Other files in the directory are never touched; an empty or unrelated
+  directory is accepted as before. An `--export-dir` that is a file is
+  rejected.
+- The README, `release/QUICKSTART.md` and the website now write the
+  sample and your own log into different export directories.
+
+### Fixed
+
+- The documentation and CLI help described `shareable_anonymous_report.json`
+  as an anonymized report suitable for sharing outside your environment.
+  It contains original topic names and absolute recording times. The
+  file name and schema are unchanged for compatibility; the README and
+  `docs/TRUST_AND_PRIVACY.md` now list what each report file contains,
+  and state that the data owner must review and approve any report file
+  before it is shared.
+- The Velune Adapter Beta Kit links point to Beta Kit 0.1.1b6.
+
+### Added
+
+- `tests/test_validation_report_overwrite.py`.
+
+### Boundaries
+
+Window construction, scoring, ranking and every report file's content
+and schema are unchanged from v0.5.3. Only the export-directory check,
+the `--overwrite` option and help text differ.
+
 ## [0.5.3] - 2026-10-30
 
 ### Fixed

@@ -29,6 +29,8 @@ The validation-report command writes outputs to a local directory:
     └── SCHEMA.md
 
 These files remain local unless the user manually decides to share them.
+An existing report in the directory is not replaced unless `--overwrite`
+is given.
 
 ## What the Report Files Contain
 

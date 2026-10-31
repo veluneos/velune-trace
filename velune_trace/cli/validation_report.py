@@ -16,6 +16,17 @@ SCHEMA_NAME = "velune.anonymous_validation_report"
 SCHEMA_VERSION = "0.2.0"
 SEMANTICS = "observed_timing_metadata_only"
 
+# Files this command writes into --export-dir. If any already exists there,
+# the run stops before reading the MCAP unless --overwrite is given.
+REPORT_FILENAMES = (
+    "report_manifest.json",
+    "summary.md",
+    "shareable_anonymous_report.json",
+    "topic_profile.json",
+    "evidence_windows.json",
+    "SCHEMA.md",
+)
+
 
 def sec_to_ns(sec: float) -> int:
     return int(sec * 1_000_000_000)
@@ -153,6 +164,7 @@ def main(argv=None):
     parser.add_argument("--top", type=int, default=5, help="Top evidence windows per topic")
     parser.add_argument("--allowed-lateness-sec", type=float, default=2.0, help="Allowed lateness before flushing old windows")
     parser.add_argument("--topic-profile", default=None, help="Optional JSON with topic metadata such as expected_hz and sensor_category")
+    parser.add_argument("--overwrite", action="store_true", help="Replace report files already in --export-dir (default: refuse)")
     args = parser.parse_args(argv)
 
     input_path = Path(args.file)
@@ -175,6 +187,17 @@ def main(argv=None):
     except Exception as e:
         print(f"[ERROR] Invalid topic profile: {e}", file=sys.stderr)
         return 2
+
+    if export_dir.exists() and not export_dir.is_dir():
+        print(f"[ERROR] --export-dir is not a directory: {export_dir}", file=sys.stderr)
+        return 2
+
+    if not args.overwrite:
+        existing = [name for name in REPORT_FILENAMES if (export_dir / name).exists()]
+        if existing:
+            print(f"[ERROR] Export directory already contains a report: {export_dir} ({', '.join(existing)})", file=sys.stderr)
+            print("[ERROR] Nothing was changed. Use a new --export-dir, or add --overwrite to replace these files.", file=sys.stderr)
+            return 2
 
     window_ns = sec_to_ns(args.window_sec)
     allowed_lateness_ns = sec_to_ns(args.allowed_lateness_sec)
